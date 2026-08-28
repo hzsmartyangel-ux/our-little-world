@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Our Little World ♡</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Georgia,serif;color:#593743;background:#fff6f7}
+.hidden{display:none!important}.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#f6c7d2,#eadcf0)}
+.card{width:min(560px,100%);padding:40px 25px;border-radius:28px;background:#fffafadd;box-shadow:0 20px 60px #74435430;text-align:center}.heart{font-size:42px}.script{font-size:clamp(42px,10vw,68px);font-style:italic;color:#a94763;margin:8px}.login{max-width:390px;margin:auto}input,textarea{width:100%;padding:14px;border:1px solid #e4bbc7;border-radius:18px;font:16px Georgia;background:#fff}.login input{border-radius:30px;text-align:center}button{padding:12px 20px;border:0;border-radius:25px;background:#c95e7b;color:white;font-size:15px;cursor:pointer} .login button{width:100%;margin-top:10px}.error{min-height:22px;color:#a94763;margin-top:8px}
+main{max-width:1000px;margin:auto;padding:25px 16px}.top{text-align:center;padding:25px 0}.top h1{font-size:38px;margin:5px}.subtitle{font-style:italic}.tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:20px 0}.tabs button{background:#fff;color:#87495b;border:1px solid #e8c6cf}.tabs button.active{background:#c95e7b;color:white}.panel{background:#fffafd;padding:25px;border-radius:25px;box-shadow:0 8px 30px #75485812}.panel h2{margin-top:0}.editor{display:grid;gap:10px}.entry{padding:16px;margin-top:14px;border-radius:18px;background:#fff0f3;border:1px solid #f1d5dc}.entry small{display:block;color:#8d6973;margin-bottom:7px}.entry p{white-space:pre-wrap;line-height:1.6}.actions{display:flex;gap:8px;flex-wrap:wrap}.danger{background:#a64c62}.quote{text-align:center;margin:30px 0;padding:22px;background:#f2cbd6;border-radius:22px;font-style:italic}
+</style>
+</head>
+<body>
+<section id="login" class="hero">
+<div class="card"><div class="heart">♡</div><div class="script">our little world</div>
+<p>A private little place for you & me. 🤍</p>
+<div class="login"><p>🔐 Enter our secret password</p>
+<input id="pw" type="password" placeholder="Secret password" onkeydown="if(event.key==='Enter')unlock()">
+<button onclick="unlock()">ENTER ♡</button><div id="err" class="error"></div></div>
+<p>Just you & me, always. 🦋</p></div>
+</section>
+
+<main id="app" class="hidden">
+<div class="top"><h1>Our Little World ❤️</h1><div class="subtitle">A place for our words, memories & little moments.</div></div>
+<div class="tabs">
+<button class="active" onclick="show('letters',this)">💌 Letters</button>
+  <button onclick="show('chat',this)">💬 Our Chat</button>
+<button onclick="show('memories',this)">📸 Memories</button>
+<button onclick="show('moments',this)">🗓️ Moments</button>
+<button onclick="show('words',this)">🤍 Words</button>
+<button onclick="show('song',this)">🎵 Our Song</button>
+</div>
+<section id="chat" class="panel hidden">
+<h2>💬 Our Little Chat</h2>
+
+<div id="chatMessages" style="height:55vh;overflow-y:auto;padding:10px;background:#fff6f8;border-radius:20px;"></div>
+
+<div style="display:flex;gap:8px;margin-top:12px;">
+<input id="chatInput" type="text" placeholder="Write something to me...">
+<button onclick="sendChatMessage()">Send ♡</button>
+</div>
+
+<div id="chatError" class="error"></div>
+</section>
+<section id="letters" class="panel">
+<h2>💌 Letters to You</h2>
+<div class="editor"><textarea id="letterText" rows="5" placeholder="Write something from your heart..."></textarea><button onclick="addEntry('letters','letterText','letter')">Save this letter ♡</button></div>
+<div id="letterList"></div></section>
+
+<section id="memories" class="panel hidden">
+<img src="https://raw.githubusercontent.com/hzsmartyangel-ux/our-little-world/main/IMG20260726110434.jpg"
+     alt="Our memory"
+     style="width:100%;max-height:500px;object-fit:cover;border-radius:20px;margin-bottom:20px;">
+<h2>📸 Our Memories</h2><div class="editor"><input id="memoryTitle" placeholder="Memory title"><textarea id="memoryText" rows="4" placeholder="Write about this memory..."></textarea><button onclick="addEntry('memories','memoryText','memory', 'memoryTitle')">Save memory ♡</button></div><div id="memoryList"></div></section>
+
+<section id="moments" class="panel hidden">
+<h2>🗓️ Special Moments</h2><div class="editor"><input id="momentTitle" placeholder="Moment / date"><textarea id="momentText" rows="3" placeholder="Why is this moment special?"></textarea><button onclick="addEntry('moments','momentText','moment','momentTitle')">Save moment ♡</button></div><div id="momentList"></div></section>
+
+<section id="words" class="panel hidden">
+<h2>🤍 Words I Keep in My Heart</h2><div class="editor"><textarea id="wordText" rows="5" placeholder="Something you want him/her to read..."></textarea><button onclick="addEntry('words','wordText','word')">Save words ♡</button></div><div id="wordList"></div></section>
+
+<section id="song" class="panel hidden">
+<h2>🎵 Our Song</h2><div class="editor"><input id="songText" placeholder="Song name or YouTube/Spotify link"><button onclick="saveSong()">Save our song ♡</button></div><div id="songSaved" class="entry hidden"></div></section>
+
+<div class="quote">“Distance means so little when someone means so much.” ♡</div>
+</main>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  query,
+  orderBy,
+  onSnapshot,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAIgT6npYKXzu_zCYdvzLZgGezkr5GoDZU",
+  authDomain: "our-little-world-h.firebaseapp.com",
+  databaseURL: "https://our-little-world-h-default-rtdb.firebaseio.com",
+  projectId: "our-little-world-h",
+  storageBucket: "our-little-world-h.firebasestorage.app",
+  messagingSenderId: "204255083251",
+  appId: "1:204255083251:web:abd61857c1974b45d11586",
+  measurementId: "G-XSLR9G2H8X"
+};
+
+const MY_UID = "nU2e103h6rYT9ZkQrTZ7a2hCcIk2";
+const HIS_UID = "mTnX5HUrmeSevuUZVjTDQ7jA9wn1";
+
+const appFirebase = initializeApp(firebaseConfig);
+const auth = getAuth(appFirebase);
+const db = getFirestore(appFirebase);
+
+const login = document.getElementById("login");
+const app = document.getElementById("app");
+const err = document.getElementById("err");
+
+function unlock() {
+  const email = prompt("Enter your Firebase email:");
+  const password = prompt("Enter your Firebase password:");
+
+  if (!email || !password) return;
+
+  signInWithEmailAndPassword(auth, email.trim(), password)
+    .catch((error) => {
+  err.textContent = "Firebase error: " + error.code;
+  console.log(error);
+});
+}
+
+window.unlock = unlock;
+
+onAuthStateChanged(auth, user => {
+  if (!user) {
+    login.classList.remove("hidden");
+    app.classList.add("hidden");
+    return;
+  }
+
+  if (user.uid !== MY_UID && user.uid !== HIS_UID) {
+    signOut(auth);
+    err.textContent = "This account is not allowed here. ♡";
+    return;
+  }
+
+  login.classList.add("hidden");
+  app.classList.remove("hidden");
+
+  loadAll();
+});
+
+function loadAll() {
+  render("letter");
+  render("memory");
+  render("moment");
+  render("word");
+  loadSong();
+  startChat();
+}
+
+function show(id, btn) {
+  document.querySelectorAll("main>section.panel")
+    .forEach(x => x.classList.add("hidden"));
+
+  document.getElementById(id).classList.remove("hidden");
+
+  document.querySelectorAll(".tabs button")
+    .forEach(x => x.classList.remove("active"));
+
+  btn.classList.add("active");
+}
+
+window.show = show;
+
+function key(type) {
+  return "oulw_" + type;
+}
+
+function get(type) {
+  return JSON.parse(localStorage.getItem(key(type)) || "[]");
+}
+
+function save(type, data) {
+  localStorage.setItem(key(type), JSON.stringify(data));
+}
+
+function addEntry(section, textId, type, titleId) {
+  const text = document.getElementById(textId).value.trim();
+  if (!text) return;
+
+  const title = titleId
+    ? document.getElementById(titleId).value.trim()
+    : "";
+
+  const arr = get(type);
+
+  arr.unshift({
+    title,
+    text,
+    date: new Date().toLocaleString()
+  });
+
+  save(type, arr);
+
+  document.getElementById(textId).value = "";
+
+  if (titleId) {
+    document.getElementById(titleId).value = "";
+  }
+
+  render(type);
+}
+
+window.addEntry = addEntry;
+
+function render(type) {
+  const map = {
+    letter: "letterList",
+    memory: "memoryList",
+    moment: "momentList",
+    word: "wordList"
+  };
+
+  const el = document.getElementById(map[type]);
+  if (!el) return;
+
+  el.innerHTML = get(type).map((x, i) => `
+    <div class="entry">
+      <small>
+        ${escapeHtml(x.date)}
+        ${x.title ? " · " + escapeHtml(x.title) : ""}
+      </small>
+
+      <p>${escapeHtml(x.text)}</p>
+
+      <div class="actions">
+        <button
+          class="danger"
+          onclick="removeEntry('${type}',${i})">
+          Delete
+        </button>
+      </div>
+    </div>
+  `).join("");
+}
+
+function removeEntry(type, i) {
+  const a = get(type);
+  a.splice(i, 1);
+  save(type, a);
+  render(type);
+}
+
+window.removeEntry = removeEntry;
+
+function saveSong() {
+  localStorage.setItem(
+    key("song"),
+    document.getElementById("songText").value
+  );
+
+  loadSong();
+}
+
+window.saveSong = saveSong;
+
+function loadSong() {
+  const s = localStorage.getItem(key("song"));
+
+  if (s) {
+    document.getElementById("songSaved").classList.remove("hidden");
+    document.getElementById("songSaved").textContent = s;
+  }
+}
+
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, m => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  }[m]));
+}
+  let chatUnsubscribe = null;
+
+function startChat() {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  const chatMessages = document.getElementById("chatMessages");
+  const chatError = document.getElementById("chatError");
+
+  const q = query(
+    collection(db, "messages"),
+    orderBy("createdAt", "asc")
+  );
+
+  chatUnsubscribe = onSnapshot(q, snapshot => {
+    chatMessages.innerHTML = "";
+
+    snapshot.forEach(doc => {
+      const data = doc.data();
+
+      const row = document.createElement("div");
+      const isMine = data.uid === user.uid;
+
+      row.style.display = "flex";
+      row.style.justifyContent = isMine ? "flex-end" : "flex-start";
+      row.style.margin = "8px 0";
+
+      const bubble = document.createElement("div");
+      bubble.style.maxWidth = "80%";
+      bubble.style.padding = "10px 14px";
+      bubble.style.borderRadius = "18px";
+      bubble.style.background = isMine ? "#e7bfd0" : "#f1e3e8";
+      bubble.style.whiteSpace = "pre-wrap";
+      bubble.textContent = data.text;
+
+      row.appendChild(bubble);
+      chatMessages.appendChild(row);
+    });
+
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+  }, error => {
+    chatError.textContent = "Chat error: " + error.code;
+  });
+}
+
+async function sendChatMessage() {
+  const user = auth.currentUser;
+  const input = document.getElementById("chatInput");
+  const error = document.getElementById("chatError");
+
+  const text = input.value.trim();
+
+  if (!user || !text) return;
+
+  if (user.uid !== MY_UID && user.uid !== HIS_UID) {
+    error.textContent = "This account is not allowed.";
+    return;
+  }
+
+  try {
+    await addDoc(collection(db, "messages"), {
+      uid: user.uid,
+      text: text,
+      createdAt: serverTimestamp()
+    });
+
+    input.value = "";
+    input.focus();
+
+  } catch (e) {
+    error.textContent = "Could not send: " + e.code;
+  }
+}
+
+window.sendChatMessage = sendChatMessage;
+</script>
+</body>
+</html>
