@@ -222,11 +222,43 @@ style="margin-top:8px;padding:14px;background:#fff;border:1px solid #e8c6cf;bord
 <div id="letterList"></div></section>
 
 <section id="memories" class="panel hidden">
+
 <img src="https://raw.githubusercontent.com/hzsmartyangel-ux/our-little-world/main/IMG20260726110434.jpg"
      alt="Our memory"
      style="width:100%;max-height:500px;object-fit:cover;border-radius:20px;margin-bottom:20px;">
-<h2>📸 Our Memories</h2><div class="editor"><input id="memoryTitle" placeholder="Memory title"><textarea id="memoryText" rows="4" placeholder="Write about this memory..."></textarea><button onclick="addEntry('memories','memoryText','memory', 'memoryTitle')">Save memory ♡</button></div><div id="memoryList"></div></section>
 
+<h2>📸 Our Memories</h2>
+
+<div class="editor">
+
+  <input
+    id="memoryTitle"
+    placeholder="Memory title"
+  >
+
+  <textarea
+    id="memoryText"
+    rows="4"
+    placeholder="Write about this memory..."
+  ></textarea>
+
+  <input
+    type="file"
+    id="memoryImage"
+    accept="image/*"
+  >
+
+  <button
+    onclick="addMemory()"
+  >
+    Save memory ♡
+  </button>
+
+</div>
+
+<div id="memoryList"></div>
+
+</section>
 <section id="moments" class="panel hidden">
 <h2>🗓️ Special Moments</h2><div class="editor"><input id="momentTitle" placeholder="Moment / date"><textarea id="momentText" rows="3" placeholder="Why is this moment special?"></textarea><button onclick="addEntry('moments','momentText','moment','momentTitle')">Save moment ♡</button></div><div id="momentList"></div></section>
 
@@ -306,8 +338,181 @@ const db = getFirestore(appFirebase);
 
 const storage = getStorage(appFirebase);
 
+// ==============================
+// Shared Entries - Firestore
+// ==============================
 
-const login = document.getElementById("login");
+const sharedEntriesRef = collection(db, "sharedEntries");
+  const sharedSongRef = collection(db, "sharedSong");
+async function saveSharedEntry(type, title, text) {
+
+  const user = auth.currentUser;
+
+  if (!user) return;
+
+  try {
+
+    await addDoc(sharedEntriesRef, {
+      type: type,
+      title: title || "",
+      text: text,
+      uid: user.uid,
+      createdAt: serverTimestamp()
+    });
+
+  } catch (error) {
+
+    console.error("Firestore save error:", error);
+
+    alert("Could not save. Please try again.");
+
+  }
+
+  }
+  let sharedEntriesUnsubscribe = null;
+
+function startSharedEntries() {
+
+  if (sharedEntriesUnsubscribe) {
+    sharedEntriesUnsubscribe();
+  }
+
+  const q = query(
+    sharedEntriesRef,
+    orderBy("createdAt", "desc")
+  );
+
+  sharedEntriesUnsubscribe = onSnapshot(
+    q,
+    snapshot => {
+
+      const lists = {
+        letter: "letterList",
+        memory: "memoryList",
+        moment: "momentList",
+        word: "wordList"
+      };
+
+      // Clear all shared lists
+      Object.values(lists).forEach(id => {
+        const element = document.getElementById(id);
+
+        if (element) {
+          element.innerHTML = "";
+        }
+      });
+
+      // Display shared entries
+      snapshot.forEach(docSnap => {
+
+        const data = docSnap.data();
+
+        const listId = lists[data.type];
+
+        if (!listId) return;
+
+        const element = document.getElementById(listId);
+
+        if (!element) return;
+
+        const box = document.createElement("div");
+        box.className = "entry";
+
+        const small = document.createElement("small");
+
+        let dateText = "";
+
+        if (data.createdAt) {
+          dateText = data.createdAt
+            .toDate()
+            .toLocaleString();
+        }
+
+        small.textContent =
+          dateText +
+          (data.title
+            ? " · " + data.title
+            : "");
+
+        if (data.imageUrl) {
+
+  const image = document.createElement("img");
+
+  image.src = data.imageUrl;
+  image.alt = data.title || "Our memory";
+
+  image.style.width = "100%";
+  image.style.maxHeight = "400px";
+  image.style.objectFit = "cover";
+  image.style.borderRadius = "20px";
+  image.style.marginTop = "10px";
+
+  box.appendChild(image);
+}
+
+const paragraph = document.createElement("p");
+paragraph.textContent = data.text;
+
+const actions = document.createElement("div");
+        actions.className = "actions";
+
+        const deleteButton =
+          document.createElement("button");
+
+        deleteButton.className = "danger";
+        deleteButton.textContent = "Delete";
+
+        deleteButton.onclick = async () => {
+
+          const confirmed =
+            confirm("Delete this entry? ♡");
+
+          if (!confirmed) return;
+
+          try {
+
+            await deleteDoc(
+              doc(db, "sharedEntries", docSnap.id)
+            );
+
+          } catch (error) {
+
+            console.error(
+              "Delete error:",
+              error
+            );
+
+            alert(
+              "Could not delete this entry."
+            );
+
+          }
+
+        };
+
+        actions.appendChild(deleteButton);
+
+        box.appendChild(small);
+        box.appendChild(paragraph);
+        box.appendChild(actions);
+
+        element.appendChild(box);
+
+      });
+
+    },
+
+    error => {
+
+      console.error(
+        "Shared entries error:",
+        error
+      );
+
+    }
+  );
+  }
+  const login = document.getElementById("login");
 
 const app = document.getElementById("app");
 
@@ -570,6 +775,7 @@ function loadAll() {
   loadSong();
 
   startChat();
+  startSharedEntries();
 
 }
 
@@ -601,10 +807,9 @@ function escapeHtml(text) {
 // Moments & Words
 // ==============================
 
-function addEntry(section, textId, type, titleId) {
+async function addEntry(section, textId, type, titleId) {
 
-  const textElement =
-    document.getElementById(textId);
+  const textElement = document.getElementById(textId);
 
   if (!textElement) return;
 
@@ -612,13 +817,11 @@ function addEntry(section, textId, type, titleId) {
 
   if (!text) return;
 
-
   let title = "";
 
   if (titleId) {
 
-    const titleElement =
-      document.getElementById(titleId);
+    const titleElement = document.getElementById(titleId);
 
     if (titleElement) {
       title = titleElement.value.trim();
@@ -626,31 +829,13 @@ function addEntry(section, textId, type, titleId) {
 
   }
 
-
-  const entries = get(type);
-
-
-  entries.unshift({
-
-    title: title,
-
-    text: text,
-
-    date: new Date().toLocaleString()
-
-  });
-
-
-  save(type, entries);
-
+  await saveSharedEntry(type, title, text);
 
   textElement.value = "";
 
-
   if (titleId) {
 
-    const titleElement =
-      document.getElementById(titleId);
+    const titleElement = document.getElementById(titleId);
 
     if (titleElement) {
       titleElement.value = "";
@@ -658,14 +843,82 @@ function addEntry(section, textId, type, titleId) {
 
   }
 
-
-  render(type);
-
 }
 
-
 window.addEntry = addEntry;
+  async function addMemory() {
 
+  const titleInput =
+    document.getElementById("memoryTitle");
+
+  const textInput =
+    document.getElementById("memoryText");
+
+  const imageInput =
+    document.getElementById("memoryImage");
+
+  if (!titleInput || !textInput || !imageInput) return;
+
+  const title = titleInput.value.trim();
+  const text = textInput.value.trim();
+  const file = imageInput.files[0];
+
+  if (!text && !file) return;
+
+  const user = auth.currentUser;
+
+  if (!user) return;
+
+  try {
+
+    let imageUrl = "";
+
+    if (file) {
+
+      const imageRef = ref(
+        storage,
+        "memories/" +
+        Date.now() +
+        "_" +
+        file.name
+      );
+
+      await uploadBytes(imageRef, file);
+
+      imageUrl =
+        await getDownloadURL(imageRef);
+    }
+
+    await addDoc(sharedEntriesRef, {
+
+      type: "memory",
+      title: title,
+      text: text,
+      imageUrl: imageUrl,
+      uid: user.uid,
+      createdAt: serverTimestamp()
+
+    });
+
+    titleInput.value = "";
+    textInput.value = "";
+    imageInput.value = "";
+
+  } catch (error) {
+
+    console.error(
+      "Memory save error:",
+      error
+    );
+
+    alert(
+      "Could not save this memory. Please try again."
+    );
+
+  }
+}
+
+window.addMemory = addMemory;
 
 // ==============================
 // Render Entries
@@ -800,7 +1053,7 @@ window.removeEntry = removeEntry;
 // & Emoji Picker
 // ==============================
 
-function saveSong() {
+async function saveSong() {
 
   const input =
     document.getElementById("songText");
@@ -811,16 +1064,32 @@ function saveSong() {
 
   if (!song) return;
 
+  const user = auth.currentUser;
 
-  localStorage.setItem(
-    key("song"),
-    song
-  );
+  if (!user) return;
 
+  try {
 
-  loadSong();
+    await addDoc(sharedSongRef, {
+      song: song,
+      uid: user.uid,
+      createdAt: serverTimestamp()
+    });
 
-  input.value = "";
+    input.value = "";
+
+  } catch (error) {
+
+    console.error(
+      "Song save error:",
+      error
+    );
+
+    alert(
+      "Could not save the song. Please try again."
+    );
+
+  }
 
 }
 
@@ -831,35 +1100,78 @@ window.saveSong = saveSong;
 // ==============================
 // Load Song
 // ==============================
-
 function loadSong() {
-
-  const saved =
-    localStorage.getItem(key("song"));
 
   const box =
     document.getElementById("songSaved");
 
   if (!box) return;
 
+  const q = query(
+    sharedSongRef,
+    orderBy("createdAt", "desc")
+  );
 
-  if (saved) {
+  onSnapshot(q, snapshot => {
+
+    box.innerHTML = "";
+
+    if (snapshot.empty) {
+
+      box.classList.add("hidden");
+
+      return;
+    }
 
     box.classList.remove("hidden");
 
-    box.textContent = saved;
+    snapshot.forEach(docSnap => {
 
-  } else {
+      const data = docSnap.data();
 
-    box.classList.add("hidden");
+      const songBox =
+        document.createElement("div");
 
-    box.textContent = "";
+      songBox.className = "entry";
 
+      const small =
+        document.createElement("small");
+
+      let dateText = "";
+
+      if (data.createdAt) {
+
+        dateText =
+          data.createdAt
+            .toDate()
+            .toLocaleString();
+
+      }
+
+      small.textContent = dateText;
+
+      const songText =
+        document.createElement("p");
+
+      songText.textContent =
+        data.song || "";
+
+      songBox.appendChild(small);
+      songBox.appendChild(songText);
+
+      box.appendChild(songBox);
+
+    });
+
+  }, error => {
+
+    console.error(
+      "Song load error:",
+      error
+    );
+
+  });
   }
-
-}
-
-
 // ==============================
 // Emoji Picker
 // ==============================
@@ -1340,8 +1652,6 @@ function startChat() {
         error
       );
 
-      chatError.textContent =
-        "Could not load our chat ♡";
 
     }
   );
