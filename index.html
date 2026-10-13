@@ -5,47 +5,14 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Our Little World ♡</title>
 <style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Georgia,serif;color:#593743;background:#fff6f7}
-.hidden{display:none!important}
-.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#f6c7d2,#eadcf0)}
-.card{width:min(560px,100%);padding:40px 25px;border-radius:28px;background:#fffafadd;box-shadow:0 20px 60px #74435430;text-align:center}
-.heart{font-size:42px}
-.script{font-size:clamp(42px,10vw,68px);font-style:italic;color:#a94763;margin:8px}
-.login{max-width:390px;margin:auto}
-input,textarea{width:100%;padding:14px;border:1px solid #e4bbc7;border-radius:18px;font:16px Georgia;background:#fff}
-.login input{border-radius:30px;text-align:center}
-button{padding:12px 20px;border:0;border-radius:25px;background:#c95e7b;color:white;font-size:15px;cursor:pointer}
-.login button{width:100%;margin-top:10px}
-.error{min-height:22px;color:#a94763;margin-top:8px}
-main{max-width:1000px;margin:auto;padding:25px 16px}
-.top{text-align:center;padding:25px 0}
-.top h1{font-size:38px;margin:5px}
-.subtitle{font-style:italic}
-.tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:20px 0}
-.tabs button{background:#fff;color:#87495b;border:1px solid #e8c6cf}
-.tabs button.active{background:#c95e7b;color:white}
-.panel{background:#fffafd;padding:25px;border-radius:25px;box-shadow:0 8px 30px #75485812}
-.panel h2{margin-top:0}
-.editor{display:grid;gap:10px}
-.entry{padding:16px;margin-top:14px;border-radius:18px;background:#fff0f3;border:1px solid #f1d5dc}
-.entry small{display:block;color:#8d6973;margin-bottom:7px}
-.entry p{white-space:pre-wrap;line-height:1.6}
-.actions{display:flex;gap:8px;flex-wrap:wrap}
-.danger{background:#a64c62}
-.quote{text-align:center;margin:30px 0;padding:22px;background:#f2cbd6;border-radius:22px;font-style:italic}
-.status-badge{display:inline-block;width:9px;height:9px;border-radius:50%;background:#ccc;margin-right:5px;vertical-align:middle}
-.status-badge.online{background:#5bc0be}
-
-/* Reaction styling */
-.reaction-trigger-btn{background:transparent;border:none;cursor:pointer;font-size:16px;padding:2px 4px;opacity:0.8;transition:transform 0.1s}
-.reaction-trigger-btn:hover{transform:scale(1.2);opacity:1}
-.reaction-popover{position:absolute;bottom:100%;right:0;background:#fff;border:1px solid #e8c6cf;border-radius:20px;padding:4px 8px;display:flex;gap:6px;box-shadow:0 4px 15px #75485820;z-index:10;margin-bottom:6px}
-.popover-emoji{cursor:pointer;font-size:18px;transition:transform 0.15s;padding:2px}
-.popover-emoji:hover{transform:scale(1.3)}
-.active-reactions-list{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
-.active-reaction-badge{background:#fff0f3;border:1px solid #e4bbc7;border-radius:12px;padding:2px 7px;font-size:12px;cursor:pointer;color:#593743}
-.active-reaction-badge.mine{background:#f2cbd6;border-color:#c95e7b;font-weight:bold}
+*{box-sizing:border-box}body{margin:0;font-family:Georgia,serif;color:#593743;background:#fff6f7}
+.hidden{display:none!important}.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#f6c7d2,#eadcf0)}
+.card{width:min(560px,100%);padding:40px 25px;border-radius:28px;background:#fffafadd;box-shadow:0 20px 60px #74435430;text-align:center}.heart{font-size:42px}.script{font-size:clamp(42px,10vw,68px);font-style:italic;color:#a94763;margin:8px}.login{max-width:390px;margin:auto}input,textarea{width:100%;padding:14px;border:1px solid #e4bbc7;border-radius:18px;font:16px Georgia;background:#fff}.login input{border-radius:30px;text-align:center}button{padding:12px 20px;border:0;border-radius:25px;background:#c95e7b;color:white;font-size:15px;cursor:pointer} .login button{width:100%;margin-top:10px}.error{min-height:22px;color:#a94763;margin-top:8px}
+main{max-width:1000px;margin:auto;padding:25px 16px}.top{text-align:center;padding:25px 0}.top h1{font-size:38px;margin:5px}.subtitle{font-style:italic}.tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:20px 0}.tabs button{background:#fff;color:#87495b;border:1px solid #e8c6cf}.tabs button.active{background:#c95e7b;color:white}.panel{background:#fffafd;padding:25px;border-radius:25px;box-shadow:0 8px 30px #75485812}.panel h2{margin-top:0}.editor{display:grid;gap:10px}.entry{padding:16px;margin-top:14px;border-radius:18px;background:#fff0f3;border:1px solid #f1d5dc}.entry small{display:block;color:#8d6973;margin-bottom:7px}.entry p{white-space:pre-wrap;line-height:1.6}.actions{display:flex;gap:8px;flex-wrap:wrap}.danger{background:#a64c62}.quote{text-align:center;margin:30px 0;padding:22px;background:#f2cbd6;border-radius:22px;font-style:italic}
+.status-badge {display:inline-block;width:9px;height:9px;border-radius:50%;background:#ccc;margin-right:5px;vertical-align:middle;}
+.status-badge.online{background:#5bc0be;}
+.reaction-btn {background:transparent;border:1px solid #e4bbc7;border-radius:12px;padding:2px 6px;font-size:12px;cursor:pointer;margin-right:4px;margin-top:4px;color:#593743;}
+.reaction-btn.active {background:#f2cbd6;}
 </style>
 </head>
 <body>
@@ -97,8 +64,8 @@ main{max-width:1000px;margin:auto;padding:25px 16px}
 
 <div style="margin-top:12px;">
   <div style="display:flex;gap:8px;margin-bottom:8px;">
-    <button type="button" onclick="toggleEmojiPicker()" style="padding:10px 14px;font-size:20px;">😊</button>
-    <button type="button" onclick="document.getElementById('fileInput').click()" style="padding:10px 14px;font-size:20px;">📎</button>
+    <button onclick="toggleEmojiPicker()" style="padding:10px 14px;font-size:20px;">😊</button>
+    <button onclick="document.getElementById('fileInput').click()" style="padding:10px 14px;font-size:20px;">📎</button>
   </div>
 
   <div style="display:flex;gap:8px;align-items:stretch;">
@@ -107,7 +74,7 @@ main{max-width:1000px;margin:auto;padding:25px 16px}
   </div>
 </div>
 
-<input id="fileInput" type="file" style="display:none;" onchange="sendFile(event)">
+<input id="fileInput" type="file" style="display:none;" onchange="sendFile()">
 
 <div id="emojiPicker" class="hidden" style="margin-top:8px;padding:14px;background:#fff;border:1px solid #e8c6cf;border-radius:18px;text-align:center;line-height:2.4;font-size:22px;">
 <span onclick="addEmoji('❤️')">❤️</span><span onclick="addEmoji('🩷')">🩷</span><span onclick="addEmoji('🧡')">🧡</span><span onclick="addEmoji('💛')">💛</span><span onclick="addEmoji('💚')">💚</span><span onclick="addEmoji('🩵')">🩵</span><span onclick="addEmoji('💙')">💙</span><span onclick="addEmoji('💜')">💜</span><span onclick="addEmoji('🤎')">🤎</span><span onclick="addEmoji('🖤')">🖤</span><span onclick="addEmoji('🤍')">🤍</span><span onclick="addEmoji('💕')">💕</span><span onclick="addEmoji('💞')">💞</span><span onclick="addEmoji('💓')">💓</span><span onclick="addEmoji('💗')">💗</span><span onclick="addEmoji('💖')">💖</span><span onclick="addEmoji('✨')">✨</span><span onclick="addEmoji('🌹')">🌹</span><span onclick="addEmoji('🦋')">🦋</span><span onclick="addEmoji('🥰')">🥰</span><span onclick="addEmoji('😍')">😍</span><span onclick="addEmoji('😘')">😘</span><span onclick="addEmoji('🥹')">🥹</span><span onclick="addEmoji('🥺')">🥺</span><span onclick="addEmoji('🫶')">🫶</span><span onclick="addEmoji('🧸')">🧸</span>
@@ -185,6 +152,7 @@ async function saveSharedEntry(type, title, text) {
     alert("Could not save. Please try again.");
   }
 }
+window.saveSharedEntry = saveSharedEntry;
 
 function startSharedEntries() {
   if (sharedEntriesUnsubscribe) sharedEntriesUnsubscribe();
@@ -472,7 +440,6 @@ function addEmoji(emoji) {
 }
 window.addEmoji = addEmoji;
 
-// Send Text Message
 async function sendChatMessage() {
   const input = document.getElementById("chatInput");
   if (!input) return;
@@ -492,22 +459,16 @@ async function sendChatMessage() {
     setDoc(doc(db, "typing", user.uid), { isTyping: false }, { merge: true });
   } catch (error) {
     console.error("Send message error:", error);
-    document.getElementById("chatError").textContent = "Could not send message. Please try again.";
   }
 }
 window.sendChatMessage = sendChatMessage;
 
-// Send File / Photo Attachment
-async function sendFile(event) {
-  const fileInput = event ? event.target : document.getElementById("fileInput");
-  if (!fileInput || !fileInput.files || !fileInput.files[0]) return;
-  
+async function sendFile() {
+  const fileInput = document.getElementById("fileInput");
+  if (!fileInput || !fileInput.files[0]) return;
   const file = fileInput.files[0];
   const user = auth.currentUser;
   if (!user) return;
-
-  const chatError = document.getElementById("chatError");
-  if (chatError) chatError.textContent = "Uploading file... ♡";
 
   try {
     const fileRef = ref(storage, "chat_files/" + Date.now() + "_" + file.name);
@@ -516,23 +477,18 @@ async function sendFile(event) {
 
     await addDoc(collection(db, "messages"), {
       text: file.name,
-      fileURL: fileURL,
-      fileType: file.type || "application/octet-stream",
+      fileURL,
+      fileType: file.type,
       uid: user.uid,
       createdAt: serverTimestamp(),
       reactions: {}
     });
-    
     fileInput.value = "";
-    if (chatError) chatError.textContent = "";
   } catch (error) {
     console.error("File upload error:", error);
-    if (chatError) chatError.textContent = "Failed to send file. Please check Firebase Storage rules.";
   }
 }
 window.sendFile = sendFile;
-
-let openPopoverId = null;
 
 let chatUnsubscribe = null;
 function startChat() {
@@ -556,7 +512,6 @@ function startChat() {
       row.style.margin = "12px 0";
 
       const bubble = document.createElement("div");
-      bubble.style.position = "relative";
       bubble.style.maxWidth = "80%";
       bubble.style.padding = "10px 15px";
       bubble.style.borderRadius = isMine ? "20px 20px 5px 20px" : "20px 20px 20px 5px";
@@ -564,37 +519,57 @@ function startChat() {
       bubble.style.color = "#593743";
       bubble.style.boxShadow = "0 3px 10px #75485815";
 
-      const headerRow = document.createElement("div");
-      headerRow.style.display = "flex";
-      headerRow.style.justifyContent = "space-between";
-      headerRow.style.alignItems = "center";
-      headerRow.style.gap = "10px";
-
       const name = document.createElement("small");
       name.textContent = isMine ? "Me ♡" : "You ♡";
+      name.style.display = "block";
       name.style.fontWeight = "bold";
+      name.style.marginBottom = "5px";
 
-      // Reaction Heart Trigger Button
-      const heartTrigger = document.createElement("button");
-      heartTrigger.className = "reaction-trigger-btn";
-      heartTrigger.textContent = "❤️";
-      heartTrigger.title = "React to message";
+      const message = document.createElement("div");
+      message.style.whiteSpace = "pre-wrap";
+      message.style.lineHeight = "1.5";
 
-      // Reaction Popover Bubble
-      const popover = document.createElement("div");
-      popover.className = "reaction-popover hidden";
-      popover.id = "popover-" + messageDoc.id;
+      if (data.fileURL) {
+        if (data.fileType && data.fileType.startsWith("image/")) {
+          const image = document.createElement("img");
+          image.src = data.fileURL;
+          image.alt = data.text || "Our memory";
+          image.style.maxWidth = "220px";
+          image.style.maxHeight = "300px";
+          image.style.borderRadius = "15px";
+          image.style.display = "block";
+          image.style.cursor = "pointer";
+          image.onclick = () => window.open(data.fileURL, "_blank");
+          message.appendChild(image);
+        } else {
+          const link = document.createElement("a");
+          link.href = data.fileURL;
+          link.target = "_blank";
+          link.textContent = "📎 " + data.text;
+          link.style.color = "#a94763";
+          link.style.fontWeight = "bold";
+          message.appendChild(link);
+        }
+      } else {
+        message.textContent = data.text || "";
+      }
 
-      const reactionOptions = ["❤️", "👍", "🔥", "🥰", "😂"];
-      reactionOptions.forEach(emoji => {
-        const emojiSpan = document.createElement("span");
-        emojiSpan.className = "popover-emoji";
-        emojiSpan.textContent = emoji;
-        emojiSpan.onclick = async (e) => {
-          e.stopPropagation();
-          popover.classList.add("hidden");
-          openPopoverId = null;
+      const reactionsBox = document.createElement("div");
+      reactionsBox.style.display = "flex";
+      reactionsBox.style.flexWrap = "wrap";
+      reactionsBox.style.marginTop = "6px";
 
+      const availableReactions = ["❤️", "👍", "🔥", "🥰", "😂"];
+      availableReactions.forEach(emoji => {
+        const btn = document.createElement("button");
+        btn.className = "reaction-btn";
+        const counts = data.reactions || {};
+        const reactedUsers = counts[emoji] || [];
+        const hasReacted = reactedUsers.includes(user.uid);
+        if (hasReacted) btn.classList.add("active");
+        btn.textContent = `${emoji} ${reactedUsers.length > 0 ? reactedUsers.length : ""}`;
+
+        btn.onclick = async () => {
           const currentReactions = data.reactions || {};
           let currentList = currentReactions[emoji] || [];
           if (currentList.includes(user.uid)) {
@@ -605,105 +580,9 @@ function startChat() {
           currentReactions[emoji] = currentList;
           await updateDoc(doc(db, "messages", messageDoc.id), { reactions: currentReactions });
         };
-        popover.appendChild(emojiSpan);
+        reactionsBox.appendChild(btn);
       });
 
-      heartTrigger.onclick = (e) => {
-        e.stopPropagation();
-        const isHidden = popover.classList.contains("hidden");
-        document.querySelectorAll(".reaction-popover").forEach(p => p.classList.add("hidden"));
-        if (isHidden) {
-          popover.classList.remove("hidden");
-          openPopoverId = messageDoc.id;
-        } else {
-          openPopoverId = null;
-        }
-      };
-
-      headerRow.appendChild(name);
-      headerRow.appendChild(heartTrigger);
-      bubble.appendChild(popover);
-      bubble.appendChild(headerRow);
-
-      const message = document.createElement("div");
-      message.style.whiteSpace = "pre-wrap";
-      message.style.lineHeight = "1.5";
-      message.style.marginTop = "4px";
-
-      // Display Image / Audio / Video / File Attachment
-      if (data.fileURL) {
-        const fileType = data.fileType || "";
-        if (fileType.startsWith("image/")) {
-          const image = document.createElement("img");
-          image.src = data.fileURL;
-          image.alt = data.text || "Photo";
-          image.style.maxWidth = "100%";
-          image.style.maxHeight = "280px";
-          image.style.borderRadius = "14px";
-          image.style.display = "block";
-          image.style.marginTop = "6px";
-          image.style.cursor = "pointer";
-          image.onclick = () => window.open(data.fileURL, "_blank");
-          message.appendChild(image);
-        } else if (fileType.startsWith("audio/")) {
-          const audio = document.createElement("audio");
-          audio.controls = true;
-          audio.src = data.fileURL;
-          audio.style.marginTop = "6px";
-          audio.style.maxWidth = "100%";
-          message.appendChild(audio);
-        } else if (fileType.startsWith("video/")) {
-          const video = document.createElement("video");
-          video.controls = true;
-          video.src = data.fileURL;
-          video.style.maxWidth = "100%";
-          video.style.maxHeight = "260px";
-          video.style.borderRadius = "12px";
-          video.style.marginTop = "6px";
-          message.appendChild(video);
-        } else {
-          const link = document.createElement("a");
-          link.href = data.fileURL;
-          link.target = "_blank";
-          link.download = data.text || "File";
-          link.textContent = "📄 " + (data.text || "Download File");
-          link.style.color = "#a94763";
-          link.style.fontWeight = "bold";
-          link.style.textDecoration = "underline";
-          link.style.display = "inline-block";
-          link.style.marginTop = "6px";
-          message.appendChild(link);
-        }
-      } else {
-        message.textContent = data.text || "";
-      }
-      bubble.appendChild(message);
-
-      // Render Active Reactions Badges below message
-      const activeReactionsBox = document.createElement("div");
-      activeReactionsBox.className = "active-reactions-list";
-      const reactions = data.reactions || {};
-      
-      Object.keys(reactions).forEach(emoji => {
-        const uids = reactions[emoji] || [];
-        if (uids.length > 0) {
-          const badge = document.createElement("span");
-          const hasMine = uids.includes(user.uid);
-          badge.className = "active-reaction-badge" + (hasMine ? " mine" : "");
-          badge.textContent = `${emoji} ${uids.length}`;
-          badge.onclick = async () => {
-            let updatedList = uids.includes(user.uid) 
-              ? uids.filter(id => id !== user.uid)
-              : [...uids, user.uid];
-            reactions[emoji] = updatedList;
-            await updateDoc(doc(db, "messages", messageDoc.id), { reactions });
-          };
-          activeReactionsBox.appendChild(badge);
-        }
-      });
-      bubble.appendChild(activeReactionsBox);
-
-      // Time Stamp
       const time = document.createElement("small");
       if (data.createdAt && typeof data.createdAt.toDate === "function") {
         const date = data.createdAt.toDate();
@@ -716,42 +595,43 @@ function startChat() {
       time.style.marginTop = "4px";
       time.style.fontSize = "11px";
       time.style.opacity = "0.65";
+
+      bubble.appendChild(name);
+      bubble.appendChild(message);
+      bubble.appendChild(reactionsBox);
       bubble.appendChild(time);
 
-      // Edit & Delete Actions for sender
       if (isMine) {
         const actions = document.createElement("div");
         actions.style.display = "flex";
         actions.style.justifyContent = "flex-end";
         actions.style.gap = "4px";
-        actions.style.marginTop = "2px";
+        actions.style.marginTop = "4px";
 
-        if (!data.fileURL) {
-          const editButton = document.createElement("button");
-          editButton.textContent = "✏️";
-          editButton.style.background = "transparent";
-          editButton.style.border = "none";
-          editButton.style.cursor = "pointer";
-          editButton.style.fontSize = "12px";
-          editButton.onclick = async () => {
-            const newText = prompt("Edit your message:", data.text);
-            if (newText === null || newText.trim() === "") return;
-            await updateDoc(doc(db, "messages", messageDoc.id), { text: newText.trim() });
-          };
-          actions.appendChild(editButton);
-        }
+        const editButton = document.createElement("button");
+        editButton.textContent = "✏️";
+        editButton.style.background = "transparent";
+        editButton.style.border = "none";
+        editButton.style.cursor = "pointer";
+        editButton.style.fontSize = "13px";
+        editButton.onclick = async () => {
+          const newText = prompt("Edit your message:", data.text);
+          if (newText === null || newText.trim() === "") return;
+          await updateDoc(doc(db, "messages", messageDoc.id), { text: newText.trim() });
+        };
 
         const deleteButton = document.createElement("button");
         deleteButton.textContent = "🗑️";
         deleteButton.style.background = "transparent";
         deleteButton.style.border = "none";
         deleteButton.style.cursor = "pointer";
-        deleteButton.style.fontSize = "12px";
+        deleteButton.style.fontSize = "13px";
         deleteButton.onclick = async () => {
           if (!confirm("Delete this message? ♡")) return;
           await deleteDoc(doc(db, "messages", messageDoc.id));
         };
 
+        actions.appendChild(editButton);
         actions.appendChild(deleteButton);
         bubble.appendChild(actions);
       }
@@ -759,17 +639,9 @@ function startChat() {
       row.appendChild(bubble);
       chatMessages.appendChild(row);
     });
-    
-    // Auto-scroll to bottom of chat
     chatMessages.scrollTop = chatMessages.scrollHeight;
   });
 }
-
-// Global click handler to close open reaction popovers when clicking outside
-document.addEventListener("click", () => {
-  document.querySelectorAll(".reaction-popover").forEach(p => p.classList.add("hidden"));
-  openPopoverId = null;
-});
 </script>
 </body>
 </html>
