@@ -39,7 +39,7 @@ main{max-width:1000px;margin:auto;padding:25px 16px}.top{text-align:center;paddi
   <div class="subtitle">A place for our words, memories & little moments.</div>
   <div style="margin-top:10px;font-size:14px;color:#8d6973;">
     <span id="partnerStatusIndicator" class="status-badge"></span>
-    <span id="partnerStatusText">Partner is offline</span>
+    <span id="partnerStatusText">Partner status</span>
   </div>
   <button onclick="logout()" style="margin-top:15px;background:#a64c62;">
     Leave our little world ♡
@@ -115,7 +115,7 @@ main{max-width:1000px;margin:auto;padding:25px 16px}.top{text-align:center;paddi
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, updateDoc, doc, deleteDoc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, updateDoc, doc, deleteDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-storage.js";
 
 const firebaseConfig = {
@@ -128,9 +128,6 @@ const firebaseConfig = {
   appId: "1:204255083251:web:abd61857c1974b45d11586",
   measurementId: "G-XSLR9G2H8X"
 };
-
-const MY_UID = "nU2e103h6rYT9ZkQrTZ7a2hCcIk2";
-const HIS_UID = "mTnX5HUrmeSevuUZVjTDQ7jA9wn1";
 
 const appFirebase = initializeApp(firebaseConfig);
 const auth = getAuth(appFirebase);
@@ -231,20 +228,21 @@ function unlock() {
 
   signInWithEmailAndPassword(auth, email, password)
     .then(userCredential => {
-      const user = userCredential.user;
-      if (user.uid !== MY_UID && user.uid !== HIS_UID) {
-        errorBox.textContent = "This account is not allowed here. ♡";
-        signOut(auth);
-        return;
-      }
       errorBox.textContent = "";
       login.classList.add("hidden");
       app.classList.remove("hidden");
     })
     .catch(error => {
-      if (error.code === "auth/invalid-credential") errorBox.textContent = "Email or password is incorrect ♡";
-      else if (error.code === "auth/invalid-email") errorBox.textContent = "Please enter a valid email ♡";
-      else errorBox.textContent = "Login error: " + error.code;
+      console.error("LOGIN ERROR:", error.code, error.message);
+      if (error.code === "auth/invalid-credential" || error.code === "auth/wrong-password") {
+        errorBox.textContent = "Email or password is incorrect ♡";
+      } else if (error.code === "auth/invalid-email") {
+        errorBox.textContent = "Please enter a valid email ♡";
+      } else if (error.code === "auth/user-not-found") {
+        errorBox.textContent = "This email is not registered in Firebase ♡";
+      } else {
+        errorBox.textContent = "Login error: " + error.message;
+      }
     });
 }
 window.unlock = unlock;
@@ -264,11 +262,7 @@ onAuthStateChanged(auth, user => {
     app.classList.add("hidden");
     return;
   }
-  if (user.uid !== MY_UID && user.uid !== HIS_UID) {
-    signOut(auth);
-    err.textContent = "This account is not allowed here. ♡";
-    return;
-  }
+
   login.classList.add("hidden");
   app.classList.remove("hidden");
   
@@ -291,7 +285,6 @@ function loadAll() {
   loadSong();
 }
 
-// Presence & Typing System
 function setupPresence(uid) {
   const presenceRef = doc(db, "presence", uid);
   setDoc(presenceRef, { online: true, lastSeen: serverTimestamp() }, { merge: true });
@@ -300,14 +293,19 @@ function setupPresence(uid) {
     setDoc(presenceRef, { online: false, lastSeen: serverTimestamp() }, { merge: true });
   });
 
-  const partnerUid = (uid === MY_UID) ? HIS_UID : MY_UID;
-  onSnapshot(doc(db, "presence", partnerUid), docSnap => {
-    const data = docSnap.data();
+  onSnapshot(collection(db, "presence"), snapshot => {
+    let activePartner = false;
+    snapshot.forEach(docSnap => {
+      if (docSnap.id !== uid && docSnap.data().online) {
+        activePartner = true;
+      }
+    });
+
     const badge = document.getElementById("partnerStatusIndicator");
     const text = document.getElementById("partnerStatusText");
     if (!badge || !text) return;
 
-    if (data && data.online) {
+    if (activePartner) {
       badge.className = "status-badge online";
       text.textContent = "Partner is online ♡";
     } else {
@@ -316,11 +314,17 @@ function setupPresence(uid) {
     }
   });
 
-  onSnapshot(doc(db, "typing", partnerUid), docSnap => {
-    const data = docSnap.data();
+  onSnapshot(collection(db, "typing"), snapshot => {
+    let partnerTyping = false;
+    snapshot.forEach(docSnap => {
+      if (docSnap.id !== uid && docSnap.data().isTyping) {
+        partnerTyping = true;
+      }
+    });
+
     const typingEl = document.getElementById("typingIndicator");
     if (!typingEl) return;
-    if (data && data.isTyping) {
+    if (partnerTyping) {
       typingEl.textContent = "Your love is typing... ✍️";
     } else {
       typingEl.textContent = "";
@@ -440,7 +444,6 @@ function addEmoji(emoji) {
 }
 window.addEmoji = addEmoji;
 
-// Chat Realtime & Actions
 async function sendChatMessage() {
   const input = document.getElementById("chatInput");
   if (!input) return;
@@ -555,7 +558,6 @@ function startChat() {
         message.textContent = data.text || "";
       }
 
-      // Reactions container
       const reactionsBox = document.createElement("div");
       reactionsBox.style.display = "flex";
       reactionsBox.style.flexWrap = "wrap";
@@ -610,7 +612,6 @@ function startChat() {
         actions.style.gap = "4px";
         actions.style.marginTop = "4px";
 
-        // Edit button
         const editButton = document.createElement("button");
         editButton.textContent = "✏️";
         editButton.style.background = "transparent";
@@ -623,7 +624,6 @@ function startChat() {
           await updateDoc(doc(db, "messages", messageDoc.id), { text: newText.trim() });
         };
 
-        // Delete button
         const deleteButton = document.createElement("button");
         deleteButton.textContent = "🗑️";
         deleteButton.style.background = "transparent";
