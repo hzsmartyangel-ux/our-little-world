@@ -115,7 +115,7 @@ main{max-width:1000px;margin:auto;padding:25px 16px}.top{text-align:center;paddi
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, updateDoc, doc, deleteDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, updateDoc, doc, deleteDoc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-storage.js";
 
 const firebaseConfig = {
@@ -440,6 +440,7 @@ function addEmoji(emoji) {
 }
 window.addEmoji = addEmoji;
 
+// Chat Realtime & Actions
 async function sendChatMessage() {
   const input = document.getElementById("chatInput");
   if (!input) return;
@@ -554,6 +555,7 @@ function startChat() {
         message.textContent = data.text || "";
       }
 
+      // Reactions container
       const reactionsBox = document.createElement("div");
       reactionsBox.style.display = "flex";
       reactionsBox.style.flexWrap = "wrap";
@@ -608,6 +610,7 @@ function startChat() {
         actions.style.gap = "4px";
         actions.style.marginTop = "4px";
 
+        // Edit button
         const editButton = document.createElement("button");
         editButton.textContent = "✏️";
         editButton.style.background = "transparent";
@@ -620,6 +623,7 @@ function startChat() {
           await updateDoc(doc(db, "messages", messageDoc.id), { text: newText.trim() });
         };
 
+        // Delete button
         const deleteButton = document.createElement("button");
         deleteButton.textContent = "🗑️";
         deleteButton.style.background = "transparent";
