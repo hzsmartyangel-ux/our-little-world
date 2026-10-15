@@ -2,214 +2,263 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Our Little World ♡</title>
 <style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Georgia,serif;color:#593743;background:#fff6f7}
-.hidden{display:none!important}
-.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#f6c7d2,#eadcf0)}
-.card{width:min(560px,100%);padding:40px 25px;border-radius:28px;background:#fffafadd;box-shadow:0 20px 60px #74435430;text-align:center}
-.heart{font-size:42px}
-.script{font-size:clamp(42px,10vw,68px);font-style:italic;color:#a94763;margin:8px}
-.login{max-width:390px;margin:auto}
-input,textarea{width:100%;padding:14px;border:1px solid #e4bbc7;border-radius:18px;font:16px Georgia;background:#fff;color:#593743}
-.login input{border-radius:30px;text-align:center;margin-bottom:10px}
-button{padding:12px 20px;border:0;border-radius:25px;background:#c95e7b;color:#fff;font-size:15px;cursor:pointer}
-.login button{width:100%;margin-top:6px}
-.error{min-height:22px;color:#a94763;margin-top:8px}
-main{max-width:1000px;margin:auto;padding:25px 16px}
-.top{text-align:center;padding:25px 0}
-.top h1{font-size:38px;margin:5px}
-.subtitle{font-style:italic}
-.tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:20px 0}
-.tabs button{background:#fff;color:#87495b;border:1px solid #e8c6cf;position:relative}
-.tabs button.active{background:#c95e7b;color:#fff}
-.badge{position:absolute;top:-6px;right:-4px;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:#e0334f;color:#fff;font-size:12px;line-height:20px;text-align:center}
-.panel{background:#fffafd;padding:25px;border-radius:25px;box-shadow:0 8px 30px #75485812}
-.panel h2{margin-top:0}
-.editor{display:grid;gap:10px}
-.entry{padding:16px;margin-top:14px;border-radius:18px;background:#fff0f3;border:1px solid #f1d5dc}
-.entry small{display:block;color:#8d6973;margin-bottom:7px}
-.entry p{white-space:pre-wrap;line-height:1.6}
-.entry a{color:#a94763}
-.actions{display:flex;gap:8px;flex-wrap:wrap}
-.danger{background:#a64c62}
-.quote{text-align:center;margin:30px 0;padding:22px;background:#f2cbd6;border-radius:22px;font-style:italic}
-
-/* ===== Chat (full screen, sits above the keyboard) ===== */
-#chat{position:fixed;left:0;top:0;width:100%;height:100vh;height:100dvh;z-index:50;display:flex;flex-direction:column;padding:0;margin:0;border-radius:0;overflow:hidden;background:#fffafd;touch-action:manipulation}
-body.chatopen{overflow:hidden;overscroll-behavior:none}
-.chat-head{display:flex;align-items:center;gap:12px;padding:10px 14px;background:linear-gradient(135deg,#f6c7d2,#eadcf0);border-bottom:1px solid #f1d5dc;flex:none}
-.back{background:#fff;color:#a94763;width:40px;height:40px;padding:0;border-radius:50%;font-size:20px;flex:none}
-.avatar{width:42px;height:42px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;color:#c95e7b;position:relative;flex:none}
-.avatar .dot{position:absolute;right:0;bottom:0;width:13px;height:13px;border-radius:50%;background:#aaa;border:2px solid #fff}
-.avatar .dot.on{background:#2ecc71}
-.chat-name{font-weight:bold;font-size:17px}
-.chat-status{font-size:13px;opacity:.8;font-style:italic}
-.chat-status.on{color:#1f9d55;opacity:1}
-.chat-status.typing{color:#a94763;opacity:1;font-weight:bold}
-#chatMessages{flex:1;min-height:0;overflow-y:auto;padding:14px;background:linear-gradient(135deg,#fff6f8,#f8edf5);-webkit-overflow-scrolling:touch}
-.daysep{text-align:center;margin:14px 0 6px}
-.daysep span{background:#f2cbd6;color:#87495b;font-size:12px;padding:4px 12px;border-radius:12px}
-.row{display:flex;align-items:flex-end;gap:4px;margin:3px 0 14px}
-.row.mine{justify-content:flex-end}
-.bwrap{max-width:80%;min-width:0}
-.bubble{padding:8px 12px 6px;border-radius:20px 20px 20px 5px;background:#f1e3e8;color:#593743;box-shadow:0 3px 10px #75485815;cursor:pointer;word-wrap:break-word;overflow-wrap:anywhere;-webkit-tap-highlight-color:transparent}
-.row.mine .bubble{background:#e7bfd0;border-radius:20px 20px 5px 20px}
-.bubble .txt{white-space:pre-wrap;line-height:1.45}
-.bubble .meta{display:flex;justify-content:flex-end;align-items:center;gap:4px;font-size:11px;opacity:.7;margin-top:3px}
-.tick{font-size:12px;letter-spacing:-3px}
-.tick.seen{color:#2b8ae0;opacity:1}
-.rbtn{flex:none;width:30px;height:30px;padding:0;border-radius:50%;background:#fff;border:1px solid #e8c6cf;color:#a94763;font-size:15px;opacity:.75}
-.row.mine .rbtn{order:-1}
-.bubble img.pic,.bubble video.pic{display:block;max-width:240px;max-height:320px;width:100%;border-radius:14px;margin-bottom:5px;cursor:zoom-in;object-fit:cover}
-.filebox{display:flex;align-items:center;gap:10px;padding:8px 10px;margin-bottom:5px;background:#ffffff90;border-radius:12px;color:#a94763;text-decoration:none;font-weight:bold}
-.filebox .ico{font-size:26px}
-.filebox small{display:block;font-weight:normal;color:#8d6973}
-.quoted{border-left:4px solid #c95e7b;background:#ffffff80;padding:5px 8px;border-radius:8px;margin-bottom:6px;font-size:13px;cursor:pointer}
-.quoted b{display:block;color:#a94763;font-size:12px}
-.reacts{display:flex;gap:4px;flex-wrap:wrap;margin:-8px 8px 0;position:relative;z-index:1}
-.row.mine .reacts{justify-content:flex-end}
-.chip{background:#fff;border:1px solid #e8c6cf;border-radius:14px;padding:1px 7px;font-size:15px;cursor:pointer;box-shadow:0 2px 6px #75485820}
-.chip.me{background:#ffe3ec;border-color:#c95e7b}
-.chip small{font-size:11px;margin-left:2px}
-#msgMenu{display:none;position:fixed;z-index:150;background:#fff;border:1px solid #e8c6cf;border-radius:22px;padding:6px 8px;box-shadow:0 8px 24px #74435455;white-space:nowrap}
-#msgMenu.open{display:block}
-#msgMenu .emojis{display:flex;gap:2px}
-#msgMenu .emojis span{font-size:27px;padding:3px 5px;cursor:pointer;border-radius:50%}
-#msgMenu .emojis span.picked{background:#ffe3ec}
-#msgMenu .acts{display:flex;gap:6px;border-top:1px solid #f1d5dc;margin-top:4px;padding-top:6px;justify-content:center}
-#msgMenu .acts button{background:#fff0f3;color:#87495b;padding:6px 11px;font-size:13px;border-radius:14px}
-#typingRow{margin:4px 0 8px}
-.typing-bubble{display:inline-flex;gap:5px;padding:12px 16px;background:#f1e3e8;border-radius:20px 20px 20px 5px;box-shadow:0 3px 10px #75485815}
-.typing-bubble span{width:8px;height:8px;border-radius:50%;background:#a94763;opacity:.35;animation:blink 1.2s infinite}
-.typing-bubble span:nth-child(2){animation-delay:.2s}
-.typing-bubble span:nth-child(3){animation-delay:.4s}
-@keyframes blink{0%,60%,100%{opacity:.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-4px)}}
-.bar{display:flex;align-items:center;gap:10px;padding:8px 14px;background:#fff0f3;border-top:1px solid #f1d5dc;font-size:14px;flex:none}
-.bar .grow{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.bar .x{background:transparent;color:#a94763;padding:4px 8px;font-size:20px}
-.bar img{width:44px;height:44px;object-fit:cover;border-radius:8px}
-.progress{height:5px;background:#f1d5dc;border-radius:3px;overflow:hidden;margin-top:4px}
-.progress i{display:block;height:100%;width:0;background:#c95e7b;transition:width .15s}
-.composer{display:flex;gap:6px;align-items:flex-end;padding:10px 12px;padding-bottom:max(10px,env(safe-area-inset-bottom));background:#fffafd;border-top:1px solid #f1d5dc;flex:none}
-.composer .ib{background:#fff;border:1px solid #e8c6cf;padding:0;width:44px;height:44px;font-size:21px;border-radius:50%;flex:none}
-.composer textarea{flex:1;min-width:0;height:44px;max-height:120px;resize:none;padding:11px 16px;border-radius:24px}
-.composer .send{width:46px;height:46px;padding:0;border-radius:50%;font-size:20px;flex:none;touch-action:manipulation}.composer .send:disabled{opacity:.65}
-#emojiPicker{padding:10px;background:#fff;border-top:1px solid #e8c6cf;text-align:center;max-height:190px;overflow-y:auto;font-size:25px;line-height:1.9;flex:none}
-#emojiPicker span{cursor:pointer;padding:0 3px}
-#chat .error{padding:0 14px 6px;margin:0;min-height:0;flex:none}
-#lightbox{position:fixed;inset:0;background:#000d;display:flex;align-items:center;justify-content:center;z-index:300;padding:15px;cursor:zoom-out}
-#lightbox img{max-width:100%;max-height:100%;border-radius:10px}
-#modal{position:fixed;inset:0;background:#0006;display:flex;align-items:center;justify-content:center;z-index:400;padding:20px}
-#modal .box{background:#fffafd;border-radius:22px;padding:24px;max-width:340px;width:100%;text-align:center;box-shadow:0 20px 60px #0005}
-#modal .box p{margin:0 0 18px;font-size:17px}
-#modal .box .btns{display:flex;gap:10px;justify-content:center}
-#modal .box .cancel{background:#fff;color:#87495b;border:1px solid #e8c6cf}
-.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:100px;max-width:90%;background:#593743;color:#fff;padding:10px 16px;border-radius:18px;font-size:14px;z-index:500;box-shadow:0 6px 20px #0004}
-@media(max-width:520px){.panel{padding:18px}.bubble img.pic,.bubble video.pic{max-width:210px}.bwrap{max-width:76%}}
+*{box-sizing:border-box}body{margin:0;font-family:Georgia,serif;color:#593743;background:#fff6f7}
+.hidden{display:none!important}.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#f6c7d2,#eadcf0)}
+.card{width:min(560px,100%);padding:40px 25px;border-radius:28px;background:#fffafadd;box-shadow:0 20px 60px #74435430;text-align:center}.heart{font-size:42px}.script{font-size:clamp(42px,10vw,68px);font-style:italic;color:#a94763;margin:8px}.login{max-width:390px;margin:auto}input,textarea{width:100%;padding:14px;border:1px solid #e4bbc7;border-radius:18px;font:16px Georgia;background:#fff}.login input{border-radius:30px;text-align:center}button{padding:12px 20px;border:0;border-radius:25px;background:#c95e7b;color:white;font-size:15px;cursor:pointer} .login button{width:100%;margin-top:10px}.error{min-height:22px;color:#a94763;margin-top:8px}
+main{max-width:1000px;margin:auto;padding:25px 16px}.top{text-align:center;padding:25px 0}.top h1{font-size:38px;margin:5px}.subtitle{font-style:italic}.tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:20px 0}.tabs button{background:#fff;color:#87495b;border:1px solid #e8c6cf}.tabs button.active{background:#c95e7b;color:white}.panel{background:#fffafd;padding:25px;border-radius:25px;box-shadow:0 8px 30px #75485812}.panel h2{margin-top:0}.editor{display:grid;gap:10px}.entry{padding:16px;margin-top:14px;border-radius:18px;background:#fff0f3;border:1px solid #f1d5dc}.entry small{display:block;color:#8d6973;margin-bottom:7px}.entry p{white-space:pre-wrap;line-height:1.6}.actions{display:flex;gap:8px;flex-wrap:wrap}.danger{background:#a64c62}.quote{text-align:center;margin:30px 0;padding:22px;background:#f2cbd6;border-radius:22px;font-style:italic}
 </style>
 </head>
 <body>
-
 <section id="login" class="hero">
 <div class="card"><div class="heart">♡</div><div class="script">our little world</div>
-<p>A private little place for you &amp; me. 🤍</p>
+<p>A private little place for you & me. 🤍</p>
+
 <div class="login">
   <p>🔐 Welcome to our little world</p>
-  <input id="email" type="email" placeholder="Your email" autocomplete="username">
-  <input id="password" type="password" placeholder="Your password" autocomplete="current-password">
+
+  <input id="email" type="email" placeholder="Your email">
+
+  <input id="password" type="password" placeholder="Your password">
+
   <button onclick="unlock()">ENTER OUR WORLD ♡</button>
+
   <div id="err" class="error"></div>
 </div>
-<p>Just you &amp; me, always. 🦋</p><div style="font-size:11px;opacity:.5">version 3</div></div>
+<p>Just you & me, always. 🦋</p></div>
 </section>
 
 <main id="app" class="hidden">
 <div id="welcomeMessage" style="text-align:center;margin:10px auto 20px;padding:15px 20px;background:#f2cbd6;border-radius:20px;font-style:italic;max-width:600px;">
   Welcome back to our little world, my love. ♡
-</div>
-<div class="top">
+</div><div class="top">
   <h1>Our Little World ❤️</h1>
-  <div class="subtitle">A place for our words, memories &amp; little moments.</div>
-  <button onclick="logout()" style="margin-top:15px;background:#a64c62;">Leave our little world ♡</button>
-  <div style="font-size:11px;opacity:.5;margin-top:8px">version 3</div>
+  <div class="subtitle">A place for our words, memories & little moments.</div>
+  <button onclick="logout()" style="margin-top:15px;background:#a64c62;">
+    Leave our little world ♡
+  </button>
 </div>
-
 <div class="tabs">
-  <button class="active" onclick="show('letters',this)">💌 Letters</button>
-  <button id="chatTab" onclick="show('chat',this)">💬 Our Chat<span id="unreadBadge" class="badge hidden">0</span></button>
-  <button onclick="show('memories',this)">📸 Memories</button>
-  <button onclick="show('moments',this)">🗓️ Moments</button>
-  <button onclick="show('words',this)">🤍 Words</button>
-  <button onclick="show('song',this)">🎵 Our Song</button>
+<button class="active" onclick="show('letters',this)">💌 Letters</button>
+  <button onclick="show('chat',this)">💬 Our Chat</button>
+<button onclick="show('memories',this)">📸 Memories</button>
+<button onclick="show('moments',this)">🗓️ Moments</button>
+<button onclick="show('words',this)">🤍 Words</button>
+<button onclick="show('song',this)">🎵 Our Song</button>
+</div>
+<section id="chat" class="panel hidden">
+<h2>💬 Our Little Chat</h2>
+
+<div id="chatMessages"
+style="height:55vh;overflow-y:auto;padding:15px;background:linear-gradient(135deg,#fff6f8,#f8edf5);border-radius:25px;box-shadow:inset 0 0 20px #75485810;">
 </div>
 
-<!-- ============ CHAT ============ -->
-<section id="chat" class="panel hidden">
-  <div class="chat-head">
-    <button class="back" onclick="closeChat()" title="Back">←</button>
-    <div class="avatar">♡<span id="partnerDot" class="dot"></span></div>
-    <div>
-      <div class="chat-name">My love ♡ <span style="font-size:10px;opacity:.5;font-weight:normal">v3</span></div>
-      <div id="partnerStatus" class="chat-status">offline</div>
-    </div>
+<div style="margin-top:12px;">
+
+ <div style="margin-top:12px;">
+
+  <div style="display:flex;gap:8px;margin-bottom:8px;">
+    
+    <button onclick="toggleEmojiPicker()"
+            style="padding:10px 14px;font-size:20px;">
+      😊
+    </button>
+
+    <button onclick="document.getElementById('fileInput').click()"
+            style="padding:10px 14px;font-size:20px;">
+      📎
+    </button>
+
   </div>
 
-  <div id="chatMessages">
-    <div id="msgList"></div>
-    <div id="typingRow" class="hidden"><div class="typing-bubble"><span></span><span></span><span></span></div></div>
+  <div style="display:flex;gap:8px;align-items:stretch;">
+
+    <textarea id="chatInput"
+              placeholder="Write something to me..."
+              rows="2"
+              style="flex:1;min-width:0;height:55px;resize:none;"></textarea>
+
+    <button onclick="sendChatMessage()"
+            style="min-width:80px;">
+      Send ♡
+    </button>
+
   </div>
 
-  <div id="replyBar" class="bar hidden">
-    <div class="grow"><b id="replyWho" style="color:#a94763"></b><br><span id="replyTxt"></span></div>
-    <button class="x" onclick="cancelReply()">✕</button>
-  </div>
+</div>
 
-  <div id="editBar" class="bar hidden">
-    <div class="grow"><b style="color:#a94763">✏️ Editing message</b><br><span id="editTxt"></span></div>
-    <button class="x" onclick="cancelEdit()">✕</button>
-  </div>
+<input id="fileInput"
+       type="file"
+       style="display:none;"
+       onchange="sendFile()">
 
-  <div id="attachBar" class="bar hidden">
-    <img id="attachThumb" class="hidden" alt="">
-    <span id="attachIco" style="font-size:28px" class="hidden">📎</span>
-    <div class="grow"><span id="attachName"></span><div class="progress hidden" id="attachProg"><i id="attachProgBar"></i></div></div>
-    <button class="x" onclick="clearAttachment()">✕</button>
-  </div>
+<div id="emojiPicker" class="hidden"
+style="margin-top:8px;padding:14px;background:#fff;border:1px solid #e8c6cf;border-radius:18px;text-align:center;line-height:2.4;font-size:22px;">
 
-  <div id="emojiPicker" class="hidden"></div>
-  <div id="chatError" class="error"></div>
+<!-- 💗 Hearts -->
+<span onclick="addEmoji('❤️')">❤️</span>
+<span onclick="addEmoji('🩷')">🩷</span>
+<span onclick="addEmoji('🧡')">🧡</span>
+<span onclick="addEmoji('💛')">💛</span>
+<span onclick="addEmoji('💚')">💚</span>
+<span onclick="addEmoji('🩵')">🩵</span>
+<span onclick="addEmoji('💙')">💙</span>
+<span onclick="addEmoji('💜')">💜</span>
+<span onclick="addEmoji('🤎')">🤎</span>
+<span onclick="addEmoji('🖤')">🖤</span>
+<span onclick="addEmoji('🩶')">🩶</span>
+<span onclick="addEmoji('🤍')">🤍</span>
+<span onclick="addEmoji('💔')">💔</span>
+<span onclick="addEmoji('❤️‍🔥')">❤️‍🔥</span>
+<span onclick="addEmoji('❤️‍🩹')">❤️‍🩹</span>
+<span onclick="addEmoji('💕')">💕</span>
+<span onclick="addEmoji('💞')">💞</span>
+<span onclick="addEmoji('💓')">💓</span>
+<span onclick="addEmoji('💗')">💗</span>
+<span onclick="addEmoji('💖')">💖</span>
+<span onclick="addEmoji('💘')">💘</span>
+<span onclick="addEmoji('💝')">💝</span>
+<span onclick="addEmoji('💟')">💟</span>
+<span onclick="addEmoji('❣️')">❣️</span>
+<span onclick="addEmoji('♥️')">♥️</span>
 
-  <div class="composer">
-    <button class="ib" onclick="toggleEmojiPicker()" title="Emoji">😊</button>
-    <button class="ib" onclick="document.getElementById('photoInput').click()" title="Photo / video">📷</button>
-    <button class="ib" onclick="document.getElementById('fileInput').click()" title="File">📎</button>
-    <textarea id="chatInput" placeholder="Write something to me..." rows="1"></textarea>
-    <button id="sendBtn" class="send" onclick="sendChatMessage()" title="Send">➤</button>
-  </div>
-  <input id="photoInput" type="file" accept="image/*,video/*" class="hidden">
-  <input id="fileInput" type="file" class="hidden">
+<!-- 😍 Feelings -->
+<span onclick="addEmoji('🥰')">🥰</span>
+<span onclick="addEmoji('😍')">😍</span>
+<span onclick="addEmoji('😘')">😘</span>
+<span onclick="addEmoji('😚')">😚</span>
+<span onclick="addEmoji('😙')">😙</span>
+<span onclick="addEmoji('😻')">😻</span>
+<span onclick="addEmoji('😊')">😊</span>
+<span onclick="addEmoji('☺️')">☺️</span>
+<span onclick="addEmoji('😉')">😉</span>
+<span onclick="addEmoji('😏')">😏</span>
+<span onclick="addEmoji('🥹')">🥹</span>
+<span onclick="addEmoji('🥺')">🥺</span>
+<span onclick="addEmoji('😭')">😭</span>
+<span onclick="addEmoji('😂')">😂</span>
+<span onclick="addEmoji('🤣')">🤣</span>
+<span onclick="addEmoji('🤭')">🤭</span>
+<span onclick="addEmoji('🙈')">🙈</span>
+<span onclick="addEmoji('🙉')">🙉</span>
+<span onclick="addEmoji('🙊')">🙊</span>
+<span onclick="addEmoji('😇')">😇</span>
+<span onclick="addEmoji('😌')">😌</span>
+<span onclick="addEmoji('🤗')">🤗</span>
+<span onclick="addEmoji('🫠')">🫠</span>
+<span onclick="addEmoji('😎')">😎</span>
+
+<!-- 🫶 Hands -->
+<span onclick="addEmoji('🫶')">🫶</span>
+<span onclick="addEmoji('🫂')">🫂</span>
+<span onclick="addEmoji('👍')">👍</span>
+<span onclick="addEmoji('👏')">👏</span>
+<span onclick="addEmoji('🙌')">🙌</span>
+<span onclick="addEmoji('✌️')">✌️</span>
+<span onclick="addEmoji('🤞')">🤞</span>
+<span onclick="addEmoji('👉')">👉</span>
+<span onclick="addEmoji('👈')">👈</span>
+<span onclick="addEmoji('☝️')">☝️</span>
+<span onclick="addEmoji('🙏')">🙏</span>
+
+<!-- 🌹 Romantic -->
+<span onclick="addEmoji('🌹')">🌹</span>
+<span onclick="addEmoji('🌷')">🌷</span>
+<span onclick="addEmoji('🌸')">🌸</span>
+<span onclick="addEmoji('🌺')">🌺</span>
+<span onclick="addEmoji('🌻')">🌻</span>
+<span onclick="addEmoji('💐')">💐</span>
+<span onclick="addEmoji('🦋')">🦋</span>
+<span onclick="addEmoji('✨')">✨</span>
+<span onclick="addEmoji('💫')">💫</span>
+<span onclick="addEmoji('⭐')">⭐</span>
+<span onclick="addEmoji('🌙')">🌙</span>
+<span onclick="addEmoji('☀️')">☀️</span>
+<span onclick="addEmoji('🌈')">🌈</span>
+
+<!-- 🐻 Cute -->
+<span onclick="addEmoji('🐻')">🐻</span>
+<span onclick="addEmoji('🐰')">🐰</span>
+<span onclick="addEmoji('🐱')">🐱</span>
+<span onclick="addEmoji('🐶')">🐶</span>
+<span onclick="addEmoji('🐼')">🐼</span>
+<span onclick="addEmoji('🦊')">🦊</span>
+<span onclick="addEmoji('🐥')">🐥</span>
+<span onclick="addEmoji('🦄')">🦄</span>
+<span onclick="addEmoji('🧸')">🧸</span>
+
+<!-- 🎀 Cute & Celebration -->
+<span onclick="addEmoji('🎀')">🎀</span>
+<span onclick="addEmoji('🎁')">🎁</span>
+<span onclick="addEmoji('🎉')">🎉</span>
+<span onclick="addEmoji('🎊')">🎊</span>
+<span onclick="addEmoji('🥳')">🥳</span>
+<span onclick="addEmoji('💎')">💎</span>
+<span onclick="addEmoji('👑')">👑</span>
+<span onclick="addEmoji('🍓')">🍓</span>
+<span onclick="addEmoji('🍒')">🍒</span>
+<span onclick="addEmoji('🍫')">🍫</span>
+<span onclick="addEmoji('🍰')">🍰</span>
+<span onclick="addEmoji('☕')">☕</span>
+
+<!-- 💋 Romantic -->
+<span onclick="addEmoji('💋')">💋</span>
+<span onclick="addEmoji('💌')">💌</span>
+<span onclick="addEmoji('💍')">💍</span>
+<span onclick="addEmoji('💑')">💑</span>
+<span onclick="addEmoji('👩‍❤️‍👨')">👩‍❤️‍👨</span>
+<span onclick="addEmoji('👩‍❤️‍💋‍👨')">👩‍❤️‍💋‍👨</span>
+
+</div>
+
+<div id="chatError" class="error"></div>
+
 </section>
-
 <section id="letters" class="panel">
 <h2>💌 Letters to You</h2>
 <div class="editor"><textarea id="letterText" rows="5" placeholder="Write something from your heart..."></textarea><button onclick="addEntry('letters','letterText','letter')">Save this letter ♡</button></div>
 <div id="letterList"></div></section>
 
 <section id="memories" class="panel hidden">
-<img src="https://raw.githubusercontent.com/hzsmartyangel-ux/our-little-world/main/IMG20260726110434.jpg" alt="Our memory" style="width:100%;max-height:500px;object-fit:cover;border-radius:20px;margin-bottom:20px;">
-<h2>📸 Our Memories</h2>
-<div class="editor">
-  <input id="memoryTitle" placeholder="Memory title">
-  <textarea id="memoryText" rows="4" placeholder="Write about this memory..."></textarea>
-  <input type="file" id="memoryImage" accept="image/*">
-  <button onclick="addMemory()">Save memory ♡</button>
-</div>
-<div id="memoryList"></div>
-</section>
 
+<img src="https://raw.githubusercontent.com/hzsmartyangel-ux/our-little-world/main/IMG20260726110434.jpg"
+     alt="Our memory"
+     style="width:100%;max-height:500px;object-fit:cover;border-radius:20px;margin-bottom:20px;">
+
+<h2>📸 Our Memories</h2>
+
+<div class="editor">
+
+  <input
+    id="memoryTitle"
+    placeholder="Memory title"
+  >
+
+  <textarea
+    id="memoryText"
+    rows="4"
+    placeholder="Write about this memory..."
+  ></textarea>
+
+  <input
+    type="file"
+    id="memoryImage"
+    accept="image/*"
+  >
+
+  <button
+    onclick="addMemory()"
+  >
+    Save memory ♡
+  </button>
+
+</div>
+
+<div id="memoryList"></div>
+
+</section>
 <section id="moments" class="panel hidden">
 <h2>🗓️ Special Moments</h2><div class="editor"><input id="momentTitle" placeholder="Moment / date"><textarea id="momentText" rows="3" placeholder="Why is this moment special?"></textarea><button onclick="addEntry('moments','momentText','moment','momentTitle')">Save moment ♡</button></div><div id="momentList"></div></section>
 
@@ -217,993 +266,1750 @@ body.chatopen{overflow:hidden;overscroll-behavior:none}
 <h2>🤍 Words I Keep in My Heart</h2><div class="editor"><textarea id="wordText" rows="5" placeholder="Something you want him/her to read..."></textarea><button onclick="addEntry('words','wordText','word')">Save words ♡</button></div><div id="wordList"></div></section>
 
 <section id="song" class="panel hidden">
-<h2>🎵 Our Song</h2><div class="editor"><input id="songText" placeholder="Song name or YouTube/Spotify link"><button onclick="saveSong()">Save our song ♡</button></div><div id="songSaved" class="hidden"></div></section>
+<h2>🎵 Our Song</h2><div class="editor"><input id="songText" placeholder="Song name or YouTube/Spotify link"><button onclick="saveSong()">Save our song ♡</button></div><div id="songSaved" class="entry hidden"></div></section>
 
 <div class="quote">“Distance means so little when someone means so much.” ♡</div>
 </main>
-
-<div id="msgMenu"></div>
-<div id="lightbox" class="hidden" onclick="this.classList.add('hidden')"><img id="lightboxImg" alt=""></div>
-<div id="modal" class="hidden"><div class="box"><p id="modalText"></p><div class="btns"><button class="cancel" id="modalNo">Cancel</button><button class="danger" id="modalYes">Delete</button></div></div></div>
-
 <script type="module">
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut }
-  from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp,
-  updateDoc, setDoc, doc, deleteDoc, deleteField }
-  from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
-import { getStorage, ref, uploadBytesResumable, uploadBytes, getDownloadURL }
-  from "https://www.gstatic.com/firebasejs/12.1.0/firebase-storage.js";
+
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  query,
+  orderBy,
+  onSnapshot,
+  serverTimestamp,
+  updateDoc,
+  doc,
+  deleteDoc
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-storage.js";
+
 
 const firebaseConfig = {
+
   apiKey: "AIzaSyAIgT6npYKXzu_zCYdvzLZgGezkr5GoDZU",
+
   authDomain: "our-little-world-h.firebaseapp.com",
-  databaseURL: "https://our-little-world-h-default-rtdb.firebaseio.com",
+
+  databaseURL:
+    "https://our-little-world-h-default-rtdb.firebaseio.com",
+
   projectId: "our-little-world-h",
-  storageBucket: "our-little-world-h.firebasestorage.app",
+
+  storageBucket:
+    "our-little-world-h.firebasestorage.app",
+
   messagingSenderId: "204255083251",
-  appId: "1:204255083251:web:abd61857c1974b45d11586",
+
+  appId:
+    "1:204255083251:web:abd61857c1974b45d11586",
+
   measurementId: "G-XSLR9G2H8X"
 };
 
-const MY_UID  = "nU2e103h6rYT9ZkQrTZ7a2hCcIk2";
+
+const MY_UID = "nU2e103h6rYT9ZkQrTZ7a2hCcIk2";
+
 const HIS_UID = "mTnX5HUrmeSevuUZVjTDQ7jA9wn1";
 
+
 const appFirebase = initializeApp(firebaseConfig);
+
 const auth = getAuth(appFirebase);
+
 const db = getFirestore(appFirebase);
+
 const storage = getStorage(appFirebase);
 
-const $ = id => document.getElementById(id);
-const loginEl = $("login"), appEl = $("app"), errEl = $("err");
-const isAllowed = u => !!u && (u.uid === MY_UID || u.uid === HIS_UID);
-const myUid = () => (auth.currentUser ? auth.currentUser.uid : null);
-const partnerUid = () => (myUid() === MY_UID ? HIS_UID : MY_UID);
-const errText = e => (e && (e.code || e.message)) || String(e);
+// ==============================
+// Shared Entries - Firestore
+// ==============================
 
-/* =====================================================
-   SMALL UI HELPERS  (no alert/confirm/prompt: phones block them)
-===================================================== */
-function toast(msg) {
-  const t = document.createElement("div");
-  t.className = "toast"; t.textContent = msg;
-  document.body.appendChild(t);
-  setTimeout(() => t.remove(), 5000);
-}
-
-
-/* show any hidden JavaScript problem on screen */
-window.addEventListener("error", e => { try { toast("Error: " + (e.message || "unknown")); } catch (x) {} });
-window.addEventListener("unhandledrejection", e => { try { toast("Error: " + errText(e.reason)); } catch (x) {} });
-
-function askConfirm(message, yesLabel) {
-  return new Promise(resolve => {
-    const modal = $("modal");
-    $("modalText").textContent = message;
-    $("modalYes").textContent = yesLabel || "Delete";
-    modal.classList.remove("hidden");
-    const done = v => {
-      modal.classList.add("hidden");
-      $("modalYes").onclick = null; $("modalNo").onclick = null;
-      resolve(v);
-    };
-    $("modalYes").onclick = () => done(true);
-    $("modalNo").onclick = () => done(false);
-  });
-}
-
-function openLightbox(url) { $("lightboxImg").src = url; $("lightbox").classList.remove("hidden"); }
-
-/* =====================================================
-   LOGIN / LOGOUT
-===================================================== */
-function unlock() {
-  const email = $("email").value.trim();
-  const password = $("password").value;
-  if (!email || !password) { errEl.textContent = "Please enter your email and password ♡"; return; }
-  errEl.textContent = "Entering our world... ♡";
-  signInWithEmailAndPassword(auth, email, password)
-    .then(cred => {
-      if (!isAllowed(cred.user)) {
-        errEl.textContent = "This account is not allowed here. ♡";
-        signOut(auth);
-      } else errEl.textContent = "";
-    })
-    .catch(e => {
-      console.error("LOGIN ERROR:", e.code, e.message);
-      const map = {
-        "auth/invalid-credential": "Email or password is incorrect ♡",
-        "auth/invalid-email": "Please enter a valid email ♡",
-        "auth/user-not-found": "This email is not registered ♡",
-        "auth/wrong-password": "Wrong password ♡",
-        "auth/network-request-failed": "No internet connection ♡"
-      };
-      errEl.textContent = map[e.code] || ("Login error: " + e.code);
-    });
-}
-window.unlock = unlock;
-$("password").addEventListener("keydown", e => { if (e.key === "Enter") unlock(); });
-
-async function logout() {
-  try { await setPresence({ online: false, typing: false }); } catch (e) {}
-  stopAll();
-  signOut(auth);
-}
-window.logout = logout;
-
-let started = false;
-onAuthStateChanged(auth, user => {
-  if (!user) {
-    stopAll();
-    document.body.classList.remove("chatopen");
-    loginEl.classList.remove("hidden");
-    appEl.classList.add("hidden");
-    return;
-  }
-  if (!isAllowed(user)) {
-    signOut(auth);
-    errEl.textContent = "This account is not allowed here. ♡";
-    return;
-  }
-  loginEl.classList.add("hidden");
-  appEl.classList.remove("hidden");
-  errEl.textContent = "";
-  if (!started) { started = true; loadAll(); }
-});
-
-function loadAll() {
-  buildEmojiPicker();
-  bindChatInputs();
-  startPresence();
-  startChat();
-  startSharedEntries();
-  loadSong();
-}
-
-const unsubs = [];
-let heartbeat = null, statusTimer = null;
-function stopAll() {
-  unsubs.splice(0).forEach(u => { try { u(); } catch (e) {} });
-  clearInterval(heartbeat); clearInterval(statusTimer);
-  started = false;
-  firstChatLoad = true;
-  chatDocs = [];
-  seenMarked.clear();
-  closeMenu();
-}
-
-/* =====================================================
-   NAVIGATION  +  keep chat above the phone keyboard
-===================================================== */
-function show(id, btn) {
-  document.querySelectorAll("main > section.panel").forEach(s => s.classList.add("hidden"));
-  const sel = $(id); if (sel) sel.classList.remove("hidden");
-  document.querySelectorAll(".tabs button").forEach(b => b.classList.remove("active"));
-  if (btn) btn.classList.add("active");
-  document.body.classList.toggle("chatopen", id === "chat");
-  closeMenu();
-  if (id === "chat") {
-    unread = 0; updateBadge();
-    fitChat();
-    scrollChatBottom(true);
-    markSeen();
-  }
-}
-window.show = show;
-
-function closeChat() {
-  cancelEdit();
-  show("letters", document.querySelector(".tabs button"));
-  window.scrollTo(0, 0);
-}
-window.closeChat = closeChat;
-
-function fitChat() {
-  const c = $("chat");
-  const vv = window.visualViewport;
-  if (vv && vv.height) {
-    c.style.height = vv.height + "px";
-    c.style.top = vv.offsetTop + "px";
-  }
-}
-if (window.visualViewport) {
-  const onVV = () => {
-    if (!chatVisible()) return;
-    fitChat();
-    if (document.activeElement && document.activeElement.id === "chatInput") {
-      requestAnimationFrame(() => scrollChatBottom(true));
-    }
-    closeMenu();
-  };
-  window.visualViewport.addEventListener("resize", onVV);
-  window.visualViewport.addEventListener("scroll", onVV);
-}
-window.addEventListener("resize", () => { if (chatVisible()) fitChat(); });
-
-/* =====================================================
-   PRESENCE  (online / typing / last seen)
-===================================================== */
-function setPresence(patch) {
-  const u = auth.currentUser;
-  if (!u) return Promise.resolve();
-  return setDoc(doc(db, "presence", u.uid),
-    { lastActive: Date.now(), lastSeen: serverTimestamp(), ...patch },
-    { merge: true }).catch(e => console.error("Presence error:", e));
-}
-
-let partnerData = null;
-let presenceBound = false;
-
-function startPresence() {
-  setPresence({ online: !document.hidden, typing: false });
-  heartbeat = setInterval(() => setPresence({ online: !document.hidden }), 20000);
-
-  if (!presenceBound) {
-    presenceBound = true;
-    document.addEventListener("visibilitychange", () => {
-      setPresence({ online: !document.hidden, typing: false });
-      if (!document.hidden) markSeen();
-    });
-    window.addEventListener("pagehide", () => setPresence({ online: false, typing: false }));
-    window.addEventListener("online", () => setPresence({ online: true }));
-  }
-
-  const unsub = onSnapshot(doc(db, "presence", partnerUid()), snap => {
-    partnerData = snap.exists() ? snap.data() : null;
-    renderPartnerStatus();
-  }, e => console.error("Partner presence error:", e));
-  unsubs.push(unsub);
-
-  statusTimer = setInterval(renderPartnerStatus, 5000);
-}
-
-function fmtLastSeen(ms) {
-  if (!ms) return "offline";
-  const d = new Date(ms), now = new Date();
-  const t = d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-  if (d.toDateString() === now.toDateString()) return "last seen today at " + t;
-  const y = new Date(now); y.setDate(now.getDate() - 1);
-  if (d.toDateString() === y.toDateString()) return "last seen yesterday at " + t;
-  return "last seen " + d.toLocaleDateString([], { day: "2-digit", month: "short" }) + " at " + t;
-}
-
-function renderPartnerStatus() {
-  const st = $("partnerStatus"), dot = $("partnerDot"), row = $("typingRow");
-  const d = partnerData;
-  const fresh = d && d.lastActive && (Date.now() - d.lastActive) < 50000;
-  const online = !!(d && d.online && fresh);
-  const typing = !!(online && d.typing && d.typingAt && (Date.now() - d.typingAt) < 6000);
-
-  st.className = "chat-status" + (typing ? " typing" : online ? " on" : "");
-  st.textContent = typing ? "typing…" : online ? "Online" : fmtLastSeen(d && d.lastActive);
-  dot.className = "dot" + (online ? " on" : "");
-
-  const wasHidden = row.classList.contains("hidden");
-  row.classList.toggle("hidden", !typing);
-  if (typing && wasHidden) scrollChatBottom(false);
-}
-
-let typingTimer = null, lastTypingSent = 0;
-function onTyping() {
-  const now = Date.now();
-  if (now - lastTypingSent > 2500) {
-    lastTypingSent = now;
-    setPresence({ typing: true, typingAt: now, online: true });
-  }
-  clearTimeout(typingTimer);
-  typingTimer = setTimeout(stopTyping, 3000);
-}
-function stopTyping() {
-  clearTimeout(typingTimer);
-  lastTypingSent = 0;
-  setPresence({ typing: false });
-}
-
-/* =====================================================
-   CHAT
-===================================================== */
-const REACTIONS = ["❤️", "😂", "😮", "😢", "👍", "🙏"];
-let chatDocs = [];
-let openMenuId = null;
-let firstChatLoad = true;
-let unread = 0;
-const seenMarked = new Set();
-let replyTarget = null;
-let editingId = null;
-let pendingFile = null;
-let uploading = false;
-let inputsBound = false;
-
-const msgsCol = () => collection(db, "messages");
-const msgRef = id => doc(db, "messages", id);
-
-function chatVisible() { return !$("chat").classList.contains("hidden"); }
-function updateBadge() {
-  const b = $("unreadBadge");
-  b.textContent = unread > 99 ? "99+" : unread;
-  b.classList.toggle("hidden", unread <= 0);
-}
-function autoGrow(t) { t.style.height = "44px"; t.style.height = Math.min(t.scrollHeight, 120) + "px"; }
-
-function scrollChatBottom(force) {
-  const box = $("chatMessages");
-  const near = box.scrollHeight - box.scrollTop - box.clientHeight < 140;
-  if (force || near) requestAnimationFrame(() => { box.scrollTop = box.scrollHeight; });
-}
-
-function bindChatInputs() {
-  if (inputsBound) return;
-  inputsBound = true;
-  const input = $("chatInput");
-  input.addEventListener("input", () => {
-    autoGrow(input);
-    if (!editingId && input.value.trim()) onTyping();
-  });
-  input.addEventListener("keydown", e => {
-    if (e.key === "Enter" && !e.shiftKey && !/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {
-      e.preventDefault(); sendChatMessage();
-    }
-  });
-  input.addEventListener("focus", () => {
-    // wait for the keyboard animation, then keep the newest message in view
-    setTimeout(() => { fitChat(); scrollChatBottom(true); }, 300);
-  });
-  input.addEventListener("blur", () => { if (!input.value.trim()) stopTyping(); });
-  $("photoInput").addEventListener("change", e => pickFile(e.target));
-  $("fileInput").addEventListener("change", e => pickFile(e.target));
-  $("chatMessages").addEventListener("scroll", closeMenu, { passive: true });
-
-  document.addEventListener("click", e => {
-    if (!e.target.closest(".bubble") && !e.target.closest(".rbtn") && !e.target.closest("#msgMenu")) closeMenu();
-  });
-}
-
-function startChat() {
-  const q = query(msgsCol(), orderBy("createdAt", "asc"));
-  const unsub = onSnapshot(q, snap => {
-    const uid = myUid();
-
-    if (!firstChatLoad && !chatVisible()) {
-      snap.docChanges().forEach(c => {
-        if (c.type === "added" && c.doc.data().uid !== uid) unread++;
-      });
-      updateBadge();
-    }
-
-    const list = [];
-    snap.forEach(d => list.push({ id: d.id, ...d.data({ serverTimestamps: "estimate" }) }));
-    chatDocs = list;
-    try { renderChat(); } catch (e) { console.error("Render error:", e); toast("Display error: " + errText(e)); }
-    firstChatLoad = false;
-    markSeen();
-  }, e => {
-    console.error("Chat error:", e);
-    toast("Cannot load the chat: " + errText(e));
-  });
-  unsubs.push(unsub);
-}
-
-function fmtSize(b) {
-  if (!b) return "";
-  if (b < 1024) return b + " B";
-  if (b < 1048576) return (b / 1024).toFixed(0) + " KB";
-  return (b / 1048576).toFixed(1) + " MB";
-}
-function fileIcon(type, name) {
-  type = type || ""; name = (name || "").toLowerCase();
-  if (type.includes("pdf") || name.endsWith(".pdf")) return "📕";
-  if (type.startsWith("audio/")) return "🎵";
-  if (/\.(doc|docx)$/.test(name)) return "📘";
-  if (/\.(xls|xlsx|csv)$/.test(name)) return "📗";
-  if (/\.(zip|rar|7z)$/.test(name)) return "🗜️";
-  return "📄";
-}
-function msgDate(m) {
-  try { if (m.createdAt && m.createdAt.toDate) return m.createdAt.toDate(); } catch (e) {}
-  return new Date();
-}
-
-function buildMessage(m, me, wasNear) {
-  const mine = m.uid === me;
-  const date = msgDate(m);
-
-  const row = document.createElement("div");
-  row.className = "row" + (mine ? " mine" : "");
-  row.id = "msg_" + m.id;
-
-  const wrap = document.createElement("div");
-  wrap.className = "bwrap";
-
-  const bubble = document.createElement("div");
-  bubble.className = "bubble";
-
-  // quoted reply (old messages may store replyTo as a plain string)
-  if (m.replyTo && typeof m.replyTo === "object") {
-    const q = document.createElement("div");
-    q.className = "quoted";
-    const who = document.createElement("b");
-    who.textContent = m.replyTo.uid === me ? "You" : "My love";
-    const t = document.createElement("span");
-    t.textContent = String(m.replyTo.text || "").slice(0, 90);
-    q.appendChild(who); q.appendChild(t);
-    q.onclick = ev => {
-      ev.stopPropagation();
-      const target = $("msg_" + m.replyTo.id);
-      if (target) {
-        target.scrollIntoView({ behavior: "smooth", block: "center" });
-        target.style.transition = "background .4s";
-        target.style.background = "#ffd6e2";
-        setTimeout(() => { target.style.background = ""; }, 1200);
-      }
-    };
-    bubble.appendChild(q);
-  }
-
-  // attachment
-  let caption = typeof m.text === "string" ? m.text : "";
-  if (m.fileURL) {
-    const type = m.fileType || "";
-    const fname = m.fileName || caption.replace("📎 ", "") || "file";
-    if (caption.startsWith("📎 ")) caption = "";
-    if (type.startsWith("image/")) {
-      const img = document.createElement("img");
-      img.className = "pic"; img.src = m.fileURL; img.alt = fname; img.loading = "lazy";
-      img.onclick = ev => { ev.stopPropagation(); openLightbox(m.fileURL); };
-      img.onload = () => { if (wasNear || firstChatLoad) scrollChatBottom(true); };
-      bubble.appendChild(img);
-    } else if (type.startsWith("video/")) {
-      const v = document.createElement("video");
-      v.className = "pic"; v.src = m.fileURL; v.controls = true; v.preload = "metadata"; v.playsInline = true;
-      v.onclick = ev => ev.stopPropagation();
-      bubble.appendChild(v);
-    } else {
-      const a = document.createElement("a");
-      a.className = "filebox"; a.href = m.fileURL; a.target = "_blank"; a.rel = "noopener noreferrer";
-      a.onclick = ev => ev.stopPropagation();
-      const ic = document.createElement("span"); ic.className = "ico"; ic.textContent = fileIcon(type, fname);
-      const nm = document.createElement("span"); nm.textContent = fname;
-      if (m.fileSize) { const sz = document.createElement("small"); sz.textContent = fmtSize(m.fileSize); nm.appendChild(sz); }
-      a.appendChild(ic); a.appendChild(nm);
-      bubble.appendChild(a);
-    }
-  }
-
-  if (caption) {
-    const txt = document.createElement("div");
-    txt.className = "txt"; txt.textContent = caption;
-    bubble.appendChild(txt);
-  }
-
-  // time + ticks
-  const meta = document.createElement("div");
-  meta.className = "meta";
-  const tm = document.createElement("span");
-  tm.textContent = date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) + (m.edited ? " · edited" : "");
-  meta.appendChild(tm);
-  if (mine) {
-    const tk = document.createElement("span");
-    tk.className = "tick" + (m.seen ? " seen" : "");
-    tk.textContent = m.seen ? "✓✓" : "✓";
-    meta.appendChild(tk);
-  }
-  bubble.appendChild(meta);
-
-  bubble.onclick = () => { openMenuId === m.id ? closeMenu() : openMenu(m.id, bubble); };
-  bubble.ondblclick = () => { closeMenu(); toggleReaction(m.id, "❤️"); };
-
-  wrap.appendChild(bubble);
-
-  // reaction chips under the message
-  const reacts = (m.reactions && typeof m.reactions === "object") ? m.reactions : {};
-  const myReact = reacts[me];
-  const counts = {};
-  Object.values(reacts).forEach(r => { if (typeof r === "string") counts[r] = (counts[r] || 0) + 1; });
-  const keys = Object.keys(counts);
-  if (keys.length) {
-    const rc = document.createElement("div"); rc.className = "reacts";
-    keys.forEach(r => {
-      const c = document.createElement("span");
-      c.className = "chip" + (myReact === r ? " me" : "");
-      c.textContent = r;
-      if (counts[r] > 1) { const n = document.createElement("small"); n.textContent = counts[r]; c.appendChild(n); }
-      c.onclick = ev => { ev.stopPropagation(); toggleReaction(m.id, r); };
-      rc.appendChild(c);
-    });
-    wrap.appendChild(rc);
-  }
-
-  // visible reaction button next to the bubble
-  const rb = document.createElement("button");
-  rb.className = "rbtn"; rb.textContent = "☺"; rb.title = "React";
-  rb.onclick = ev => { ev.stopPropagation(); openMenuId === m.id ? closeMenu() : openMenu(m.id, bubble); };
-
-  row.appendChild(wrap);
-  row.appendChild(rb);
-  return row;
-}
-
-function renderChat() {
-  const me = myUid();
-  if (!me) return;
-  const box = $("chatMessages");
-  const wasNear = box.scrollHeight - box.scrollTop - box.clientHeight < 140;
-  const list = $("msgList");
-  list.innerHTML = "";
-  let lastDay = "";
-
-  chatDocs.forEach(m => {
-    try {
-      const dayKey = msgDate(m).toDateString();
-      if (dayKey !== lastDay) {
-        lastDay = dayKey;
-        const sep = document.createElement("div");
-        sep.className = "daysep";
-        const s = document.createElement("span");
-        const now = new Date(), y = new Date(); y.setDate(now.getDate() - 1);
-        s.textContent = dayKey === now.toDateString() ? "Today" :
-          dayKey === y.toDateString() ? "Yesterday" :
-          msgDate(m).toLocaleDateString([], { day: "numeric", month: "long", year: "numeric" });
-        sep.appendChild(s); list.appendChild(sep);
-      }
-      list.appendChild(buildMessage(m, me, wasNear));
-    } catch (e) {
-      console.error("Message render error:", m.id, e);
-    }
-  });
-
-  // keep an open menu in sync with the fresh DOM
-  if (openMenuId) {
-    const b = document.querySelector("#msg_" + CSS.escape(openMenuId) + " .bubble");
-    if (b && chatDocs.some(d => d.id === openMenuId)) openMenu(openMenuId, b); else closeMenu();
-  }
-
-  if (firstChatLoad || wasNear) scrollChatBottom(true);
-}
-
-/* ---------- floating menu: reactions + reply / edit / delete ---------- */
-function openMenu(id, anchor) {
-  const m = chatDocs.find(d => d.id === id);
-  const me = myUid();
-  if (!m || !me) return closeMenu();
-  openMenuId = id;
-  const mine = m.uid === me;
-  const myReact = (m.reactions || {})[me];
-
-  const menu = $("msgMenu");
-  menu.innerHTML = "";
-
-  const em = document.createElement("div"); em.className = "emojis";
-  REACTIONS.forEach(r => {
-    const s = document.createElement("span");
-    s.textContent = r;
-    if (myReact === r) s.className = "picked";
-    s.onclick = ev => { ev.stopPropagation(); closeMenu(); toggleReaction(id, r); };
-    em.appendChild(s);
-  });
-  menu.appendChild(em);
-
-  const acts = document.createElement("div"); acts.className = "acts";
-  const bReply = document.createElement("button"); bReply.textContent = "↩ Reply";
-  bReply.onclick = ev => { ev.stopPropagation(); closeMenu(); startReply(id); };
-  acts.appendChild(bReply);
-  if (mine) {
-    if (!m.fileURL) {
-      const bEdit = document.createElement("button"); bEdit.textContent = "✏️ Edit";
-      bEdit.onclick = ev => { ev.stopPropagation(); closeMenu(); startEdit(id); };
-      acts.appendChild(bEdit);
-    }
-    const bDel = document.createElement("button"); bDel.textContent = "🗑️ Delete";
-    bDel.onclick = ev => { ev.stopPropagation(); closeMenu(); deleteMessage(id); };
-    acts.appendChild(bDel);
-  }
-  menu.appendChild(acts);
-
-  // position next to the bubble, always inside the screen
-  menu.style.visibility = "hidden";
-  menu.classList.add("open");
-  const r = anchor.getBoundingClientRect();
-  const mw = menu.offsetWidth, mh = menu.offsetHeight;
-  const vw = window.innerWidth, vh = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
-  let left = mine ? r.right - mw : r.left;
-  left = Math.max(8, Math.min(left, vw - mw - 8));
-  let top = r.top - mh - 8;
-  if (top < 70) top = r.bottom + 8;
-  if (top + mh > vh - 8) top = Math.max(70, vh - mh - 8);
-  menu.style.left = left + "px";
-  menu.style.top = top + "px";
-  menu.style.visibility = "visible";
-}
-function closeMenu() {
-  openMenuId = null;
-  const menu = $("msgMenu");
-  if (menu) menu.classList.remove("open");
-}
-
-/* ---------- reactions ---------- */
-function toggleReaction(id, emoji) {
-  const uid = myUid();
-  const m = chatDocs.find(d => d.id === id);
-  if (!uid || !m) return;
-  const cur = (m.reactions || {})[uid];
-  const p = cur === emoji
-    ? updateDoc(msgRef(id), { ["reactions." + uid]: deleteField() })
-    : updateDoc(msgRef(id), { ["reactions." + uid]: emoji });
-  p.catch(e => { console.error("Reaction error:", e); toast("Reaction failed: " + errText(e)); });
-}
-
-/* ---------- seen ticks ---------- */
-function markSeen() {
-  const me = myUid();
-  if (!me || !chatVisible() || document.hidden) return;
-  chatDocs.forEach(m => {
-    if (m.uid !== me && !m.seen && !seenMarked.has(m.id)) {
-      seenMarked.add(m.id);
-      updateDoc(msgRef(m.id), { seen: true }).catch(e => {
-        seenMarked.delete(m.id); console.error("Seen error:", e);
-      });
-    }
-  });
-}
-
-/* ---------- reply ---------- */
-function startReply(id) {
-  const m = chatDocs.find(d => d.id === id); if (!m) return;
-  cancelEdit();
-  replyTarget = { id: m.id, text: m.text || (m.fileName ? "📎 " + m.fileName : "📎 file"), uid: m.uid };
-  $("replyWho").textContent = "Replying to " + (m.uid === myUid() ? "yourself" : "my love");
-  $("replyTxt").textContent = String(replyTarget.text).slice(0, 80);
-  $("replyBar").classList.remove("hidden");
-  $("chatInput").focus();
-}
-function cancelReply() { replyTarget = null; $("replyBar").classList.add("hidden"); }
-window.cancelReply = cancelReply;
-
-/* ---------- edit: the text goes into the input, Send saves it ---------- */
-function startEdit(id) {
-  const m = chatDocs.find(d => d.id === id);
-  if (!m || m.uid !== myUid() || m.fileURL) return;
-  cancelReply();
-  clearAttachment();
-  editingId = id;
-  const input = $("chatInput");
-  input.value = m.text || "";
-  autoGrow(input);
-  $("editTxt").textContent = String(m.text || "").slice(0, 80);
-  $("editBar").classList.remove("hidden");
-  input.focus();
-  input.setSelectionRange(input.value.length, input.value.length);
-}
-function cancelEdit() {
-  if (!editingId) return;
-  editingId = null;
-  $("editBar").classList.add("hidden");
-  const input = $("chatInput");
-  input.value = ""; autoGrow(input);
-}
-window.cancelEdit = cancelEdit;
-
-function saveEdit() {
-  const input = $("chatInput");
-  const text = input.value.trim();
-  const id = editingId;
-  if (!id) return;
-  if (!text) { toast("A message can't be empty (use Delete instead) ♡"); return; }
-  const old = chatDocs.find(d => d.id === id);
-  editingId = null;
-  $("editBar").classList.add("hidden");
-  input.value = ""; autoGrow(input);
-  if (old && old.text === text) return;
-  updateDoc(msgRef(id), { text: text, edited: true })
-    .catch(e => { console.error("Edit error:", e); toast("Edit failed: " + errText(e)); });
-}
-
-/* ---------- delete ---------- */
-async function deleteMessage(id) {
-  const m = chatDocs.find(d => d.id === id);
-  if (!m || m.uid !== myUid()) return;
-  const yes = await askConfirm("Delete this message? ♡", "Delete");
-  if (!yes) return;
-  try {
-    await deleteDoc(msgRef(id));
-  } catch (e) {
-    console.error("Delete error:", e);
-    toast("Delete failed: " + errText(e));
-  }
-}
-
-/* ---------- attachments ---------- */
-const MAX_BYTES = 25 * 1024 * 1024;
-function pickFile(inputEl) {
-  const f = inputEl.files[0];
-  inputEl.value = "";
-  if (!f) return;
-  if (f.size > MAX_BYTES) { toast("File too big (max 25 MB) ♡"); return; }
-  cancelEdit();
-  pendingFile = f;
-  $("attachName").textContent = f.name + " · " + fmtSize(f.size);
-  const th = $("attachThumb"), ic = $("attachIco");
-  if (f.type.startsWith("image/")) {
-    th.src = URL.createObjectURL(f); th.classList.remove("hidden"); ic.classList.add("hidden");
-  } else {
-    th.classList.add("hidden"); ic.textContent = fileIcon(f.type, f.name); ic.classList.remove("hidden");
-  }
-  $("attachProg").classList.add("hidden");
-  $("attachProgBar").style.width = "0";
-  $("attachBar").classList.remove("hidden");
-  $("chatInput").focus();
-}
-function clearAttachment() {
-  if (uploading) return;
-  pendingFile = null;
-  $("attachBar").classList.add("hidden");
-  $("attachThumb").src = "";
-}
-window.clearAttachment = clearAttachment;
-
-function uploadWithProgress(storageRef, file) {
-  return new Promise((resolve, reject) => {
-    const task = uploadBytesResumable(storageRef, file, { contentType: file.type || "application/octet-stream" });
-    task.on("state_changed", snap => {
-      const pct = snap.totalBytes ? (snap.bytesTransferred / snap.totalBytes) * 100 : 0;
-      $("attachProgBar").style.width = pct.toFixed(0) + "%";
-    }, reject, () => resolve(task.snapshot.ref));
-  });
-}
-
-/* ---------- send ---------- */
-async function sendChatMessage() {
-  const user = auth.currentUser;
-  const input = $("chatInput");
-  if (!user) { toast("Please log in again ♡"); return; }
-  if (!isAllowed(user)) { toast("This account is not allowed. ♡"); return; }
-
-  if (editingId) { saveEdit(); return; }
-
-  const text = input.value.trim();
-  if (!text && !pendingFile) return;
-
-  if (pendingFile) { sendWithFile(text); return; }
-
-  const data = { uid: user.uid, text: text, createdAt: serverTimestamp(), seen: false };
-  if (replyTarget) data.replyTo = replyTarget;
-
-  // Keep the draft until Firestore confirms the message was saved.
-  const sendBtn = $("sendBtn");
-  sendBtn.disabled = true;
-  sendBtn.textContent = "…";
-  try {
-    await addDoc(msgsCol(), data);
-    input.value = "";
-    autoGrow(input);
-    cancelReply();
-    stopTyping();
-    $("emojiPicker").classList.add("hidden");
-    scrollChatBottom(true);
-    input.focus();
-  } catch (e) {
-    console.error("Send error:", e);
-    toast("Could not send: " + errText(e));
-  } finally {
-    sendBtn.disabled = false;
-    sendBtn.textContent = "➤";
-  }
-}
-window.sendChatMessage = sendChatMessage;
-
-async function sendWithFile(text) {
-  if (uploading) return;
-  const user = auth.currentUser;
-  const file = pendingFile;
-  const input = $("chatInput");
-  uploading = true;
-  try {
-    $("attachProg").classList.remove("hidden");
-    const safe = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-    const fRef = ref(storage, "chatFiles/" + user.uid + "/" + Date.now() + "_" + safe);
-    const done = await uploadWithProgress(fRef, file);
-    const url = await getDownloadURL(done);
-
-    const data = {
-      uid: user.uid, text: text, createdAt: serverTimestamp(), seen: false,
-      fileURL: url, fileType: file.type || "", fileName: file.name, fileSize: file.size
-    };
-    if (replyTarget) data.replyTo = replyTarget;
-
-    await addDoc(msgsCol(), data);
-
-    input.value = ""; autoGrow(input);
-    pendingFile = null;
-    $("attachBar").classList.add("hidden");
-    cancelReply();
-    stopTyping();
-    scrollChatBottom(true);
-  } catch (e) {
-    console.error("Upload error:", e);
-    toast("Upload failed: " + errText(e));
-  } finally {
-    uploading = false;
-  }
-}
-
-/* ---------- emoji picker ---------- */
-const EMOJIS = ("❤️ 🩷 🧡 💛 💚 🩵 💙 💜 🤎 🖤 🩶 🤍 💔 ❤️‍🔥 ❤️‍🩹 💕 💞 💓 💗 💖 💘 💝 💟 ❣️ " +
- "🥰 😍 😘 😚 😙 😻 😊 ☺️ 😉 😏 🥹 🥺 😭 😂 🤣 🤭 🙈 🙉 🙊 😇 😌 🤗 🫠 😎 😴 😡 😮 😢 " +
- "🫶 🫂 👍 👏 🙌 ✌️ 🤞 👉 👈 ☝️ 🙏 💪 " +
- "🌹 🌷 🌸 🌺 🌻 💐 🦋 ✨ 💫 ⭐ 🌙 ☀️ 🌈 " +
- "🐻 🐰 🐱 🐶 🐼 🦊 🐥 🦄 🧸 " +
- "🎀 🎁 🎉 🎊 🥳 💎 👑 🍓 🍒 🍫 🍰 ☕ " +
- "💋 💌 💍 💑 👩‍❤️‍👨 👩‍❤️‍💋‍👨").split(" ");
-
-function buildEmojiPicker() {
-  const p = $("emojiPicker");
-  if (p.childElementCount) return;
-  EMOJIS.forEach(e => {
-    const s = document.createElement("span");
-    s.textContent = e;
-    s.onclick = () => addEmoji(e);
-    p.appendChild(s);
-  });
-}
-function toggleEmojiPicker() { $("emojiPicker").classList.toggle("hidden"); }
-window.toggleEmojiPicker = toggleEmojiPicker;
-function addEmoji(emoji) {
-  const input = $("chatInput");
-  const s = input.selectionStart ?? input.value.length;
-  const e = input.selectionEnd ?? input.value.length;
-  input.value = input.value.substring(0, s) + emoji + input.value.substring(e);
-  const pos = s + emoji.length;
-  input.focus(); input.setSelectionRange(pos, pos);
-  autoGrow(input);
-  if (!editingId) onTyping();
-}
-window.addEmoji = addEmoji;
-
-/* =====================================================
-   SHARED ENTRIES (letters, memories, moments, words)
-===================================================== */
 const sharedEntriesRef = collection(db, "sharedEntries");
-const sharedSongRef = collection(db, "sharedSong");
-
+  const sharedSongRef = collection(db, "sharedSong");
 async function saveSharedEntry(type, title, text) {
+
   const user = auth.currentUser;
+
   if (!user) return;
+
   try {
-    await addDoc(sharedEntriesRef, { type, title: title || "", text, uid: user.uid, createdAt: serverTimestamp() });
-  } catch (e) {
-    console.error("Firestore save error:", e);
-    toast("Could not save: " + errText(e));
+
+    await addDoc(sharedEntriesRef, {
+      type: type,
+      title: title || "",
+      text: text,
+      uid: user.uid,
+      createdAt: serverTimestamp()
+    });
+
+  } catch (error) {
+
+    console.error("Firestore save error:", error);
+
+    alert("Could not save. Please try again.");
+
   }
-}
+
+  }
+  let sharedEntriesUnsubscribe = null;
 
 function startSharedEntries() {
-  const q = query(sharedEntriesRef, orderBy("createdAt", "desc"));
-  const unsub = onSnapshot(q, snapshot => {
-    const lists = { letter: "letterList", memory: "memoryList", moment: "momentList", word: "wordList" };
-    Object.values(lists).forEach(id => { const el = $(id); if (el) el.innerHTML = ""; });
 
-    snapshot.forEach(docSnap => {
-      const data = docSnap.data({ serverTimestamps: "estimate" });
-      const el = $(lists[data.type]);
-      if (!el) return;
+  if (sharedEntriesUnsubscribe) {
+    sharedEntriesUnsubscribe();
+  }
 
-      const box = document.createElement("div");
-      box.className = "entry";
+  const q = query(
+    sharedEntriesRef,
+    orderBy("createdAt", "desc")
+  );
 
-      const small = document.createElement("small");
-      const dateText = data.createdAt && data.createdAt.toDate ? data.createdAt.toDate().toLocaleString() : "";
-      small.textContent = dateText + (data.title ? " · " + data.title : "");
+  sharedEntriesUnsubscribe = onSnapshot(
+    q,
+    snapshot => {
 
-      if (data.imageUrl) {
-        const img = document.createElement("img");
-        img.src = data.imageUrl; img.alt = data.title || "Our memory"; img.loading = "lazy";
-        Object.assign(img.style, { width: "100%", maxHeight: "400px", objectFit: "cover", borderRadius: "20px", marginTop: "10px", cursor: "zoom-in" });
-        img.onclick = () => openLightbox(data.imageUrl);
-        box.appendChild(img);
-      }
-
-      const p = document.createElement("p");
-      p.textContent = data.text;
-
-      const actions = document.createElement("div");
-      actions.className = "actions";
-      const del = document.createElement("button");
-      del.className = "danger"; del.textContent = "Delete";
-      del.onclick = async () => {
-        if (!(await askConfirm("Delete this entry? ♡", "Delete"))) return;
-        try { await deleteDoc(doc(db, "sharedEntries", docSnap.id)); }
-        catch (e) { console.error("Delete error:", e); toast("Could not delete: " + errText(e)); }
+      const lists = {
+        letter: "letterList",
+        memory: "memoryList",
+        moment: "momentList",
+        word: "wordList"
       };
-      actions.appendChild(del);
 
-      box.appendChild(small); box.appendChild(p); box.appendChild(actions);
-      el.appendChild(box);
-    });
-  }, e => console.error("Shared entries error:", e));
-  unsubs.push(unsub);
+      // Clear all shared lists
+      Object.values(lists).forEach(id => {
+        const element = document.getElementById(id);
+
+        if (element) {
+          element.innerHTML = "";
+        }
+      });
+
+      // Display shared entries
+      snapshot.forEach(docSnap => {
+
+        const data = docSnap.data();
+
+        const listId = lists[data.type];
+
+        if (!listId) return;
+
+        const element = document.getElementById(listId);
+
+        if (!element) return;
+
+        const box = document.createElement("div");
+        box.className = "entry";
+
+        const small = document.createElement("small");
+
+        let dateText = "";
+
+        if (data.createdAt) {
+          dateText = data.createdAt
+            .toDate()
+            .toLocaleString();
+        }
+
+        small.textContent =
+          dateText +
+          (data.title
+            ? " · " + data.title
+            : "");
+
+        if (data.imageUrl) {
+
+  const image = document.createElement("img");
+
+  image.src = data.imageUrl;
+  image.alt = data.title || "Our memory";
+
+  image.style.width = "100%";
+  image.style.maxHeight = "400px";
+  image.style.objectFit = "cover";
+  image.style.borderRadius = "20px";
+  image.style.marginTop = "10px";
+
+  box.appendChild(image);
 }
+
+const paragraph = document.createElement("p");
+paragraph.textContent = data.text;
+
+const actions = document.createElement("div");
+        actions.className = "actions";
+
+        const deleteButton =
+          document.createElement("button");
+
+        deleteButton.className = "danger";
+        deleteButton.textContent = "Delete";
+
+        deleteButton.onclick = async () => {
+
+          const confirmed =
+            confirm("Delete this entry? ♡");
+
+          if (!confirmed) return;
+
+          try {
+
+            await deleteDoc(
+              doc(db, "sharedEntries", docSnap.id)
+            );
+
+          } catch (error) {
+
+            console.error(
+              "Delete error:",
+              error
+            );
+
+            alert(
+              "Could not delete this entry."
+            );
+
+          }
+
+        };
+
+        actions.appendChild(deleteButton);
+
+        box.appendChild(small);
+        box.appendChild(paragraph);
+        box.appendChild(actions);
+
+        element.appendChild(box);
+
+      });
+
+    },
+
+    error => {
+
+      console.error(
+        "Shared entries error:",
+        error
+      );
+
+    }
+  );
+  }
+  const login = document.getElementById("login");
+
+const app = document.getElementById("app");
+
+const err = document.getElementById("err");
+
+
+function unlock() {
+
+  const email =
+    document.getElementById("email").value.trim();
+
+  const password =
+    document.getElementById("password").value;
+
+  const errorBox =
+    document.getElementById("err");
+
+
+  if (!email || !password) {
+
+    errorBox.textContent =
+      "Please enter your email and password ♡";
+
+    return;
+  }
+
+
+  errorBox.textContent =
+    "Entering our world... ♡";
+
+
+  signInWithEmailAndPassword(
+    auth,
+    email,
+    password
+  )
+
+  .then(userCredential => {
+
+    const user =
+      userCredential.user;
+
+    console.log(
+      "LOGIN SUCCESS:",
+      user.uid
+    );
+
+
+    if (
+      user.uid !== MY_UID &&
+      user.uid !== HIS_UID
+    ) {
+
+      errorBox.textContent =
+        "This account is not allowed here. ♡";
+
+      signOut(auth);
+
+      return;
+    }
+
+
+    errorBox.textContent = "";
+
+    login.classList.add("hidden");
+
+    app.classList.remove("hidden");
+
+  })
+
+  .catch(error => {
+
+    console.error(
+      "LOGIN ERROR:",
+      error.code,
+      error.message
+    );
+
+
+    if (
+      error.code ===
+      "auth/invalid-credential"
+    ) {
+
+      errorBox.textContent =
+        "Email or password is incorrect ♡";
+
+    }
+
+    else if (
+      error.code ===
+      "auth/invalid-email"
+    ) {
+
+      errorBox.textContent =
+        "Please enter a valid email ♡";
+
+    }
+
+    else if (
+      error.code ===
+      "auth/user-not-found"
+    ) {
+
+      errorBox.textContent =
+        "This email is not registered ♡";
+
+    }
+
+    else if (
+      error.code ===
+      "auth/wrong-password"
+    ) {
+
+      errorBox.textContent =
+        "Wrong password ♡";
+
+    }
+
+    else {
+
+      errorBox.textContent =
+        "Login error: " + error.code;
+
+    }
+
+  });
+
+}
+
+window.unlock = unlock;
+
+
+window.unlock = unlock;
+
+
+function logout() {
+
+  signOut(auth);
+
+}
+
+
+window.logout = logout;
+
+
+onAuthStateChanged(auth, user => {
+
+  if (!user) {
+
+    login.classList.remove("hidden");
+
+    app.classList.add("hidden");
+
+    return;
+  }
+
+
+  if (
+    user.uid !== MY_UID &&
+    user.uid !== HIS_UID
+  ) {
+
+    signOut(auth);
+
+    err.textContent =
+      "This account is not allowed here. ♡";
+
+    return;
+  }
+
+
+  login.classList.add("hidden");
+
+  app.classList.remove("hidden");
+
+});
+// ==============================
+// PART 2 — Navigation & Storage
+// ==============================
+
+function show(id, btn) {
+
+  document
+    .querySelectorAll("main > section.panel")
+    .forEach(section => {
+      section.classList.add("hidden");
+    });
+
+  const selected = document.getElementById(id);
+
+  if (selected) {
+    selected.classList.remove("hidden");
+  }
+
+  document
+    .querySelectorAll(".tabs button")
+    .forEach(button => {
+      button.classList.remove("active");
+    });
+
+  if (btn) {
+    btn.classList.add("active");
+  }
+}
+
+window.show = show;
+
+
+// ==============================
+// Local Storage
+// ==============================
+
+function key(type) {
+  return "oulw_" + type;
+}
+
+
+function get(type) {
+
+  try {
+
+    return JSON.parse(
+      localStorage.getItem(key(type)) || "[]"
+    );
+
+  } catch (error) {
+
+    console.error("Storage error:", error);
+
+    return [];
+  }
+}
+
+
+function save(type, data) {
+
+  localStorage.setItem(
+    key(type),
+    JSON.stringify(data)
+  );
+
+}
+
+
+// ==============================
+// Load Everything
+// ==============================
+
+function loadAll() {
+
+  render("letter");
+
+  render("memory");
+
+  render("moment");
+
+  render("word");
+
+  loadSong();
+
+  startChat();
+  startSharedEntries();
+
+}
+
+
+// ==============================
+// Escape HTML
+// ==============================
+
+function escapeHtml(text) {
+
+  if (!text) return "";
+
+  return text.replace(
+    /[&<>"']/g,
+    character => ({
+
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#039;"
+
+    }[character])
+  );
+
+}
+  // ==============================
+// PART 3 — Letters, Memories,
+// Moments & Words
+// ==============================
 
 async function addEntry(section, textId, type, titleId) {
-  const textEl = $(textId);
-  if (!textEl) return;
-  const text = textEl.value.trim();
-  if (!text) return;
-  let title = "";
-  const titleEl = titleId ? $(titleId) : null;
-  if (titleEl) title = titleEl.value.trim();
-  await saveSharedEntry(type, title, text);
-  textEl.value = "";
-  if (titleEl) titleEl.value = "";
-}
-window.addEntry = addEntry;
 
-async function addMemory() {
-  const titleInput = $("memoryTitle"), textInput = $("memoryText"), imageInput = $("memoryImage");
-  const title = titleInput.value.trim(), text = textInput.value.trim(), file = imageInput.files[0];
-  if (!text && !file) return;
-  const user = auth.currentUser;
-  if (!user) return;
-  try {
-    let imageUrl = "";
-    if (file) {
-      const safe = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-      const r = ref(storage, "memories/" + Date.now() + "_" + safe);
-      await uploadBytes(r, file);
-      imageUrl = await getDownloadURL(r);
+  const textElement = document.getElementById(textId);
+
+  if (!textElement) return;
+
+  const text = textElement.value.trim();
+
+  if (!text) return;
+
+  let title = "";
+
+  if (titleId) {
+
+    const titleElement = document.getElementById(titleId);
+
+    if (titleElement) {
+      title = titleElement.value.trim();
     }
-    await addDoc(sharedEntriesRef, { type: "memory", title, text, imageUrl, uid: user.uid, createdAt: serverTimestamp() });
-    titleInput.value = ""; textInput.value = ""; imageInput.value = "";
-  } catch (e) {
-    console.error("Memory save error:", e);
-    toast("Could not save this memory: " + errText(e));
+
+  }
+
+  await saveSharedEntry(type, title, text);
+
+  textElement.value = "";
+
+  if (titleId) {
+
+    const titleElement = document.getElementById(titleId);
+
+    if (titleElement) {
+      titleElement.value = "";
+    }
+
+  }
+
+}
+
+window.addEntry = addEntry;
+  async function addMemory() {
+
+  const titleInput =
+    document.getElementById("memoryTitle");
+
+  const textInput =
+    document.getElementById("memoryText");
+
+  const imageInput =
+    document.getElementById("memoryImage");
+
+  if (!titleInput || !textInput || !imageInput) return;
+
+  const title = titleInput.value.trim();
+  const text = textInput.value.trim();
+  const file = imageInput.files[0];
+
+  if (!text && !file) return;
+
+  const user = auth.currentUser;
+
+  if (!user) return;
+
+  try {
+
+    let imageUrl = "";
+
+    if (file) {
+
+      const imageRef = ref(
+        storage,
+        "memories/" +
+        Date.now() +
+        "_" +
+        file.name
+      );
+
+      await uploadBytes(imageRef, file);
+
+      imageUrl =
+        await getDownloadURL(imageRef);
+    }
+
+    await addDoc(sharedEntriesRef, {
+
+      type: "memory",
+      title: title,
+      text: text,
+      imageUrl: imageUrl,
+      uid: user.uid,
+      createdAt: serverTimestamp()
+
+    });
+
+    titleInput.value = "";
+    textInput.value = "";
+    imageInput.value = "";
+
+  } catch (error) {
+
+    console.error(
+      "Memory save error:",
+      error
+    );
+
+    alert(
+      "Could not save this memory. Please try again."
+    );
+
   }
 }
+
 window.addMemory = addMemory;
 
-/* =====================================================
-   OUR SONG
-===================================================== */
-async function saveSong() {
-  const input = $("songText");
-  const song = input.value.trim();
-  const user = auth.currentUser;
-  if (!song || !user) return;
-  try {
-    await addDoc(sharedSongRef, { song, uid: user.uid, createdAt: serverTimestamp() });
-    input.value = "";
-  } catch (e) {
-    console.error("Song save error:", e);
-    toast("Could not save the song: " + errText(e));
-  }
+// ==============================
+// Render Entries
+// ==============================
+
+function render(type) {
+
+  const lists = {
+
+    letter: "letterList",
+
+    memory: "memoryList",
+
+    moment: "momentList",
+
+    word: "wordList"
+
+  };
+
+
+  const listId = lists[type];
+
+  if (!listId) return;
+
+
+  const element =
+    document.getElementById(listId);
+
+  if (!element) return;
+
+
+  const entries = get(type);
+
+
+  element.innerHTML = "";
+
+
+  entries.forEach((entry, index) => {
+
+    const box =
+      document.createElement("div");
+
+    box.className = "entry";
+
+
+    const small =
+      document.createElement("small");
+
+    small.textContent =
+      entry.date +
+      (entry.title
+        ? " · " + entry.title
+        : "");
+
+
+    const paragraph =
+      document.createElement("p");
+
+    paragraph.textContent =
+      entry.text;
+
+
+    const actions =
+      document.createElement("div");
+
+    actions.className = "actions";
+
+
+    const deleteButton =
+      document.createElement("button");
+
+    deleteButton.className = "danger";
+
+    deleteButton.textContent = "Delete";
+
+
+    deleteButton.onclick = () => {
+
+      removeEntry(type, index);
+
+    };
+
+
+    actions.appendChild(deleteButton);
+
+
+    box.appendChild(small);
+
+    box.appendChild(paragraph);
+
+    box.appendChild(actions);
+
+
+    element.appendChild(box);
+
+  });
+
 }
+
+
+// ==============================
+// Delete Entry
+// ==============================
+
+function removeEntry(type, index) {
+
+  const entries = get(type);
+
+
+  if (
+    index < 0 ||
+    index >= entries.length
+  ) {
+    return;
+  }
+
+
+  entries.splice(index, 1);
+
+
+  save(type, entries);
+
+
+  render(type);
+
+}
+
+
+window.removeEntry = removeEntry;
+  // ==============================
+// PART 4 — Our Song
+// & Emoji Picker
+// ==============================
+
+async function saveSong() {
+
+  const input =
+    document.getElementById("songText");
+
+  if (!input) return;
+
+  const song = input.value.trim();
+
+  if (!song) return;
+
+  const user = auth.currentUser;
+
+  if (!user) return;
+
+  try {
+
+    await addDoc(sharedSongRef, {
+      song: song,
+      uid: user.uid,
+      createdAt: serverTimestamp()
+    });
+
+    input.value = "";
+
+  } catch (error) {
+
+    console.error(
+      "Song save error:",
+      error
+    );
+
+    alert(
+      "Could not save the song. Please try again."
+    );
+
+  }
+
+}
+
+
 window.saveSong = saveSong;
 
+
+// ==============================
+// Load Song
+// ==============================
 function loadSong() {
-  const box = $("songSaved");
-  const q = query(sharedSongRef, orderBy("createdAt", "desc"));
-  const unsub = onSnapshot(q, snapshot => {
+
+  const box =
+    document.getElementById("songSaved");
+
+  if (!box) return;
+
+  const q = query(
+    sharedSongRef,
+    orderBy("createdAt", "desc")
+  );
+
+  onSnapshot(q, snapshot => {
+
     box.innerHTML = "";
-    if (snapshot.empty) { box.classList.add("hidden"); return; }
+
+    if (snapshot.empty) {
+
+      box.classList.add("hidden");
+
+      return;
+    }
+
     box.classList.remove("hidden");
+
     snapshot.forEach(docSnap => {
-      const data = docSnap.data({ serverTimestamps: "estimate" });
-      const songBox = document.createElement("div");
+
+      const data = docSnap.data();
+
+      const songBox =
+        document.createElement("div");
+
       songBox.className = "entry";
-      const small = document.createElement("small");
-      small.textContent = data.createdAt && data.createdAt.toDate ? data.createdAt.toDate().toLocaleString() : "";
-      const p = document.createElement("p");
-      const s = data.song || "";
-      if (/^https?:\/\//i.test(s)) {
-        const a = document.createElement("a");
-        a.href = s; a.target = "_blank"; a.rel = "noopener noreferrer"; a.textContent = "🎵 " + s;
-        p.appendChild(a);
-      } else p.textContent = s;
-      songBox.appendChild(small); songBox.appendChild(p);
+
+      const small =
+        document.createElement("small");
+
+      let dateText = "";
+
+      if (data.createdAt) {
+
+        dateText =
+          data.createdAt
+            .toDate()
+            .toLocaleString();
+
+      }
+
+      small.textContent = dateText;
+
+      const songText =
+        document.createElement("p");
+
+      songText.textContent =
+        data.song || "";
+
+      songBox.appendChild(small);
+      songBox.appendChild(songText);
+
       box.appendChild(songBox);
+
     });
-  }, e => console.error("Song load error:", e));
-  unsubs.push(unsub);
+
+  }, error => {
+
+    console.error(
+      "Song load error:",
+      error
+    );
+
+  });
+  }
+// ==============================
+// Emoji Picker
+// ==============================
+
+function toggleEmojiPicker() {
+
+  const picker =
+    document.getElementById("emojiPicker");
+
+  if (!picker) return;
+
+
+  picker.classList.toggle("hidden");
+
 }
+
+
+window.toggleEmojiPicker =
+  toggleEmojiPicker;
+
+
+// ==============================
+// Add Emoji
+// ==============================
+
+function addEmoji(emoji) {
+
+  const input =
+    document.getElementById("chatInput");
+
+  if (!input) return;
+
+
+  const start =
+    input.selectionStart ?? input.value.length;
+
+  const end =
+    input.selectionEnd ?? input.value.length;
+
+
+  input.value =
+    input.value.substring(0, start) +
+    emoji +
+    input.value.substring(end);
+
+
+  const newPosition =
+    start + emoji.length;
+
+
+  input.focus();
+
+
+  input.setSelectionRange(
+    newPosition,
+    newPosition
+  );
+
+}
+
+
+window.addEmoji = addEmoji;
+  // ==============================
+// PART 5 — Chat Display
+// ==============================
+
+let chatUnsubscribe = null;
+
+function startChat() {
+
+  const user = auth.currentUser;
+
+  if (!user) return;
+
+
+  const chatMessages =
+    document.getElementById("chatMessages");
+
+  const chatError =
+    document.getElementById("chatError");
+
+  if (!chatMessages) return;
+
+
+  // Stop old listener first
+  if (chatUnsubscribe) {
+    chatUnsubscribe();
+    chatUnsubscribe = null;
+  }
+
+
+  const messagesQuery = query(
+    collection(db, "messages"),
+    orderBy("createdAt", "asc")
+  );
+
+
+  chatUnsubscribe = onSnapshot(
+    messagesQuery,
+
+    snapshot => {
+
+      chatMessages.innerHTML = "";
+
+
+      snapshot.forEach(messageDoc => {
+
+        const data = messageDoc.data();
+
+        const isMine =
+          data.uid === user.uid;
+
+
+        const row =
+          document.createElement("div");
+
+        row.style.display = "flex";
+
+        row.style.justifyContent =
+          isMine ? "flex-end" : "flex-start";
+
+        row.style.margin = "12px 0";
+
+
+        const bubble =
+          document.createElement("div");
+
+        bubble.style.maxWidth = "80%";
+
+        bubble.style.padding = "10px 15px";
+
+        bubble.style.borderRadius =
+          isMine
+            ? "20px 20px 5px 20px"
+            : "20px 20px 20px 5px";
+
+        bubble.style.background =
+          isMine ? "#e7bfd0" : "#f1e3e8";
+
+        bubble.style.color = "#593743";
+
+        bubble.style.boxShadow =
+          "0 3px 10px #75485815";
+
+
+        // Name
+        const name =
+          document.createElement("small");
+
+        name.textContent =
+          isMine ? "Me ♡" : "You ♡";
+
+        name.style.display = "block";
+
+        name.style.fontWeight = "bold";
+
+        name.style.marginBottom = "5px";
+
+
+        // Message content
+        const message =
+          document.createElement("div");
+
+        message.style.whiteSpace =
+          "pre-wrap";
+
+        message.style.lineHeight =
+          "1.5";
+
+
+        // File or normal message
+        if (data.fileURL) {
+
+          if (
+            data.fileType &&
+            data.fileType.startsWith("image/")
+          ) {
+
+            const image =
+              document.createElement("img");
+
+            image.src = data.fileURL;
+
+            image.alt =
+              data.text || "Our memory";
+
+            image.style.maxWidth = "220px";
+
+            image.style.maxHeight = "300px";
+
+            image.style.borderRadius = "15px";
+
+            image.style.display = "block";
+
+            image.style.cursor = "pointer";
+
+
+            image.onclick = () => {
+
+              window.open(
+                data.fileURL,
+                "_blank"
+              );
+
+            };
+
+
+            message.appendChild(image);
+
+          } else {
+
+            const link =
+              document.createElement("a");
+
+            link.href = data.fileURL;
+
+            link.target = "_blank";
+
+            link.rel = "noopener noreferrer";
+
+            link.textContent =
+              "📎 " +
+              String(data.text || "")
+                .replace("📎 ", "");
+
+            link.style.color = "#a94763";
+
+            link.style.fontWeight = "bold";
+
+            link.style.textDecoration =
+              "none";
+
+
+            message.appendChild(link);
+
+          }
+
+        } else {
+
+          message.textContent =
+            data.text || "";
+
+        }
+
+
+        // Time
+        const time =
+          document.createElement("small");
+
+
+        if (
+          data.createdAt &&
+          typeof data.createdAt.toDate === "function"
+        ) {
+
+          const date =
+            data.createdAt.toDate();
+
+
+          time.textContent =
+            date.toLocaleDateString([], {
+              day: "2-digit",
+              month: "short",
+              year: "numeric"
+            }) +
+            " · " +
+            date.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit"
+            });
+
+        } else {
+
+          time.textContent =
+            "sending...";
+
+        }
+
+
+        time.style.display = "block";
+
+        time.style.textAlign = "right";
+
+        time.style.marginTop = "6px";
+
+        time.style.fontSize = "11px";
+
+        time.style.opacity = "0.65";
+
+
+        bubble.appendChild(name);
+
+        bubble.appendChild(message);
+
+        bubble.appendChild(time);
+
+
+        // ==========================
+        // Delete + Edit
+        // ==========================
+
+        if (isMine) {
+
+          const actions =
+            document.createElement("div");
+
+          actions.style.display = "flex";
+
+          actions.style.justifyContent =
+            "flex-end";
+
+          actions.style.gap = "3px";
+
+
+          // Delete
+          const deleteButton =
+            document.createElement("button");
+
+          deleteButton.textContent = "🗑️";
+
+          deleteButton.style.background =
+            "transparent";
+
+          deleteButton.style.padding =
+            "3px 6px";
+
+          deleteButton.style.fontSize =
+            "14px";
+
+          deleteButton.style.border = "none";
+
+
+          deleteButton.onclick = async () => {
+
+            if (
+              !confirm(
+                "Delete this message? ♡"
+              )
+            ) {
+              return;
+            }
+
+
+            try {
+
+              await deleteDoc(
+                doc(
+                  db,
+                  "messages",
+                  messageDoc.id
+                )
+              );
+
+              chatError.textContent = "";
+
+            } catch (error) {
+
+              console.error(
+                "Delete error:",
+                error
+              );
+
+              chatError.textContent =
+                "Delete failed ♡";
+
+            }
+
+          };
+
+
+          // Edit
+          const editButton =
+            document.createElement("button");
+
+          editButton.textContent = "✏️";
+
+          editButton.style.background =
+            "transparent";
+
+          editButton.style.padding =
+            "3px 6px";
+
+          editButton.style.fontSize =
+            "14px";
+
+          editButton.style.border = "none";
+
+
+          editButton.onclick = async () => {
+
+            // Files cannot be edited
+            if (data.fileURL) {
+
+              alert(
+                "File messages cannot be edited ♡"
+              );
+
+              return;
+
+            }
+
+
+            const newText =
+              prompt(
+                "Edit your message ♡",
+                data.text || ""
+              );
+
+
+            if (newText === null) {
+              return;
+            }
+
+
+            const trimmedText =
+              newText.trim();
+
+
+            if (!trimmedText) {
+              return;
+            }
+
+
+            try {
+
+              await updateDoc(
+                doc(
+                  db,
+                  "messages",
+                  messageDoc.id
+                ),
+                {
+                  text: trimmedText
+                }
+              );
+
+            } catch (error) {
+
+              console.error(
+                "Edit error:",
+                error
+              );
+
+              chatError.textContent =
+                "Edit failed ♡";
+
+            }
+
+          };
+
+
+          actions.appendChild(deleteButton);
+
+          actions.appendChild(editButton);
+
+          bubble.appendChild(actions);
+
+        }
+
+
+        row.appendChild(bubble);
+
+        chatMessages.appendChild(row);
+
+      });
+
+
+      // Scroll to latest message
+      chatMessages.scrollTop =
+        chatMessages.scrollHeight;
+
+    },
+
+    error => {
+
+      console.error(
+        "Chat error:",
+        error
+      );
+
+
+    }
+  );
+
+    }
+  // ==============================
+// PART 6 — Send Message
+// Reply & Reactions
+// ==============================
+
+async function sendChatMessage() {
+
+  const user = auth.currentUser;
+
+  const input =
+    document.getElementById("chatInput");
+
+  const error =
+    document.getElementById("chatError");
+
+
+  if (!user || !input) return;
+
+
+  const text = input.value.trim();
+
+
+  if (!text) return;
+
+
+  if (
+    user.uid !== MY_UID &&
+    user.uid !== HIS_UID
+  ) {
+
+    error.textContent =
+      "This account is not allowed. ♡";
+
+    return;
+  }
+
+
+  try {
+
+    const messageData = {
+
+      uid: user.uid,
+
+      text: text,
+
+      createdAt: serverTimestamp()
+
+    };
+
+
+    // Reply information
+    if (input.dataset.replyTo) {
+
+      messageData.replyTo =
+        input.dataset.replyTo;
+
+      messageData.replyText =
+        input.dataset.replyText || "";
+
+    }
+
+
+    await addDoc(
+      collection(db, "messages"),
+      messageData
+    );
+
+
+    // Clear input
+    input.value = "";
+
+    input.placeholder =
+      "Write something to me...";
+
+    delete input.dataset.replyTo;
+
+    delete input.dataset.replyText;
+
+    error.textContent = "";
+
+
+  } catch (e) {
+
+    console.error(
+      "Send message error:",
+      e
+    );
+
+    error.textContent =
+      "Could not send your message ♡";
+
+  }
+
+}
+
+
+window.sendChatMessage =
+  sendChatMessage;
+
+
+// ==============================
+// Reply
+// ==============================
+
+function cancelReply() {
+
+  const input =
+    document.getElementById("chatInput");
+
+  if (!input) return;
+
+
+  delete input.dataset.replyTo;
+
+  delete input.dataset.replyText;
+
+
+  input.value = "";
+
+  input.placeholder =
+    "Write something to me...";
+
+
+  input.focus();
+
+}
+
+
+window.cancelReply =
+  cancelReply;
+
+
+// ==============================
+// Reaction
+// ==============================
+
+async function setReaction(
+  messageId,
+  reaction
+) {
+
+  const user = auth.currentUser;
+
+  if (!user) return;
+
+
+  try {
+
+    await updateDoc(
+      doc(
+        db,
+        "messages",
+        messageId
+      ),
+      {
+        reaction: reaction
+      }
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Reaction error:",
+      error
+    );
+
+  }
+
+}
+
+
+// ==============================
+// Enter key = Send
+// ==============================
+
+const chatInput =
+  document.getElementById("chatInput");
+
+
+if (chatInput) {
+
+  chatInput.addEventListener(
+    "keydown",
+    event => {
+
+      if (
+        event.key === "Enter" &&
+        !event.shiftKey
+      ) {
+
+        event.preventDefault();
+
+        sendChatMessage();
+
+      }
+
+    }
+  );
+
+}
+  
+// ==============================
+// PART 7 — Upload Files
+// ==============================
+
+async function sendFile() {
+
+  const user = auth.currentUser;
+
+  const fileInput =
+    document.getElementById("fileInput");
+
+  const error =
+    document.getElementById("chatError");
+
+  const file =
+    fileInput.files[0];
+
+
+  if (!user || !file) return;
+
+
+  if (
+    user.uid !== MY_UID &&
+    user.uid !== HIS_UID
+  ) {
+
+    error.textContent =
+      "This account is not allowed. ♡";
+
+    return;
+  }
+
+
+  try {
+
+    error.textContent =
+      "Uploading... ♡";
+
+
+    const safeFileName =
+      file.name.replace(
+        /[^a-zA-Z0-9._-]/g,
+        "_"
+      );
+
+
+    const fileRef = ref(
+      storage,
+      "chatFiles/" +
+      Date.now() +
+      "_" +
+      safeFileName
+    );
+
+
+    await uploadBytes(
+      fileRef,
+      file
+    );
+
+
+    const fileURL =
+      await getDownloadURL(fileRef);
+
+
+    await addDoc(
+      collection(db, "messages"),
+      {
+
+        uid: user.uid,
+
+        text: "📎 " + file.name,
+
+        fileURL: fileURL,
+
+        fileType: file.type,
+
+        createdAt: serverTimestamp()
+
+      }
+    );
+
+
+    fileInput.value = "";
+
+    error.textContent = "";
+
+
+  } catch (e) {
+
+    console.error(
+      "Upload error:",
+      e
+    );
+
+    error.textContent =
+      "Could not upload file ♡";
+
+  }
+
+}
+
+
+window.sendFile = sendFile;
+
+
+// ==============================
+// Start application after login
+// ==============================
+
+onAuthStateChanged(auth, user => {
+
+  if (!user) {
+
+    login.classList.remove("hidden");
+
+    app.classList.add("hidden");
+
+    return;
+  }
+
+
+  if (
+    user.uid !== MY_UID &&
+    user.uid !== HIS_UID
+  ) {
+
+    signOut(auth);
+
+    err.textContent =
+      "This account is not allowed here. ♡";
+
+    return;
+  }
+
+
+  login.classList.add("hidden");
+
+  app.classList.remove("hidden");
+
+  err.textContent = "";
+
+  loadAll();
+
+});
+
+// ==============================
+// END OF SCRIPT
+// ==============================
+
 </script>
+
 </body>
 </html>
+  
