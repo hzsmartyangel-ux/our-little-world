@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
 <title>Our Little World ♡</title>
 <style>
 *{box-sizing:border-box}
@@ -38,7 +38,10 @@ main{max-width:1000px;margin:auto;padding:25px 16px}
 .quote{text-align:center;margin:30px 0;padding:22px;background:#f2cbd6;border-radius:22px;font-style:italic}
 
 /* ===== Chat ===== */
-#chat{padding:0;overflow:hidden}
+#chat{position:fixed;left:0;top:0;width:100%;height:100dvh;z-index:50;display:flex;flex-direction:column;padding:0;margin:0;border-radius:0;overflow:hidden;background:#fffafd;touch-action:manipulation}
+body.chatopen{overflow:hidden}
+.back{background:#fff;color:#a94763;width:40px;height:40px;padding:0;border-radius:50%;font-size:20px;flex:none}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:90px;max-width:90%;background:#593743;color:#fff;padding:10px 16px;border-radius:18px;font-size:14px;z-index:200;box-shadow:0 6px 20px #0004}
 .chat-head{display:flex;align-items:center;gap:12px;padding:14px 18px;background:linear-gradient(135deg,#f6c7d2,#eadcf0);border-bottom:1px solid #f1d5dc}
 .avatar{width:44px;height:44px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;color:#c95e7b;position:relative;flex:none}
 .avatar .dot{position:absolute;right:0;bottom:0;width:13px;height:13px;border-radius:50%;background:#aaa;border:2px solid #fff}
@@ -47,7 +50,7 @@ main{max-width:1000px;margin:auto;padding:25px 16px}
 .chat-status{font-size:13px;opacity:.8;font-style:italic}
 .chat-status.on{color:#1f9d55;opacity:1}
 .chat-status.typing{color:#a94763;opacity:1;font-weight:bold}
-#chatMessages{height:58vh;overflow-y:auto;padding:14px;background:linear-gradient(135deg,#fff6f8,#f8edf5);-webkit-overflow-scrolling:touch}
+#chatMessages{flex:1;min-height:0;overflow-y:auto;padding:14px;background:linear-gradient(135deg,#fff6f8,#f8edf5);-webkit-overflow-scrolling:touch}
 .daysep{text-align:center;margin:14px 0 6px}
 .daysep span{background:#f2cbd6;color:#87495b;font-size:12px;padding:4px 12px;border-radius:12px}
 .row{display:flex;margin:3px 0 14px;position:relative}
@@ -101,7 +104,9 @@ main{max-width:1000px;margin:auto;padding:25px 16px}
 #chat .error{padding:0 14px 10px;margin:0}
 #lightbox{position:fixed;inset:0;background:#000d;display:flex;align-items:center;justify-content:center;z-index:100;padding:15px;cursor:zoom-out}
 #lightbox img{max-width:100%;max-height:100%;border-radius:10px}
-@media(max-width:520px){.panel{padding:18px}#chat{padding:0}#chatMessages{height:62vh}.bubble img.pic,.bubble video.pic{max-width:210px}}
+@media(max-width:520px){.panel{padding:18px}#chat{padding:0}.bubble img.pic,.bubble video.pic{max-width:210px}}
+.chat-head,.bar,.composer,#emojiPicker,#chat .error{flex:none}
+.composer{padding-bottom:max(10px,env(safe-area-inset-bottom))}
 </style>
 </head>
 <body>
@@ -141,6 +146,7 @@ main{max-width:1000px;margin:auto;padding:25px 16px}
 <!-- ============ CHAT ============ -->
 <section id="chat" class="panel hidden">
   <div class="chat-head">
+    <button class="back" onclick="closeChat()" title="Back">←</button>
     <div class="avatar">♡<span id="partnerDot" class="dot"></span></div>
     <div>
       <div class="chat-name">My love ♡</div>
@@ -324,13 +330,47 @@ function show(id, btn) {
   const sel = $(id); if (sel) sel.classList.remove("hidden");
   document.querySelectorAll(".tabs button").forEach(b => b.classList.remove("active"));
   if (btn) btn.classList.add("active");
+  document.body.classList.toggle("chatopen", id === "chat");
   if (id === "chat") {
     unread = 0; updateBadge();
+    fitChat();
     scrollChatBottom(true);
     markSeen();
   }
 }
 window.show = show;
+
+function closeChat() {
+  show("letters", document.querySelector(".tabs button"));
+  window.scrollTo(0, 0);
+}
+window.closeChat = closeChat;
+
+/* keep the chat exactly above the phone keyboard */
+function fitChat() {
+  const c = $("chat");
+  const vv = window.visualViewport;
+  if (vv) {
+    c.style.height = vv.height + "px";
+    c.style.top = vv.offsetTop + "px";
+  }
+}
+if (window.visualViewport) {
+  const onVV = () => {
+    fitChat();
+    if (document.activeElement && document.activeElement.id === "chatInput") scrollChatBottom(true);
+    window.scrollTo(0, 0);
+  };
+  window.visualViewport.addEventListener("resize", onVV);
+  window.visualViewport.addEventListener("scroll", onVV);
+}
+
+function toast(msg) {
+  const t = document.createElement("div");
+  t.className = "toast"; t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 5000);
+}
 
 /* =====================================================
    PRESENCE  (online / typing / last seen)
@@ -446,7 +486,7 @@ function startChat() {
     markSeen();
   }, e => {
     console.error("Chat error:", e);
-    $("chatError").textContent = "Cannot load the chat (check Firestore rules) ♡";
+    toast("Cannot load the chat: " + (e.code || e.message));
   });
   unsubs.push(unsub);
 
@@ -684,7 +724,7 @@ async function toggleReaction(m, emoji) {
     });
   } catch (e) {
     console.error("Reaction error:", e);
-    $("chatError").textContent = "Reaction failed (check Firestore rules) ♡";
+    toast("Reaction failed: " + (e.code || e.message));
   }
 }
 
@@ -803,7 +843,7 @@ async function sendChatMessage() {
     scrollChatBottom(true);
   } catch (e) {
     console.error("Send error:", e);
-    errBox.textContent = "Could not send (check connection / rules) ♡";
+    toast("Could not send: " + (e.code || e.message));
   } finally {
     sending = false;
   }
