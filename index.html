@@ -96,7 +96,7 @@ body.chatopen{overflow:hidden;overscroll-behavior:none}
 .composer{display:flex;gap:6px;align-items:flex-end;padding:10px 12px;padding-bottom:max(10px,env(safe-area-inset-bottom));background:#fffafd;border-top:1px solid #f1d5dc;flex:none}
 .composer .ib{background:#fff;border:1px solid #e8c6cf;padding:0;width:44px;height:44px;font-size:21px;border-radius:50%;flex:none}
 .composer textarea{flex:1;min-width:0;height:44px;max-height:120px;resize:none;padding:11px 16px;border-radius:24px}
-.composer .send{width:46px;height:46px;padding:0;border-radius:50%;font-size:20px;flex:none}
+.composer .send{width:46px;height:46px;padding:0;border-radius:50%;font-size:20px;flex:none;touch-action:manipulation}.composer .send:disabled{opacity:.65}
 #emojiPicker{padding:10px;background:#fff;border-top:1px solid #e8c6cf;text-align:center;max-height:190px;overflow-y:auto;font-size:25px;line-height:1.9;flex:none}
 #emojiPicker span{cursor:pointer;padding:0 3px}
 #chat .error{padding:0 14px 6px;margin:0;min-height:0;flex:none}
@@ -123,7 +123,7 @@ body.chatopen{overflow:hidden;overscroll-behavior:none}
   <button onclick="unlock()">ENTER OUR WORLD ♡</button>
   <div id="err" class="error"></div>
 </div>
-<p>Just you &amp; me, always. 🦋</p><div class="verTag" onclick="toggleDebug()" style="font-size:11px;opacity:.5">version 3</div></div>
+<p>Just you &amp; me, always. 🦋</p><div style="font-size:11px;opacity:.5">version 3</div></div>
 </section>
 
 <main id="app" class="hidden">
@@ -134,7 +134,7 @@ body.chatopen{overflow:hidden;overscroll-behavior:none}
   <h1>Our Little World ❤️</h1>
   <div class="subtitle">A place for our words, memories &amp; little moments.</div>
   <button onclick="logout()" style="margin-top:15px;background:#a64c62;">Leave our little world ♡</button>
-  <div class="verTag" onclick="toggleDebug()" style="font-size:11px;opacity:.5;margin-top:8px">version 3</div>
+  <div style="font-size:11px;opacity:.5;margin-top:8px">version 3</div>
 </div>
 
 <div class="tabs">
@@ -152,7 +152,7 @@ body.chatopen{overflow:hidden;overscroll-behavior:none}
     <button class="back" onclick="closeChat()" title="Back">←</button>
     <div class="avatar">♡<span id="partnerDot" class="dot"></span></div>
     <div>
-      <div class="chat-name">My love ♡ <span class="verTag" onclick="toggleDebug()" style="font-size:12px;opacity:.6;font-weight:normal;padding:4px">v3 🛠</span></div>
+      <div class="chat-name">My love ♡ <span style="font-size:10px;opacity:.5;font-weight:normal">v3</span></div>
       <div id="partnerStatus" class="chat-status">offline</div>
     </div>
   </div>
@@ -223,7 +223,6 @@ body.chatopen{overflow:hidden;overscroll-behavior:none}
 </main>
 
 <div id="msgMenu"></div>
-<pre id="dbgPanel" class="hidden" onclick="this.classList.add('hidden')" style="position:fixed;top:56px;left:8px;right:8px;max-height:50vh;overflow:auto;z-index:600;background:#000e;color:#9f9;font:11px monospace;padding:10px;border-radius:12px;white-space:pre-wrap;margin:0"></pre>
 <div id="lightbox" class="hidden" onclick="this.classList.add('hidden')"><img id="lightboxImg" alt=""></div>
 <div id="modal" class="hidden"><div class="box"><p id="modalText"></p><div class="btns"><button class="cancel" id="modalNo">Cancel</button><button class="danger" id="modalYes">Delete</button></div></div></div>
 
@@ -231,7 +230,7 @@ body.chatopen{overflow:hidden;overscroll-behavior:none}
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut }
   from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-import { getFirestore, initializeFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp,
+import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp,
   updateDoc, setDoc, doc, deleteDoc, deleteField }
   from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 import { getStorage, ref, uploadBytesResumable, uploadBytes, getDownloadURL }
@@ -253,10 +252,7 @@ const HIS_UID = "mTnX5HUrmeSevuUZVjTDQ7jA9wn1";
 
 const appFirebase = initializeApp(firebaseConfig);
 const auth = getAuth(appFirebase);
-const db = (() => {
-  try { return initializeFirestore(appFirebase, { experimentalAutoDetectLongPolling: true }); }
-  catch (e) { return getFirestore(appFirebase); }
-})();
+const db = getFirestore(appFirebase);
 const storage = getStorage(appFirebase);
 
 const $ = id => document.getElementById(id);
@@ -264,24 +260,6 @@ const loginEl = $("login"), appEl = $("app"), errEl = $("err");
 const isAllowed = u => !!u && (u.uid === MY_UID || u.uid === HIS_UID);
 const myUid = () => (auth.currentUser ? auth.currentUser.uid : null);
 const partnerUid = () => (myUid() === MY_UID ? HIS_UID : MY_UID);
-const logLines = [];
-function dlog(msg) {
-  logLines.push(new Date().toLocaleTimeString() + "  " + msg);
-  if (logLines.length > 60) logLines.shift();
-  const p = document.getElementById("dbgPanel");
-  if (p && !p.classList.contains("hidden")) { p.textContent = logLines.join("\n"); p.scrollTop = p.scrollHeight; }
-}
-const _ce = console.error;
-console.error = function (...a) {
-  try { dlog("ERROR " + a.map(x => (x && (x.code || x.message)) ? ((x.code || "") + " " + (x.message || "")) : String(x)).join(" ")); } catch (e) {}
-  _ce.apply(console, a);
-};
-function toggleDebug() {
-  const p = $("dbgPanel");
-  p.classList.toggle("hidden");
-  p.textContent = logLines.join("\n");
-}
-window.toggleDebug = toggleDebug;
 const errText = e => (e && (e.code || e.message)) || String(e);
 
 /* =====================================================
@@ -375,12 +353,12 @@ onAuthStateChanged(auth, user => {
 });
 
 function loadAll() {
-  dlog("UA: " + navigator.userAgent);
-  dlog("screen " + window.innerWidth + "x" + window.innerHeight + " · protocol " + location.protocol);
-  [["emoji", buildEmojiPicker], ["inputs", bindChatInputs], ["presence", startPresence],
-   ["chat", startChat], ["entries", startSharedEntries], ["song", loadSong]].forEach(([n, f]) => {
-    try { f(); dlog("started " + n); } catch (e) { console.error("start " + n + " failed:", e); toast("Start error (" + n + "): " + errText(e)); }
-  });
+  buildEmojiPicker();
+  bindChatInputs();
+  startPresence();
+  startChat();
+  startSharedEntries();
+  loadSong();
 }
 
 const unsubs = [];
@@ -406,7 +384,6 @@ function show(id, btn) {
   document.body.classList.toggle("chatopen", id === "chat");
   closeMenu();
   if (id === "chat") {
-    kbFake = false; fullH = window.innerHeight;
     unread = 0; updateBadge();
     fitChat();
     scrollChatBottom(true);
@@ -422,11 +399,8 @@ function closeChat() {
 }
 window.closeChat = closeChat;
 
-let fullH = window.innerHeight, kbFake = false;
-const isMobileUA = /Android|iPhone|iPad|Mobi/i.test(navigator.userAgent);
 function fitChat() {
   const c = $("chat");
-  if (kbFake) { c.style.top = "0px"; c.style.height = Math.round(fullH * 0.5) + "px"; return; }
   const vv = window.visualViewport;
   if (vv && vv.height) {
     c.style.height = vv.height + "px";
@@ -436,16 +410,16 @@ function fitChat() {
 if (window.visualViewport) {
   const onVV = () => {
     if (!chatVisible()) return;
-    if (kbFake && window.visualViewport.height < fullH * 0.85) kbFake = false; // real keyboard resize detected
     fitChat();
-    if (document.activeElement && document.activeElement.id === "chatInput") scrollChatBottom(true);
-    window.scrollTo(0, 0);
+    if (document.activeElement && document.activeElement.id === "chatInput") {
+      requestAnimationFrame(() => scrollChatBottom(true));
+    }
     closeMenu();
   };
   window.visualViewport.addEventListener("resize", onVV);
   window.visualViewport.addEventListener("scroll", onVV);
 }
-window.addEventListener("resize", () => { if (chatVisible()) { if (kbFake && window.innerHeight < fullH * 0.85) kbFake = false; fitChat(); } });
+window.addEventListener("resize", () => { if (chatVisible()) fitChat(); });
 
 /* =====================================================
    PRESENCE  (online / typing / last seen)
@@ -573,26 +547,12 @@ function bindChatInputs() {
   });
   input.addEventListener("focus", () => {
     // wait for the keyboard animation, then keep the newest message in view
-    setTimeout(() => {
-      if (document.activeElement !== input) return;   // user already moved on (e.g. tapped a message)
-      const vvH = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
-      if (isMobileUA && !kbFake && vvH > fullH * 0.85 && window.innerHeight > fullH * 0.85) {
-        kbFake = true;   // this browser did not shrink for the keyboard: make room ourselves
-        dlog("keyboard not detected -> using fallback layout");
-      }
-      fitChat(); scrollChatBottom(true);
-    }, 400);
+    setTimeout(() => { fitChat(); scrollChatBottom(true); }, 300);
   });
   input.addEventListener("blur", () => { if (!input.value.trim()) stopTyping(); });
   $("photoInput").addEventListener("change", e => pickFile(e.target));
   $("fileInput").addEventListener("change", e => pickFile(e.target));
   $("chatMessages").addEventListener("scroll", closeMenu, { passive: true });
-  // tapping the empty background (not a message) closes the keyboard and restores full height
-  $("chatMessages").addEventListener("touchstart", e => {
-    const t = e.target;
-    const background = t.id === "chatMessages" || t.id === "msgList" || t.classList.contains("row") || t.closest(".daysep");
-    if (kbFake && background) { kbFake = false; input.blur(); fitChat(); }
-  }, { passive: true });
 
   document.addEventListener("click", e => {
     if (!e.target.closest(".bubble") && !e.target.closest(".rbtn") && !e.target.closest("#msgMenu")) closeMenu();
@@ -612,7 +572,6 @@ function startChat() {
     }
 
     const list = [];
-    dlog("chat snapshot: " + snap.size + " messages" + (snap.metadata && snap.metadata.fromCache ? " (from cache, server not reached yet)" : ""));
     snap.forEach(d => list.push({ id: d.id, ...d.data({ serverTimestamps: "estimate" }) }));
     chatDocs = list;
     try { renderChat(); } catch (e) { console.error("Render error:", e); toast("Display error: " + errText(e)); }
@@ -863,15 +822,14 @@ function closeMenu() {
 
 /* ---------- reactions ---------- */
 function toggleReaction(id, emoji) {
-  dlog("reaction " + emoji);
   const uid = myUid();
   const m = chatDocs.find(d => d.id === id);
   if (!uid || !m) return;
   const cur = (m.reactions || {})[uid];
   const p = cur === emoji
     ? updateDoc(msgRef(id), { ["reactions." + uid]: deleteField() })
-    : setDoc(msgRef(id), { reactions: { [uid]: emoji } }, { merge: true });
-  p.then(() => dlog("reaction saved on server")).catch(e => { console.error("Reaction error:", e); toast("Reaction failed: " + errText(e)); });
+    : updateDoc(msgRef(id), { ["reactions." + uid]: emoji });
+  p.catch(e => { console.error("Reaction error:", e); toast("Reaction failed: " + errText(e)); });
 }
 
 /* ---------- seen ticks ---------- */
@@ -936,9 +894,7 @@ function saveEdit() {
   $("editBar").classList.add("hidden");
   input.value = ""; autoGrow(input);
   if (old && old.text === text) return;
-  dlog("edit save");
   updateDoc(msgRef(id), { text: text, edited: true })
-    .then(() => dlog("edit saved on server"))
     .catch(e => { console.error("Edit error:", e); toast("Edit failed: " + errText(e)); });
 }
 
@@ -949,9 +905,7 @@ async function deleteMessage(id) {
   const yes = await askConfirm("Delete this message? ♡", "Delete");
   if (!yes) return;
   try {
-    dlog("delete");
     await deleteDoc(msgRef(id));
-    dlog("deleted on server");
   } catch (e) {
     console.error("Delete error:", e);
     toast("Delete failed: " + errText(e));
@@ -998,8 +952,7 @@ function uploadWithProgress(storageRef, file) {
 }
 
 /* ---------- send ---------- */
-function sendChatMessage() {
-  dlog("send tapped");
+async function sendChatMessage() {
   const user = auth.currentUser;
   const input = $("chatInput");
   if (!user) { toast("Please log in again ♡"); return; }
@@ -1015,20 +968,26 @@ function sendChatMessage() {
   const data = { uid: user.uid, text: text, createdAt: serverTimestamp(), seen: false };
   if (replyTarget) data.replyTo = replyTarget;
 
-  // clear the box right away so it feels instant (and the keyboard stays open)
-  input.value = ""; autoGrow(input);
-  cancelReply();
-  stopTyping();
-  input.focus();
-
-  addDoc(msgsCol(), data)
-    .then(() => dlog("message saved on server"))
-    .catch(e => {
-      console.error("Send error:", e);
-      toast("Could not send: " + errText(e));
-      if (!input.value) { input.value = text; autoGrow(input); }
-    });
-  scrollChatBottom(true);
+  // Keep the draft until Firestore confirms the message was saved.
+  const sendBtn = $("sendBtn");
+  sendBtn.disabled = true;
+  sendBtn.textContent = "…";
+  try {
+    await addDoc(msgsCol(), data);
+    input.value = "";
+    autoGrow(input);
+    cancelReply();
+    stopTyping();
+    $("emojiPicker").classList.add("hidden");
+    scrollChatBottom(true);
+    input.focus();
+  } catch (e) {
+    console.error("Send error:", e);
+    toast("Could not send: " + errText(e));
+  } finally {
+    sendBtn.disabled = false;
+    sendBtn.textContent = "➤";
+  }
 }
 window.sendChatMessage = sendChatMessage;
 
@@ -1051,10 +1010,9 @@ async function sendWithFile(text) {
     };
     if (replyTarget) data.replyTo = replyTarget;
 
-    addDoc(msgsCol(), data).catch(e => { console.error("Send error:", e); toast("Could not send: " + errText(e)); });
+    await addDoc(msgsCol(), data);
 
     input.value = ""; autoGrow(input);
-    uploading = false;
     pendingFile = null;
     $("attachBar").classList.add("hidden");
     cancelReply();
