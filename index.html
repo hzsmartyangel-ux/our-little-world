@@ -45,6 +45,8 @@ main{max-width:1000px;margin:auto;padding:25px 16px}.top{text-align:center;paddi
 .typing-bubble span:nth-child(2){animation-delay:.2s}
 .typing-bubble span:nth-child(3){animation-delay:.4s}
 @keyframes blink{0%,60%,100%{opacity:.3}30%{opacity:1}}
+#lightbox{position:fixed;left:0;top:0;right:0;bottom:0;background:#000d;display:flex;align-items:center;justify-content:center;z-index:300;padding:15px}
+#lightbox img{max-width:100%;max-height:100%;border-radius:10px}
 </style>
 </head>
 <body>
@@ -63,7 +65,7 @@ main{max-width:1000px;margin:auto;padding:25px 16px}.top{text-align:center;paddi
 
   <div id="err" class="error"></div>
 </div>
-<p>Just you & me, always. 🦋</p><div style="font-size:11px;opacity:.5">step 5 of 5</div></div>
+<p>Just you & me, always. 🦋</p><div style="font-size:11px;opacity:.5">step 5 fixed</div></div>
 </section>
 
 <main id="app" class="hidden">
@@ -334,6 +336,7 @@ style="margin-top:8px;padding:14px;background:#fff;border:1px solid #e8c6cf;bord
 
 <div class="quote">“Distance means so little when someone means so much.” ♡</div>
 </main>
+<div id="lightbox" class="hidden" onclick="this.classList.add('hidden')"><img id="lightboxImg" alt=""></div>
 <div id="modal" class="hidden"><div class="box"><p id="modalText"></p><div class="btns"><button class="cancel" id="modalNo">Cancel</button><button class="danger" id="modalYes">Delete</button></div></div></div>
 
 <script type="module">
@@ -366,6 +369,7 @@ import {
   getStorage,
   ref,
   uploadBytes,
+  uploadBytesResumable,
   getDownloadURL
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-storage.js";
 
@@ -1439,14 +1443,7 @@ function startChat() {
             image.style.cursor = "pointer";
 
 
-            image.onclick = () => {
-
-              window.open(
-                data.fileURL,
-                "_blank"
-              );
-
-            };
+            image.onclick = () => { openLightbox(data.fileURL); };
 
 
             message.appendChild(image);
@@ -1940,102 +1937,147 @@ async function sendFile(inputEl) {
 
   const user = auth.currentUser;
 
-  const fileInput =
-    inputEl || document.getElementById("fileInput");
+  const error = document.getElementById("chatError");
 
-  const error =
-    document.getElementById("chatError");
-
-  const file =
-    fileInput.files[0];
-
+  const file = inputEl && inputEl.files && inputEl.files[0];
 
   if (!user || !file) return;
 
-
-  if (
-    user.uid !== MY_UID &&
-    user.uid !== HIS_UID
-  ) {
-
-    error.textContent =
-      "This account is not allowed. ♡";
-
+  if (user.uid !== MY_UID && user.uid !== HIS_UID) {
+    error.textContent = "This account is not allowed. ♡";
+    inputEl.value = "";
     return;
   }
 
-
   try {
 
-    error.textContent =
-      "Uploading... ♡";
+    let fileURL = "";
+    let fileType = file.type;
 
-
-    const safeFileName =
-      file.name.replace(
-        /[^a-zA-Z0-9._-]/g,
-        "_"
-      );
-
-
-    const fileRef = ref(
-      storage,
-      "chatFiles/" +
-      Date.now() +
-      "_" +
-      safeFileName
-    );
-
-
-    await uploadBytes(
-      fileRef,
-      file
-    );
-
-
-    const fileURL =
-      await getDownloadURL(fileRef);
-
-
-    await addDoc(
-      collection(db, "messages"),
-      {
-
-        uid: user.uid,
-
-        text: "📎 " + file.name,
-
-        fileURL: fileURL,
-
-        fileType: file.type,
-
-        fileName: file.name,
-
-        fileSize: file.size,
-
-        createdAt: serverTimestamp()
-
+    // Photos: shrink and send inside the message (works without Firebase Storage)
+    if (file.type && file.type.indexOf("image/") === 0) {
+      error.textContent = "Sending photo... ♡";
+      try {
+        fileURL = await compressForChat(file);
+        fileType = "image/jpeg";
+      } catch (compressError) {
+        console.error("Photo shrink failed:", compressError);
+        fileURL = "";
       }
-    );
+    }
 
+    // Other files and videos: Firebase Storage
+    if (!fileURL) {
+      if (file.size > 25 * 1024 * 1024) {
+        inputEl.value = "";
+        error.textContent = "";
+        toast("File too big (max 25 MB) ♡");
+        return;
+      }
+      fileURL = await uploadToStorage(file, error);
+    }
 
-    fileInput.value = "";
+    await addDoc(collection(db, "messages"), {
+      uid: user.uid,
+      text: "📎 " + file.name,
+      fileURL: fileURL,
+      fileType: fileType,
+      fileName: file.name,
+      fileSize: file.size,
+      createdAt: serverTimestamp()
+    });
 
+    inputEl.value = "";
     error.textContent = "";
 
+    const box = document.getElementById("chatMessages");
+    if (box) box.scrollTop = box.scrollHeight;
 
   } catch (e) {
 
-    console.error(
-      "Upload error:",
-      e
-    );
+    console.error("Upload error:", e);
 
-    error.textContent =
-      "Could not upload file ♡";
+    inputEl.value = "";
+
+    const code = (e && (e.code || e.message)) || String(e);
+    error.textContent = "Could not send the file ♡";
+    toast("Could not send: " + code);
 
   }
 
+}
+
+// Shrink a photo to a small JPEG (about 100-400 KB) so it fits in a message
+function compressForChat(file) {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      try {
+        const sides = [1280, 1024, 800, 640, 480];
+        const qualities = [0.75, 0.65, 0.55];
+        let best = null;
+        outer:
+        for (let a = 0; a < sides.length; a++) {
+          const scale = Math.min(1, sides[a] / Math.max(img.naturalWidth, img.naturalHeight));
+          const w = Math.max(1, Math.round(img.naturalWidth * scale));
+          const h = Math.max(1, Math.round(img.naturalHeight * scale));
+          const canvas = document.createElement("canvas");
+          canvas.width = w; canvas.height = h;
+          const ctx = canvas.getContext("2d");
+          ctx.fillStyle = "#ffffff";
+          ctx.fillRect(0, 0, w, h);
+          ctx.drawImage(img, 0, 0, w, h);
+          for (let b = 0; b < qualities.length; b++) {
+            best = canvas.toDataURL("image/jpeg", qualities[b]);
+            if (best.length < 800000) break outer;
+          }
+        }
+        URL.revokeObjectURL(url);
+        if (!best || best.length >= 1000000) { reject(new Error("photo-too-large")); return; }
+        resolve(best);
+      } catch (err) { URL.revokeObjectURL(url); reject(err); }
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("cannot-read-photo")); };
+    img.src = url;
+  });
+}
+
+// Upload to Firebase Storage with a visible percentage and a clear message if it gets stuck
+function uploadToStorage(file, statusEl) {
+  return new Promise((resolve, reject) => {
+    const safeFileName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+    const fileRef = ref(storage, "chatFiles/" + Date.now() + "_" + safeFileName);
+    const task = uploadBytesResumable(fileRef, file, { contentType: file.type || "application/octet-stream" });
+
+    let lastProgress = Date.now();
+    statusEl.textContent = "Uploading... 0% ♡";
+
+    const watchdog = setInterval(() => {
+      if (Date.now() - lastProgress > 15000) {
+        clearInterval(watchdog);
+        try { task.cancel(); } catch (e) {}
+        reject(new Error("upload-stuck: Firebase Storage is not set up or its rules are not published"));
+      }
+    }, 2000);
+
+    task.on("state_changed", snap => {
+      lastProgress = Date.now();
+      const pct = snap.totalBytes ? Math.round(snap.bytesTransferred / snap.totalBytes * 100) : 0;
+      statusEl.textContent = "Uploading... " + pct + "% ♡";
+    }, err => {
+      clearInterval(watchdog);
+      reject(err);
+    }, () => {
+      clearInterval(watchdog);
+      getDownloadURL(task.snapshot.ref).then(resolve, reject);
+    });
+  });
+}
+
+function openLightbox(url) {
+  document.getElementById("lightboxImg").src = url;
+  document.getElementById("lightbox").classList.remove("hidden");
 }
 
 
