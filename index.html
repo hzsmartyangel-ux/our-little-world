@@ -9,6 +9,26 @@
 .hidden{display:none!important}.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#f6c7d2,#eadcf0)}
 .card{width:min(560px,100%);padding:40px 25px;border-radius:28px;background:#fffafadd;box-shadow:0 20px 60px #74435430;text-align:center}.heart{font-size:42px}.script{font-size:clamp(42px,10vw,68px);font-style:italic;color:#a94763;margin:8px}.login{max-width:390px;margin:auto}input,textarea{width:100%;padding:14px;border:1px solid #e4bbc7;border-radius:18px;font:16px Georgia;background:#fff}.login input{border-radius:30px;text-align:center}button{padding:12px 20px;border:0;border-radius:25px;background:#c95e7b;color:white;font-size:15px;cursor:pointer} .login button{width:100%;margin-top:10px}.error{min-height:22px;color:#a94763;margin-top:8px}
 main{max-width:1000px;margin:auto;padding:25px 16px}.top{text-align:center;padding:25px 0}.top h1{font-size:38px;margin:5px}.subtitle{font-style:italic}.tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:20px 0}.tabs button{background:#fff;color:#87495b;border:1px solid #e8c6cf}.tabs button.active{background:#c95e7b;color:white}.panel{background:#fffafd;padding:25px;border-radius:25px;box-shadow:0 8px 30px #75485812}.panel h2{margin-top:0}.editor{display:grid;gap:10px}.entry{padding:16px;margin-top:14px;border-radius:18px;background:#fff0f3;border:1px solid #f1d5dc}.entry small{display:block;color:#8d6973;margin-bottom:7px}.entry p{white-space:pre-wrap;line-height:1.6}.actions{display:flex;gap:8px;flex-wrap:wrap}.danger{background:#a64c62}.quote{text-align:center;margin:30px 0;padding:22px;background:#f2cbd6;border-radius:22px;font-style:italic}
+
+/* step 2: popups + edit bar */
+.bar{display:flex;align-items:center;gap:10px;padding:8px 14px;margin-top:10px;background:#fff0f3;border:1px solid #f1d5dc;border-radius:16px;font-size:14px}
+.bar .grow{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar .x{background:transparent;color:#a94763;padding:4px 8px;font-size:20px}
+#modal{position:fixed;left:0;top:0;right:0;bottom:0;background:#0006;display:flex;align-items:center;justify-content:center;z-index:400;padding:20px}
+#modal .box{background:#fffafd;border-radius:22px;padding:24px;max-width:340px;width:100%;text-align:center;box-shadow:0 20px 60px #0005}
+#modal .box p{margin:0 0 18px;font-size:17px}
+#modal .box .btns{display:flex;gap:10px;justify-content:center}
+#modal .box .cancel{background:#fff;color:#87495b;border:1px solid #e8c6cf}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:90px;max-width:90%;background:#593743;color:#fff;padding:10px 16px;border-radius:18px;font-size:14px;z-index:500;box-shadow:0 6px 20px #0004}
+
+/* step 3: reactions */
+.rrow{display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-end;align-items:center;margin-top:6px}
+.rchip{background:#fff;border:1px solid #e8c6cf;border-radius:14px;padding:1px 8px;font-size:15px;cursor:pointer}
+.rchip.me{background:#ffe3ec;border-color:#c95e7b}
+.rbtn{background:#fff;color:#a94763;border:1px solid #e8c6cf;padding:2px 9px;font-size:15px;border-radius:14px}
+.rpick{display:none;gap:2px;justify-content:center;flex-wrap:wrap;background:#fff;border:1px solid #e8c6cf;border-radius:18px;padding:6px;margin-top:6px}
+.rpick span{font-size:27px;padding:3px 6px;cursor:pointer;border-radius:50%}
+.rpick span.picked{background:#ffe3ec}
 </style>
 </head>
 <body>
@@ -27,7 +47,7 @@ main{max-width:1000px;margin:auto;padding:25px 16px}.top{text-align:center;paddi
 
   <div id="err" class="error"></div>
 </div>
-<p>Just you & me, always. 🦋</p><div style="font-size:11px;opacity:.5">step 1 of 5</div></div>
+<p>Just you & me, always. 🦋</p><div style="font-size:11px;opacity:.5">step 3 of 5</div></div>
 </section>
 
 <main id="app" class="hidden">
@@ -53,6 +73,11 @@ main{max-width:1000px;margin:auto;padding:25px 16px}.top{text-align:center;paddi
 
 <div id="chatMessages"
 style="height:45vh;overflow-y:auto;padding:15px;background:linear-gradient(135deg,#fff6f8,#f8edf5);border-radius:25px;box-shadow:inset 0 0 20px #75485810;">
+</div>
+
+<div id="editBar" class="bar hidden">
+  <div class="grow"><b style="color:#a94763">✏️ Editing message</b><br><span id="editTxt"></span></div>
+  <button class="x" onclick="cancelEdit()">✕</button>
 </div>
 
 <div style="margin-top:12px;">
@@ -272,6 +297,8 @@ style="margin-top:8px;padding:14px;background:#fff;border:1px solid #e8c6cf;bord
 
 <div class="quote">“Distance means so little when someone means so much.” ♡</div>
 </main>
+<div id="modal" class="hidden"><div class="box"><p id="modalText"></p><div class="btns"><button class="cancel" id="modalNo">Cancel</button><button class="danger" id="modalYes">Delete</button></div></div></div>
+
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
@@ -293,7 +320,9 @@ import {
   serverTimestamp,
   updateDoc,
   doc,
-  deleteDoc
+  deleteDoc,
+  setDoc,
+  deleteField
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 import {
@@ -366,7 +395,7 @@ async function saveSharedEntry(type, title, text) {
 
     console.error("Firestore save error:", error);
 
-    alert("Could not save. Please try again.");
+    toast("Could not save. Please try again.");
 
   }
 
@@ -466,8 +495,7 @@ const actions = document.createElement("div");
 
         deleteButton.onclick = async () => {
 
-          const confirmed =
-            confirm("Delete this entry? ♡");
+          const confirmed = await askConfirm("Delete this entry? ♡", "Delete");
 
           if (!confirmed) return;
 
@@ -484,7 +512,7 @@ const actions = document.createElement("div");
               error
             );
 
-            alert(
+            toast(
               "Could not delete this entry."
             );
 
@@ -913,7 +941,7 @@ window.addEntry = addEntry;
       error
     );
 
-    alert(
+    toast(
       "Could not save this memory. Please try again."
     );
 
@@ -1087,7 +1115,7 @@ async function saveSong() {
       error
     );
 
-    alert(
+    toast(
       "Could not save the song. Please try again."
     );
 
@@ -1471,6 +1499,50 @@ function startChat() {
         bubble.appendChild(time);
 
 
+        // ----- reactions (step 3) -----
+        try {
+          const reacts = (data.reactions && typeof data.reactions === "object") ? data.reactions : {};
+          const myReact = reacts[user.uid];
+          const counts = {};
+          Object.keys(reacts).forEach(u => {
+            const r = reacts[u];
+            if (typeof r === "string") counts[r] = (counts[r] || 0) + 1;
+          });
+
+          const rrow = document.createElement("div");
+          rrow.className = "rrow";
+
+          Object.keys(counts).forEach(r => {
+            const chip = document.createElement("span");
+            chip.className = "rchip" + (myReact === r ? " me" : "");
+            chip.textContent = r + (counts[r] > 1 ? " " + counts[r] : "");
+            chip.onclick = () => toggleReaction(messageDoc.id, r, myReact);
+            rrow.appendChild(chip);
+          });
+
+          const picker = document.createElement("div");
+          picker.className = "rpick";
+          ["❤️", "😂", "😮", "😢", "👍", "🙏"].forEach(r => {
+            const sp = document.createElement("span");
+            sp.textContent = r;
+            if (myReact === r) sp.className = "picked";
+            sp.onclick = () => { picker.style.display = "none"; toggleReaction(messageDoc.id, r, myReact); };
+            picker.appendChild(sp);
+          });
+
+          const rbtn = document.createElement("button");
+          rbtn.className = "rbtn";
+          rbtn.textContent = "☺";
+          rbtn.onclick = () => { picker.style.display = (picker.style.display === "flex") ? "none" : "flex"; };
+          rrow.appendChild(rbtn);
+
+          bubble.appendChild(rrow);
+          bubble.appendChild(picker);
+        } catch (reactError) {
+          console.error("Reaction display error:", reactError);
+        }
+
+
         // ==========================
         // Delete + Edit
         // ==========================
@@ -1508,11 +1580,7 @@ function startChat() {
 
           deleteButton.onclick = async () => {
 
-            if (
-              !confirm(
-                "Delete this message? ♡"
-              )
-            ) {
+            if (!(await askConfirm("Delete this message? ♡", "Delete"))) {
               return;
             }
 
@@ -1562,66 +1630,8 @@ function startChat() {
           editButton.style.border = "none";
 
 
-          editButton.onclick = async () => {
-
-            // Files cannot be edited
-            if (data.fileURL) {
-
-              alert(
-                "File messages cannot be edited ♡"
-              );
-
-              return;
-
-            }
-
-
-            const newText =
-              prompt(
-                "Edit your message ♡",
-                data.text || ""
-              );
-
-
-            if (newText === null) {
-              return;
-            }
-
-
-            const trimmedText =
-              newText.trim();
-
-
-            if (!trimmedText) {
-              return;
-            }
-
-
-            try {
-
-              await updateDoc(
-                doc(
-                  db,
-                  "messages",
-                  messageDoc.id
-                ),
-                {
-                  text: trimmedText
-                }
-              );
-
-            } catch (error) {
-
-              console.error(
-                "Edit error:",
-                error
-              );
-
-              chatError.textContent =
-                "Edit failed ♡";
-
-            }
-
+          editButton.onclick = () => {
+            startEdit(messageDoc.id, data);
           };
 
 
@@ -1680,6 +1690,8 @@ async function sendChatMessage() {
 
   const text = input.value.trim();
 
+
+  if (editingId) { saveEdit(text); return; }
 
   if (!text) return;
 
@@ -2042,6 +2054,77 @@ try {
     }, 600);
   });
 } catch (e) { console.error("keyboard step failed", e); }
+
+
+// ==============================
+// STEP 2 — helpers: popups, edit mode
+function toast(msg) {
+  const t = document.createElement("div");
+  t.className = "toast";
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 5000);
+}
+
+function askConfirm(message, yesLabel) {
+  return new Promise(resolve => {
+    const modal = document.getElementById("modal");
+    document.getElementById("modalText").textContent = message;
+    document.getElementById("modalYes").textContent = yesLabel || "Delete";
+    modal.classList.remove("hidden");
+    const done = v => {
+      modal.classList.add("hidden");
+      document.getElementById("modalYes").onclick = null;
+      document.getElementById("modalNo").onclick = null;
+      resolve(v);
+    };
+    document.getElementById("modalYes").onclick = () => done(true);
+    document.getElementById("modalNo").onclick = () => done(false);
+  });
+}
+
+var editingId = null;
+
+function startEdit(id, data) {
+  if (data.fileURL) { toast("File messages cannot be edited ♡"); return; }
+  editingId = id;
+  const input = document.getElementById("chatInput");
+  input.value = data.text || "";
+  document.getElementById("editTxt").textContent = String(data.text || "").slice(0, 80);
+  document.getElementById("editBar").classList.remove("hidden");
+  input.focus();
+}
+
+function cancelEdit() {
+  editingId = null;
+  document.getElementById("editBar").classList.add("hidden");
+  document.getElementById("chatInput").value = "";
+}
+window.cancelEdit = cancelEdit;
+
+function saveEdit(text) {
+  const id = editingId;
+  if (!id) return;
+  if (!text) { toast("A message can't be empty (use the bin to delete) ♡"); return; }
+  editingId = null;
+  document.getElementById("editBar").classList.add("hidden");
+  document.getElementById("chatInput").value = "";
+  updateDoc(doc(db, "messages", id), { text: text, edited: true })
+    .catch(e => { console.error("Edit error:", e); toast("Edit failed: " + ((e && e.code) || e)); });
+}
+
+
+// ==============================
+// STEP 3 — save / remove a reaction
+function toggleReaction(messageId, emoji, current) {
+  const user = auth.currentUser;
+  if (!user) return;
+  const ref1 = doc(db, "messages", messageId);
+  const job = (current === emoji)
+    ? updateDoc(ref1, { ["reactions." + user.uid]: deleteField() })
+    : setDoc(ref1, { reactions: { [user.uid]: emoji } }, { merge: true });
+  job.catch(e => { console.error("Reaction error:", e); toast("Reaction failed: " + ((e && e.code) || e)); });
+}
 
 </script>
 
