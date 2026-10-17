@@ -47,6 +47,12 @@ main{max-width:1000px;margin:auto;padding:25px 16px}.top{text-align:center;paddi
 @keyframes blink{0%,60%,100%{opacity:.3}30%{opacity:1}}
 #lightbox{position:fixed;left:0;top:0;right:0;bottom:0;background:#000d;display:flex;align-items:center;justify-content:center;z-index:300;padding:15px}
 #lightbox img{max-width:100%;max-height:100%;border-radius:10px}
+
+/* step 7: reply + loaded files */
+.rquote{border-left:4px solid #c95e7b;background:#ffffff80;padding:5px 8px;border-radius:8px;margin-bottom:6px;font-size:13px;cursor:pointer}
+.rquote b{display:block;color:#a94763;font-size:12px}
+.rbtn2{background:#fff;color:#a94763;border:1px solid #e8c6cf;padding:2px 9px;font-size:15px;border-radius:14px}
+.chunkbtn{background:#fff;color:#a94763;border:1px solid #e8c6cf;border-radius:14px;padding:10px 14px;font-size:14px;text-align:left;max-width:100%}
 </style>
 </head>
 <body>
@@ -65,7 +71,7 @@ main{max-width:1000px;margin:auto;padding:25px 16px}.top{text-align:center;paddi
 
   <div id="err" class="error"></div>
 </div>
-<p>Just you & me, always. 🦋</p><div style="font-size:11px;opacity:.5">step 6</div></div>
+<p>Just you & me, always. 🦋</p><div style="font-size:11px;opacity:.5">step 7</div></div>
 </section>
 
 <main id="app" class="hidden">
@@ -113,6 +119,11 @@ style="height:45vh;overflow-y:auto;padding:15px;background:linear-gradient(135de
   <span id="attachIco" class="hidden" style="font-size:28px">📎</span>
   <div class="grow"><span id="attachName"></span><br><small style="opacity:.7">Write a message if you want, then tap Send</small></div>
   <button class="x" onclick="clearAttachment()">✕</button>
+</div>
+
+<div id="replyBar" class="bar hidden">
+  <div class="grow"><b id="replyWho" style="color:#a94763"></b><br><span id="replyTxt"></span></div>
+  <button class="x" onclick="clearReply()">✕</button>
 </div>
 
 <div style="margin-top:12px;">
@@ -369,7 +380,9 @@ import {
   doc,
   deleteDoc,
   setDoc,
-  deleteField
+  deleteField,
+  where,
+  getDocs
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 import {
@@ -1369,6 +1382,8 @@ function startChat() {
         const row =
           document.createElement("div");
 
+        row.id = "msg_" + messageDoc.id;
+
         row.style.display = "flex";
 
         row.style.justifyContent =
@@ -1424,7 +1439,49 @@ function startChat() {
 
 
         // File or normal message
-        if (data.fileURL) {
+        if (data.chunkId) {
+
+          // file or video stored inside Firestore (loads when you tap it)
+          const isVideo = !!(data.fileType && data.fileType.indexOf("video/") === 0);
+          const sizeText = data.fileSize ? " (" + fmtSize(data.fileSize) + ")" : "";
+          const cached = chunkUrlCache[data.chunkId];
+
+          if (cached && isVideo) {
+            message.appendChild(makeVideo(cached));
+          } else {
+            const cbtn = document.createElement("button");
+            cbtn.className = "chunkbtn";
+            const label = (isVideo ? "▶ Play video: " : "⬇ Open file: ") + (data.fileName || "file") + sizeText;
+            cbtn.textContent = label;
+            cbtn.onclick = async () => {
+              cbtn.disabled = true;
+              cbtn.textContent = "Loading... ♡";
+              try {
+                const url = await loadChunkedFile(data);
+                if (isVideo) {
+                  cbtn.replaceWith(makeVideo(url));
+                } else {
+                  const a = document.createElement("a");
+                  a.href = url;
+                  a.download = data.fileName || "file";
+                  a.target = "_blank";
+                  document.body.appendChild(a);
+                  a.click();
+                  a.remove();
+                  cbtn.disabled = false;
+                  cbtn.textContent = label;
+                }
+              } catch (loadError) {
+                console.error("Load file error:", loadError);
+                cbtn.disabled = false;
+                cbtn.textContent = label;
+                toast("Could not load the file: " + ((loadError && (loadError.code || loadError.message)) || loadError));
+              }
+            };
+            message.appendChild(cbtn);
+          }
+
+        } else if (data.fileURL) {
 
           if (
             data.fileType &&
@@ -1509,7 +1566,7 @@ function startChat() {
         }
 
         // words sent together with a photo or file
-        if (data.fileURL && data.caption) {
+        if ((data.fileURL || data.chunkId) && data.caption) {
           const cap = document.createElement("div");
           cap.style.whiteSpace = "pre-wrap";
           cap.style.lineHeight = "1.5";
@@ -1566,6 +1623,31 @@ function startChat() {
 
         bubble.appendChild(name);
 
+        // ----- quoted reply (step 7) -----
+        try {
+          if (data.replyTo && typeof data.replyTo === "object") {
+            const quote = document.createElement("div");
+            quote.className = "rquote";
+            const qwho = document.createElement("b");
+            qwho.textContent = data.replyTo.uid === user.uid ? "You" : "My love";
+            const qtext = document.createElement("span");
+            qtext.textContent = String(data.replyTo.text || "").slice(0, 90);
+            quote.appendChild(qwho);
+            quote.appendChild(qtext);
+            quote.onclick = () => {
+              const target = document.getElementById("msg_" + data.replyTo.id);
+              if (target) {
+                target.scrollIntoView({ block: "center" });
+                target.style.background = "#ffd6e2";
+                setTimeout(() => { target.style.background = ""; }, 1200);
+              }
+            };
+            bubble.appendChild(quote);
+          }
+        } catch (quoteError) {
+          console.error("Quote display error:", quoteError);
+        }
+
         bubble.appendChild(message);
 
         bubble.appendChild(time);
@@ -1606,6 +1688,13 @@ function startChat() {
           rbtn.className = "rbtn";
           rbtn.textContent = "☺";
           rbtn.onclick = () => { picker.style.display = (picker.style.display === "flex") ? "none" : "flex"; };
+          const replyBtn = document.createElement("button");
+          replyBtn.className = "rbtn2";
+          replyBtn.textContent = "↩";
+          replyBtn.title = "Reply";
+          replyBtn.onclick = () => startReply(messageDoc.id, data);
+          rrow.appendChild(replyBtn);
+
           rrow.appendChild(rbtn);
 
           bubble.appendChild(rrow);
@@ -1666,6 +1755,8 @@ function startChat() {
                   messageDoc.id
                 )
               );
+
+              if (data.chunkId) { deleteChunks(data.chunkId); }
 
               chatError.textContent = "";
 
@@ -1795,15 +1886,9 @@ async function sendChatMessage() {
     };
 
 
-    // Reply information
-    if (input.dataset.replyTo) {
-
-      messageData.replyTo =
-        input.dataset.replyTo;
-
-      messageData.replyText =
-        input.dataset.replyText || "";
-
+    // Reply information (step 7)
+    if (replyTarget) {
+      messageData.replyTo = replyTarget;
     }
 
 
@@ -1822,6 +1907,8 @@ async function sendChatMessage() {
     delete input.dataset.replyTo;
 
     delete input.dataset.replyText;
+
+    try { clearReply(); } catch (e) {}
 
     error.textContent = "";
 
@@ -2022,6 +2109,7 @@ async function sendPendingFile(caption) {
 
     let fileURL = "";
     let fileType = file.type;
+    let chunkInfo = null;
 
     // Photos: shrink and send inside the message (works without Firebase Storage)
     if (file.type && file.type.indexOf("image/") === 0) {
@@ -2035,20 +2123,27 @@ async function sendPendingFile(caption) {
       }
     }
 
-    // Other files and videos: Firebase Storage
+    // Other files and videos up to 10 MB: saved in Firestore pieces (no Firebase Storage needed)
     if (!fileURL) {
-      if (file.size > 25 * 1024 * 1024) {
+      if (file.size <= CHUNK_MAX_BYTES) {
+        chunkInfo = await uploadChunked(file, error);
+      } else if (file.size > 25 * 1024 * 1024) {
         error.textContent = "";
         toast("File too big (max 25 MB) ♡");
         return;
+      } else {
+        // bigger than 10 MB: only possible with Firebase Storage
+        fileURL = await uploadToStorage(file, error);
       }
-      fileURL = await uploadToStorage(file, error);
     }
 
     await addDoc(collection(db, "messages"), {
       uid: user.uid,
       text: "📎 " + file.name,
       caption: caption || "",
+      replyTo: replyTarget || null,
+      chunkId: chunkInfo ? chunkInfo.chunkId : "",
+      chunkCount: chunkInfo ? chunkInfo.count : 0,
       fileURL: fileURL,
       fileType: fileType,
       fileName: file.name,
@@ -2058,6 +2153,7 @@ async function sendPendingFile(caption) {
 
     sendingFile = false;
     clearAttachment();
+    try { clearReply(); } catch (e) {}
 
     const input = document.getElementById("chatInput");
     input.value = "";
@@ -2267,7 +2363,8 @@ var editingId = null;
 
 function startEdit(id, data) {
   try { clearAttachment(); } catch (e) {}
-  if (data.fileURL) { toast("File messages cannot be edited ♡"); return; }
+  if (data.fileURL || data.chunkId) { toast("File messages cannot be edited ♡"); return; }
+  try { clearReply(); } catch (e) {}
   editingId = id;
   const input = document.getElementById("chatInput");
   input.value = data.text || "";
@@ -2394,6 +2491,129 @@ function onTyping() {
 function stopTyping() {
   clearTimeout(typingTimer);
   if (lastTypingSent) { lastTypingSent = 0; setPresence({ typing: false }); }
+}
+
+
+// ==============================
+// STEP 7 — reply, and files / videos without Firebase Storage
+var replyTarget = null;
+var chunkUrlCache = {};
+var CHUNK_MAX_BYTES = 10 * 1024 * 1024;
+var CHUNK_CHARS = 700000;   // must be a multiple of 4
+
+function fmtSize(b) {
+  if (!b) return "";
+  if (b < 1024) return b + " B";
+  if (b < 1048576) return (b / 1024).toFixed(0) + " KB";
+  return (b / 1048576).toFixed(1) + " MB";
+}
+
+function startReply(id, data) {
+  try { if (editingId) cancelEdit(); } catch (e) {}
+  let text = (data.text && String(data.text).indexOf("📎 ") !== 0) ? data.text : "";
+  if (!text && data.caption) text = data.caption;
+  if (!text) {
+    if (data.fileType && data.fileType.indexOf("image/") === 0) text = "📷 Photo";
+    else if (data.fileType && data.fileType.indexOf("video/") === 0) text = "🎬 Video";
+    else text = "📎 " + (data.fileName || "file");
+  }
+  replyTarget = { id: id, text: String(text).slice(0, 120), uid: data.uid };
+  document.getElementById("replyWho").textContent =
+    "Replying to " + (data.uid === auth.currentUser.uid ? "yourself" : "my love");
+  document.getElementById("replyTxt").textContent = replyTarget.text.slice(0, 80);
+  document.getElementById("replyBar").classList.remove("hidden");
+  document.getElementById("chatInput").focus();
+}
+
+function clearReply() {
+  replyTarget = null;
+  const bar = document.getElementById("replyBar");
+  if (bar) bar.classList.add("hidden");
+}
+window.clearReply = clearReply;
+
+function makeVideo(url) {
+  const video = document.createElement("video");
+  video.src = url;
+  video.controls = true;
+  video.preload = "metadata";
+  video.setAttribute("playsinline", "");
+  video.style.maxWidth = "220px";
+  video.style.borderRadius = "15px";
+  video.style.display = "block";
+  return video;
+}
+
+// Save a file in pieces inside Firestore (collection "fileChunks")
+async function uploadChunked(file, statusEl) {
+  const dataUrl = await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(reader.error || new Error("cannot-read-file"));
+    reader.readAsDataURL(file);
+  });
+  const base64 = String(dataUrl).slice(String(dataUrl).indexOf(",") + 1);
+  const total = Math.max(1, Math.ceil(base64.length / CHUNK_CHARS));
+  const chunkId = "f" + Date.now() + Math.random().toString(36).slice(2, 8);
+  const uid = auth.currentUser.uid;
+  let done = 0;
+  statusEl.textContent = "Uploading... 0% ♡";
+
+  try {
+    for (let i = 0; i < total; i += 3) {
+      const batch = [];
+      for (let j = i; j < Math.min(total, i + 3); j++) {
+        batch.push(addDoc(collection(db, "fileChunks"), {
+          chunkId: chunkId,
+          index: j,
+          total: total,
+          data: base64.slice(j * CHUNK_CHARS, (j + 1) * CHUNK_CHARS),
+          uid: uid
+        }).then(() => {
+          done++;
+          statusEl.textContent = "Uploading... " + Math.round(done / total * 100) + "% ♡";
+        }));
+      }
+      await Promise.all(batch);
+    }
+  } catch (e) {
+    deleteChunks(chunkId);
+    throw e;
+  }
+  return { chunkId: chunkId, count: total };
+}
+
+// Read the pieces back and build the file
+async function loadChunkedFile(data) {
+  if (chunkUrlCache[data.chunkId]) return chunkUrlCache[data.chunkId];
+  const snap = await getDocs(query(collection(db, "fileChunks"), where("chunkId", "==", data.chunkId)));
+  const parts = [];
+  snap.forEach(d => parts.push(d.data()));
+  parts.sort((a, b) => a.index - b.index);
+  if (!parts.length || (data.chunkCount && parts.length < data.chunkCount)) {
+    throw new Error("file-pieces-missing");
+  }
+  const arrays = parts.map(p => {
+    const bin = atob(p.data);
+    const bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return bytes;
+  });
+  const blob = new Blob(arrays, { type: data.fileType || "application/octet-stream" });
+  const url = URL.createObjectURL(blob);
+  chunkUrlCache[data.chunkId] = url;
+  return url;
+}
+
+async function deleteChunks(chunkId) {
+  try {
+    const snap = await getDocs(query(collection(db, "fileChunks"), where("chunkId", "==", chunkId)));
+    const jobs = [];
+    snap.forEach(d => jobs.push(deleteDoc(doc(db, "fileChunks", d.id))));
+    await Promise.all(jobs);
+  } catch (e) {
+    console.error("Delete pieces error:", e);
+  }
 }
 
 </script>
