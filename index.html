@@ -85,6 +85,7 @@ main{max-width:1000px;margin:auto;padding:25px 16px}.top{text-align:center;paddi
 #callUI #callCtl button.on{background:#fff;color:#111b21}
 #callUI #callCtl #callHang{background:#f15c6d;color:#fff}
 #callUI.vid .avatarbig,#callUI.vid .cname{display:none}
+.hbtn{background:transparent;color:#593743;padding:9px;border-radius:50%;display:flex;align-items:center;justify-content:center}
 </style>
 </head>
 <body>
@@ -105,7 +106,7 @@ main{max-width:1000px;margin:auto;padding:25px 16px}.top{text-align:center;paddi
 <div style="text-align:center;margin:10px auto 20px;padding:15px 20px;background:#f2cbd6;border-radius:20px;font-style:italic;max-width:600px">Welcome back to our little world, my love. ♡</div>
 <div class="top">
   <h1>Our Little World ❤️</h1>
-  <div class="subtitle">A place for our words, memories &amp; little moments.</div><div style="font-size:11px;opacity:.5">version 5</div>
+  <div class="subtitle">A place for our words, memories &amp; little moments.</div><div style="font-size:11px;opacity:.5">version 6</div>
   <button onclick="logout()" style="margin-top:15px;background:#a64c62">Leave our little world ♡</button>
 </div>
 <div class="tabs">
@@ -122,6 +123,7 @@ main{max-width:1000px;margin:auto;padding:25px 16px}.top{text-align:center;paddi
 <div class="chat-head">
   <div class="avatar">♡<span id="partnerDot" class="dot"></span></div>
   <div><div class="chat-name">My love ♡</div><div id="partnerStatus" class="chat-status">offline</div></div>
+  <div style="margin-left:auto;display:flex;gap:4px"><button id="vidBtn" class="hbtn" onclick="startCall(true)"></button><button id="callBtn" class="hbtn" onclick="startCall()"></button></div>
 </div>
 <div id="chatMessages"></div>
 <div id="editBar" class="bar hidden"><div class="grow"><b style="color:#a94763">✏️ Editing message</b><br><span id="editTxt"></span></div><button class="x" onclick="cancelEdit()">✕</button></div>
@@ -140,8 +142,6 @@ main{max-width:1000px;margin:auto;padding:25px 16px}.top{text-align:center;paddi
     <button onclick="$('photoInput').click()">📷</button>
     <button onclick="$('fileInput').click()">📎</button>
     <button id="micBtn" onclick="toggleRecord()">🎤</button>
-    <button id="callBtn" onclick="startCall()">📞</button>
-    <button id="vidBtn" onclick="startCall(true)">📹</button>
   </div>
   <div style="display:flex;gap:8px;align-items:stretch">
     <textarea id="chatInput" placeholder="Write something to me..." rows="2" style="flex:1;min-width:0;height:55px;resize:none"></textarea>
@@ -1230,6 +1230,8 @@ const ICON = {
 };
 const svg = (d, size) => '<svg viewBox="0 0 24 24" width="' + (size || 28) + '" height="' + (size || 28) + '" fill="currentColor"><path d="' + d + '"/></svg>';
 function paintIcons() {
+  $("vidBtn").innerHTML = svg(ICON.vid, 26);
+  $("callBtn").innerHTML = svg(ICON.call, 24);
   $("btnSpk").innerHTML = svg(ICON.vol);
   $("btnCam").innerHTML = svg(ICON.vidoff);
   $("btnMute").innerHTML = svg(ICON.mic);
