@@ -1060,7 +1060,7 @@ function handleCallDoc(d) {
   if (!me) return;
   if (!d) { if (call.id) cleanupCall(); return; }
   if (d.state === "ended") {
-    if (call.id === d.callId) cleanupCall();
+    if (call.id === d.callId) cleanupCall(d.declined ? "declined" : "");
     if (incoming && incoming.callId === d.callId) { stopRing(); incoming = null; $("callUI").classList.add("hidden"); }
     return;
   }
@@ -1081,20 +1081,20 @@ function startCallListener() {
 }
 
 async function hangUp() {
-  const id = call.id, missed = call.role === "caller" && !call.answered;
+  const id = call.id;
   cleanupCall();
-  if (missed) logMissedCall();
   if (id) { try { await updateDoc(callRef(), { state: "ended" }); } catch (e) {} }
 }
 async function declineCall() {
   const d = incoming;
   stopRing(); incoming = null;
   $("callUI").classList.add("hidden");
-  if (d) { try { await updateDoc(callRef(), { state: "ended" }); } catch (e) {} }
+  if (d) { try { await updateDoc(callRef(), { state: "ended", declined: true }); } catch (e) {} }
 }
 
-function cleanupCall() {
-  const wasOn = !!call.started;
+function cleanupCall(reason) {
+  const wasOn = !!call.started, role = call.role, answered = call.answered;
+  const dur = wasOn ? Math.round((Date.now() - call.started) / 1000) : 0;
   clearTimeout(call.ringTimeout); clearInterval(call.timer);
   try { if (call.pc) call.pc.close(); } catch (e) {}
   try { if (call.stream) call.stream.getTracks().forEach(t => t.stop()); } catch (e) {}
@@ -1102,6 +1102,11 @@ function cleanupCall() {
   $("remoteAudio").srcObject = null;
   $("callUI").classList.add("hidden");
   if (wasOn) toast("Call ended ♡");
+  // call history: the person who made the call saves it in the chat
+  if (role === "caller") {
+    if (wasOn) logCall("📞 Call · " + Math.floor(dur / 60) + ":" + String(dur % 60).padStart(2, "0"), false, dur);
+    else if (!answered) logCall(reason === "declined" ? "📞 Call declined" : "📞 Missed call", reason !== "declined", 0);
+  }
 }
 
 function startRing() {
@@ -1130,11 +1135,11 @@ function stopRing() {
 // ===== missed calls + notifications =====
 var unread = 0, chatLoaded = false;
 
-async function logMissedCall() {
+async function logCall(text, missed, duration) {
   const u = auth.currentUser;
   if (!u) return;
-  try { await addDoc(collection(db, "messages"), { uid: u.uid, text: "📞 Missed call", isCall: true, createdAt: serverTimestamp() }); }
-  catch (e) { console.error("Missed call log error:", e); }
+  try { await addDoc(collection(db, "messages"), { uid: u.uid, text, isCall: true, missed: !!missed, duration: duration || 0, createdAt: serverTimestamp() }); }
+  catch (e) { console.error("Call log error:", e); }
 }
 
 function notifyLocal(title, body) {
@@ -1152,7 +1157,7 @@ function onPartnerMessage(d) {
   if (!$("chat").classList.contains("hidden") && !document.hidden) return;
   unread++;
   updateBadge();
-  notifyLocal(d.isCall ? "📞 Missed call" : "💌 New message", d.isCall ? "My love tried to call you" : String(d.text || "").slice(0, 80));
+  notifyLocal(d.isCall ? d.text : "💌 New message", d.isCall ? "My love ♡" : String(d.text || "").slice(0, 80));
 }
 
 document.addEventListener("visibilitychange", () => {
