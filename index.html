@@ -86,6 +86,18 @@ main{max-width:1000px;margin:auto;padding:25px 16px}.top{text-align:center;paddi
 #callUI #callCtl #callHang{background:#f15c6d;color:#fff}
 #callUI.vid .avatarbig,#callUI.vid .cname{display:none}
 .hbtn{background:transparent;color:#593743;padding:9px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.chat-head{position:relative;padding:8px 8px;gap:6px}
+.hinfo{flex:1;min-width:0}
+.hinfo .chat-name,.hinfo .chat-status{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hicons{display:flex;flex:none}
+.hbtn{flex:none}
+.hmenu{position:absolute;right:8px;top:100%;margin-top:6px;background:#fff;border:1px solid #e8c6cf;border-radius:14px;padding:6px;box-shadow:0 8px 24px #0003;z-index:50}
+.hmenu button{background:transparent;color:#593743;white-space:nowrap}
+.composer{display:flex;gap:8px;align-items:flex-end;margin-top:12px}
+.pill{flex:1;min-width:0;display:flex;align-items:flex-end;gap:2px;background:#fff;border:1px solid #e4bbc7;border-radius:28px;padding:4px 6px}
+.pill textarea{border:0;background:transparent;border-radius:0;padding:10px 6px;height:42px;max-height:120px;resize:none;outline:none;flex:1;min-width:0}
+.ibtn{background:transparent;color:#8d6973;padding:8px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none}
+#micBtn{width:52px;height:52px;padding:0;border-radius:50%;background:#c95e7b;color:#fff;display:flex;align-items:center;justify-content:center;flex:none}
 </style>
 </head>
 <body>
@@ -106,7 +118,7 @@ main{max-width:1000px;margin:auto;padding:25px 16px}.top{text-align:center;paddi
 <div style="text-align:center;margin:10px auto 20px;padding:15px 20px;background:#f2cbd6;border-radius:20px;font-style:italic;max-width:600px">Welcome back to our little world, my love. ♡</div>
 <div class="top">
   <h1>Our Little World ❤️</h1>
-  <div class="subtitle">A place for our words, memories &amp; little moments.</div><div style="font-size:11px;opacity:.5">version 6</div>
+  <div class="subtitle">A place for our words, memories &amp; little moments.</div><div style="font-size:11px;opacity:.5">version 8</div>
   <button onclick="logout()" style="margin-top:15px;background:#a64c62">Leave our little world ♡</button>
 </div>
 <div class="tabs">
@@ -121,9 +133,15 @@ main{max-width:1000px;margin:auto;padding:25px 16px}.top{text-align:center;paddi
 <section id="chat" class="panel hidden">
 <h2>💬 Our Little Chat</h2>
 <div class="chat-head">
+  <button id="hBack" class="hbtn" onclick="show('letters',document.querySelector('.tabs button'))"></button>
   <div class="avatar">♡<span id="partnerDot" class="dot"></span></div>
-  <div><div class="chat-name">My love ♡</div><div id="partnerStatus" class="chat-status">offline</div></div>
-  <div style="margin-left:auto;display:flex;gap:4px"><button id="vidBtn" class="hbtn" onclick="startCall(true)"></button><button id="callBtn" class="hbtn" onclick="startCall()"></button></div>
+  <div class="hinfo"><div class="chat-name">My love ♡</div><div id="partnerStatus" class="chat-status">offline</div></div>
+  <div class="hicons">
+    <button id="vidBtn" class="hbtn" onclick="startCall(true)"></button>
+    <button id="callBtn" class="hbtn" onclick="startCall()"></button>
+    <button id="hDots" class="hbtn" onclick="$('hMenu').classList.toggle('hidden')"></button>
+  </div>
+  <div id="hMenu" class="hmenu hidden"><button onclick="logout()">🚪 Leave our little world ♡</button></div>
 </div>
 <div id="chatMessages"></div>
 <div id="editBar" class="bar hidden"><div class="grow"><b style="color:#a94763">✏️ Editing message</b><br><span id="editTxt"></span></div><button class="x" onclick="cancelEdit()">✕</button></div>
@@ -136,17 +154,14 @@ main{max-width:1000px;margin:auto;padding:25px 16px}.top{text-align:center;paddi
 </div>
 <div id="replyBar" class="bar hidden"><div class="grow"><b id="replyWho" style="color:#a94763"></b><br><span id="replyTxt"></span></div><button class="x" onclick="clearReply()">✕</button></div>
 
-<div style="margin-top:12px">
-  <div class="tool">
-    <button onclick="toggleEmojiPicker()">😊</button>
-    <button onclick="$('photoInput').click()">📷</button>
-    <button onclick="$('fileInput').click()">📎</button>
-    <button id="micBtn" onclick="toggleRecord()">🎤</button>
+<div class="composer">
+  <div class="pill">
+    <button id="emojiBtn" class="ibtn" onclick="toggleEmojiPicker()"></button>
+    <textarea id="chatInput" placeholder="Message" rows="1"></textarea>
+    <button id="attBtn" class="ibtn" onclick="$('fileInput').click()"></button>
+    <button id="camBtn" class="ibtn" onclick="$('photoInput').click()"></button>
   </div>
-  <div style="display:flex;gap:8px;align-items:stretch">
-    <textarea id="chatInput" placeholder="Write something to me..." rows="2" style="flex:1;min-width:0;height:55px;resize:none"></textarea>
-    <button onclick="sendChatMessage()" style="min-width:80px">Send ♡</button>
-  </div>
+  <button id="micBtn" onclick="mainAction()"></button>
 </div>
 <input id="fileInput" type="file" style="display:none" onchange="sendFile(this)">
 <input id="photoInput" type="file" accept="image/*,video/*" style="display:none" onchange="sendFile(this)">
@@ -938,7 +953,7 @@ async function toggleRecord() {
   rec.onstop = async () => {
     clearInterval(recTimer);
     recStream.getTracks().forEach(t => t.stop());
-    btn.textContent = "🎤"; btn.style.background = "";
+    updateSendBtn(); $("chatInput").placeholder = "Message";
     const secs = Math.round((Date.now() - recStart) / 1000);
     const type = (rec.mimeType || mime || "audio/webm").split(";")[0];
     if (secs < 1) { toast("Too short ♡"); return; }
@@ -946,10 +961,10 @@ async function toggleRecord() {
   };
   rec.start();
   recStart = Date.now();
-  btn.style.background = "#d33"; btn.textContent = "⏹ 0:00";
+  btn.style.background = "#d33"; btn.innerHTML = svg(ICON.stop, 26); $("chatInput").placeholder = "Recording… 0:00";
   recTimer = setInterval(() => {
     const s = Math.round((Date.now() - recStart) / 1000);
-    btn.textContent = "⏹ " + Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
+    $("chatInput").placeholder = "Recording… " + Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
     if (s >= 120) rec.stop();
   }, 500);
 }
@@ -1219,6 +1234,13 @@ document.addEventListener("visibilitychange", () => {
 var speakerOn = false;
 
 const ICON = {
+  emoji: "M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z",
+  attach: "M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5v10.5c0 .55-.45 1-1 1s-1-.45-1-1V6H10v9.5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V5c0-2.21-1.79-4-4-4S7 2.79 7 5v12.5c0 3.04 2.46 5.5 5.5 5.5s5.5-2.46 5.5-5.5V6h-1.5z",
+  camera: "M12 12m-3.2 0a3.2 3.2 0 1 0 6.4 0a3.2 3.2 0 1 0-6.4 0M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z",
+  send: "M2.01 21L23 12 2.01 3 2 10l15 2-15 2z",
+  stop: "M6 6h12v12H6z",
+  back: "M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z",
+  dots: "M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z",
   mic: "M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z",
   micoff: "M19 11h-1.7c0 .74-.16 1.43-.43 2.05l1.23 1.23c.56-.98.9-2.09.9-3.28zm-4.02.17c0-.06.02-.11.02-.17V5c0-1.66-1.34-3-3-3S9 3.34 9 5v.18l5.98 5.99zM4.27 3L3 4.27l6.01 6.01V11c0 1.66 1.33 3 2.99 3 .22 0 .44-.03.65-.08l1.66 1.66c-.71.33-1.5.52-2.31.52-2.76 0-5.3-2.1-5.3-5.1H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c.91-.13 1.77-.45 2.54-.9L19.73 21 21 19.73 4.27 3z",
   vid: "M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z",
@@ -1230,6 +1252,12 @@ const ICON = {
 };
 const svg = (d, size) => '<svg viewBox="0 0 24 24" width="' + (size || 28) + '" height="' + (size || 28) + '" fill="currentColor"><path d="' + d + '"/></svg>';
 function paintIcons() {
+  $("emojiBtn").innerHTML = svg(ICON.emoji, 26);
+  $("attBtn").innerHTML = svg(ICON.attach, 24);
+  $("camBtn").innerHTML = svg(ICON.camera, 24);
+  updateSendBtn();
+  $("hBack").innerHTML = svg(ICON.back, 26);
+  $("hDots").innerHTML = svg(ICON.dots, 26);
   $("vidBtn").innerHTML = svg(ICON.vid, 26);
   $("callBtn").innerHTML = svg(ICON.call, 24);
   $("btnSpk").innerHTML = svg(ICON.vol);
@@ -1319,6 +1347,31 @@ async function toggleSpeaker() {
   } catch (e) { console.error("Speaker error:", e); toast("Could not switch the speaker ♡"); }
 }
 
+// ===== WhatsApp-style send / mic button =====
+function updateSendBtn() {
+  const b = $("micBtn");
+  if (!b || (rec && rec.state === "recording")) return;
+  const has = $("chatInput").value.trim() || pendingFile || editingId;
+  b.style.background = "";
+  b.innerHTML = svg(has ? ICON.send : ICON.mic, 26);
+}
+function mainAction() {
+  if (rec && rec.state === "recording") { toggleRecord(); return; }
+  if ($("chatInput").value.trim() || pendingFile || editingId) sendChatMessage();
+  else toggleRecord();
+}
+$("chatInput").addEventListener("input", () => {
+  const t = $("chatInput");
+  t.style.height = "42px";
+  t.style.height = Math.min(120, t.scrollHeight) + "px";
+  updateSendBtn();
+});
+setInterval(() => {
+  updateSendBtn();
+  const t = $("chatInput");
+  if (!t.value) t.style.height = "42px";
+}, 300);
+window.mainAction = mainAction;
 window.toggleMute = toggleMute;
 window.toggleCamera = toggleCamera;
 window.flipCamera = flipCamera;
