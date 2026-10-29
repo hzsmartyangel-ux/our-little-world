@@ -61,6 +61,17 @@ main{max-width:1000px;margin:auto;padding:25px 16px}.top{text-align:center;paddi
 #callUI .big{font-size:80px}#callText{font-size:22px;font-style:italic}
 #callUI .row{display:flex;gap:18px}#callUI button{font-size:18px;padding:16px 26px;border-radius:40px}
 #callAnswer{background:#2e9e5b}#callDecline,#callHang{background:#c0392b}
+#callUI{overflow:hidden}
+#remoteVideo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000;z-index:0}
+#localVideo{position:absolute;top:16px;right:16px;width:96px;height:140px;object-fit:cover;border-radius:14px;border:2px solid #fff;z-index:3;background:#000;transform:scaleX(-1)}
+#callUI .cinner{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:22px}
+#callCtl{position:absolute;left:0;right:0;bottom:30px;display:flex;gap:12px;justify-content:center;z-index:3;flex-wrap:wrap;padding:0 10px}
+#callCtl button{width:60px;height:60px;padding:0;border-radius:50%;font-size:24px;background:#fffe;color:#593743}
+#callCtl button.on{background:#c95e7b;color:#fff}
+#callCtl #callHang{background:#c0392b;color:#fff}
+#callUI.vid .cinner{position:static}
+#callUI.vid .big,#callUI.vid .row{display:none}
+#callUI.vid #callText{position:absolute;top:18px;left:16px;font-size:16px;color:#fff;text-shadow:0 1px 4px #000;z-index:3}
 </style>
 </head>
 <body>
@@ -117,6 +128,7 @@ main{max-width:1000px;margin:auto;padding:25px 16px}.top{text-align:center;paddi
     <button onclick="$('fileInput').click()">📎</button>
     <button id="micBtn" onclick="toggleRecord()">🎤</button>
     <button id="callBtn" onclick="startCall()">📞</button>
+    <button id="vidBtn" onclick="startCall(true)">📹</button>
   </div>
   <div style="display:flex;gap:8px;align-items:stretch">
     <textarea id="chatInput" placeholder="Write something to me..." rows="2" style="flex:1;min-width:0;height:55px;resize:none"></textarea>
@@ -161,12 +173,22 @@ main{max-width:1000px;margin:auto;padding:25px 16px}.top{text-align:center;paddi
 <div id="lightbox" class="hidden" onclick="this.classList.add('hidden')"><img id="lightboxImg" alt=""></div>
 <div id="modal" class="hidden"><div class="box"><p id="modalText"></p><div class="btns"><button class="cancel" id="modalNo">Cancel</button><button class="danger" id="modalYes">Delete</button></div></div></div>
 <div id="callUI" class="hidden">
-  <div class="big">♡</div>
-  <div id="callText"></div>
-  <div class="row">
-    <button id="callAnswer" onclick="answerCall()">📞 Answer</button>
-    <button id="callDecline" onclick="declineCall()">✕ Decline</button>
-    <button id="callHang" onclick="hangUp()">📵 Hang up</button>
+  <video id="remoteVideo" class="hidden" autoplay playsinline muted></video>
+  <video id="localVideo" class="hidden" autoplay playsinline muted></video>
+  <div class="cinner">
+    <div class="big">♡</div>
+    <div id="callText"></div>
+    <div class="row">
+      <button id="callAnswer" onclick="answerCall()">📞 Answer</button>
+      <button id="callDecline" onclick="declineCall()">✕ Decline</button>
+    </div>
+  </div>
+  <div id="callCtl" class="hidden">
+    <button id="btnMute" onclick="toggleMute()">🎙️</button>
+    <button id="btnCam" onclick="toggleCamera()">📷</button>
+    <button id="btnFlip" onclick="flipCamera()">🔄</button>
+    <button id="btnSpk" onclick="toggleSpeaker()">🔊</button>
+    <button id="callHang" onclick="hangUp()">📵</button>
   </div>
   <audio id="remoteAudio" autoplay playsinline></audio>
 </div>
@@ -944,7 +966,7 @@ async function sendVoice(blob, type, secs) {
 
 // ===== voice calls (WebRTC, signalled through Firestore doc calls/active) =====
 const RTC_CFG = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }, { urls: "stun:stun1.l.google.com:19302" }] };
-const freshCall = () => ({ id: null, role: null, pc: null, stream: null, iceDone: 0, answered: false, gotAnswer: false, started: 0, ringTimeout: null, timer: null, last: null });
+const freshCall = () => ({ id: null, role: null, pc: null, stream: null, iceDone: 0, answered: false, gotAnswer: false, started: 0, ringTimeout: null, timer: null, last: null, camOn: false, camStream: null, vSender: null, dummy: null, dummyTimer: null, facing: "user", video: false });
 var call = freshCall(), incoming = null, ringInt = null, ringCtx = null, incomingTimer = null, callUnsub = null;
 const callRef = () => doc(db, "calls", "active");
 
@@ -953,7 +975,7 @@ function callUI(mode, text) {
   $("callText").textContent = text;
   $("callAnswer").classList.toggle("hidden", mode !== "incoming");
   $("callDecline").classList.toggle("hidden", mode !== "incoming");
-  $("callHang").classList.toggle("hidden", mode === "incoming");
+  $("callCtl").classList.toggle("hidden", mode === "incoming");
 }
 function callTick() {
   if (!call.started) return;
@@ -965,7 +987,12 @@ function newPC() {
   const pc = new RTCPeerConnection(RTC_CFG);
   call.pc = pc;
   call.stream.getTracks().forEach(t => pc.addTrack(t, call.stream));
-  pc.ontrack = e => { const a = $("remoteAudio"); a.srcObject = e.streams[0]; a.play().catch(() => {}); };
+  try { call.dummy = makeDummyTrack(); call.vSender = pc.addTrack(call.dummy, call.stream); } catch (e) { console.error("No video support:", e); call.vSender = null; }
+  pc.ontrack = e => {
+    const a = $("remoteAudio"), v = $("remoteVideo");
+    a.srcObject = e.streams[0]; a.play().catch(() => {});
+    v.srcObject = e.streams[0]; v.play().catch(() => {});
+  };
   pc.onconnectionstatechange = () => {
     const s = pc.connectionState;
     if (s === "connected" && !call.started) { call.started = Date.now(); callTick(); call.timer = setInterval(callTick, 1000); }
@@ -975,7 +1002,7 @@ function newPC() {
   return pc;
 }
 
-async function startCall() {
+async function startCall(video) {
   const user = auth.currentUser;
   if (!user) return;
   if (call.id || incoming) { toast("A call screen is already open ♡"); return; }
@@ -983,7 +1010,7 @@ async function startCall() {
   try { call.stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
   catch (e) { toast("Please allow the microphone ♡"); return; }
   const id = "c" + Date.now();
-  call.id = id; call.role = "caller";
+  call.id = id; call.role = "caller"; call.video = video === true;
   callUI("calling", "Calling my love… ♡");
   const pc = newPC();
   let ready = false;
@@ -999,9 +1026,10 @@ async function startCall() {
     await pc.setLocalDescription(offer);
     await setDoc(callRef(), {
       callId: id, from: user.uid, to: partnerUid(), state: "ringing",
-      offer: { type: offer.type, sdp: offer.sdp }, answer: null, callerIce: [], calleeIce: [], at: Date.now()
+      offer: { type: offer.type, sdp: offer.sdp }, answer: null, callerIce: [], calleeIce: [], at: Date.now(), video: video === true, camCaller: false, camCallee: false
     });
     ready = true;
+    if (video === true) toggleCamera();
     if (buf.length) await updateDoc(callRef(), { callerIce: arrayUnion(...buf) });
     call.ringTimeout = setTimeout(() => { if (call.id === id && !call.answered) { toast("No answer ♡"); hangUp(); } }, 45000);
   } catch (e) {
@@ -1029,6 +1057,7 @@ async function answerCall() {
     const ans = await pc.createAnswer();
     await pc.setLocalDescription(ans);
     await updateDoc(callRef(), { answer: { type: ans.type, sdp: ans.sdp }, state: "active" });
+    if (d.video) { call.video = true; toggleCamera(); }
     applyRemote(d);
   } catch (e) {
     console.error("Answer error:", e);
@@ -1041,6 +1070,7 @@ async function applyRemote(d) {
   const pc = call.pc;
   if (!pc) return;
   call.last = d;
+  setRemoteVideo(call.role === "caller" ? d.camCallee : d.camCaller);
   try {
     if (call.role === "caller" && d.answer && !call.gotAnswer) {
       call.gotAnswer = true; call.answered = true;
@@ -1066,7 +1096,7 @@ function handleCallDoc(d) {
   }
   if (d.to === me && d.state === "ringing" && !call.id && !incoming && Math.abs(Date.now() - d.at) < 60000) {
     incoming = d;
-    callUI("incoming", "My love is calling… ♡");
+    callUI("incoming", d.video ? "📹 My love is video calling… ♡" : "My love is calling… ♡");
     startRing();
     if (document.hidden) notifyLocal("📞 My love is calling", "Open our little world to answer");
     return;
@@ -1093,18 +1123,25 @@ async function declineCall() {
 }
 
 function cleanupCall(reason) {
-  const wasOn = !!call.started, role = call.role, answered = call.answered;
+  const wasOn = !!call.started, role = call.role, answered = call.answered, wasVideo = call.video;
   const dur = wasOn ? Math.round((Date.now() - call.started) / 1000) : 0;
   clearTimeout(call.ringTimeout); clearInterval(call.timer);
   try { if (call.pc) call.pc.close(); } catch (e) {}
   try { if (call.stream) call.stream.getTracks().forEach(t => t.stop()); } catch (e) {}
+  try { if (call.camStream) call.camStream.getTracks().forEach(t => t.stop()); } catch (e) {}
+  clearInterval(call.dummyTimer);
+  try { if (call.dummy) call.dummy.stop(); } catch (e) {}
+  $("localVideo").srcObject = null; $("localVideo").classList.add("hidden");
+  $("remoteVideo").srcObject = null; setRemoteVideo(false);
+  $("btnMute").textContent = "🎙️"; ["btnMute", "btnCam", "btnSpk"].forEach(i => $(i).classList.remove("on"));
+  speakerOn = false;
   call = freshCall();
   $("remoteAudio").srcObject = null;
   $("callUI").classList.add("hidden");
   if (wasOn) toast("Call ended ♡");
   // call history: the person who made the call saves it in the chat
   if (role === "caller") {
-    if (wasOn) logCall("📞 Call · " + Math.floor(dur / 60) + ":" + String(dur % 60).padStart(2, "0"), false, dur);
+    if (wasOn) logCall((wasVideo ? "📹 Video call · " : "📞 Call · ") + Math.floor(dur / 60) + ":" + String(dur % 60).padStart(2, "0"), false, dur);
     else if (!answered) logCall(reason === "declined" ? "📞 Call declined" : "📞 Missed call", reason !== "declined", 0);
   }
 }
@@ -1164,6 +1201,89 @@ document.addEventListener("visibilitychange", () => {
   if (!document.hidden && !$("chat").classList.contains("hidden")) { unread = 0; updateBadge(); }
 });
 
+// ===== call controls: mute, camera, flip, speaker =====
+var speakerOn = false;
+
+function makeDummyTrack() {
+  const c = document.createElement("canvas");
+  c.width = 160; c.height = 120;
+  const x = c.getContext("2d");
+  const draw = () => { x.fillStyle = "#000"; x.fillRect(0, 0, 160, 120); };
+  draw();
+  call.dummyTimer = setInterval(draw, 1000);
+  return c.captureStream(5).getVideoTracks()[0];
+}
+
+function setRemoteVideo(on) {
+  $("remoteVideo").classList.toggle("hidden", !on);
+  $("callUI").classList.toggle("vid", !!on);
+}
+
+function toggleMute() {
+  if (!call.stream) return;
+  const muted = $("btnMute").classList.toggle("on");
+  call.stream.getAudioTracks().forEach(t => { t.enabled = !muted; });
+  $("btnMute").textContent = muted ? "🔇" : "🎙️";
+}
+
+async function toggleCamera() {
+  if (!call.pc) return;
+  if (!call.vSender) { toast("Camera is not supported on this browser ♡"); return; }
+  try {
+    if (!call.camOn) {
+      const cs = await navigator.mediaDevices.getUserMedia({ video: { facingMode: call.facing } });
+      await call.vSender.replaceTrack(cs.getVideoTracks()[0]);
+      call.camStream = cs; call.camOn = true;
+      const lv = $("localVideo");
+      lv.srcObject = cs; lv.classList.remove("hidden"); lv.play().catch(() => {});
+      lv.style.transform = call.facing === "user" ? "scaleX(-1)" : "none";
+    } else {
+      await call.vSender.replaceTrack(call.dummy);
+      if (call.camStream) call.camStream.getTracks().forEach(t => t.stop());
+      call.camStream = null; call.camOn = false;
+      $("localVideo").classList.add("hidden");
+    }
+    $("btnCam").classList.toggle("on", call.camOn);
+    updateDoc(callRef(), call.role === "caller" ? { camCaller: call.camOn } : { camCallee: call.camOn }).catch(() => {});
+  } catch (e) { console.error("Camera error:", e); toast("Camera not allowed ♡"); }
+}
+
+async function flipCamera() {
+  if (!call.camOn) { toast("Turn the camera on first ♡"); return; }
+  try {
+    if (call.camStream) call.camStream.getTracks().forEach(t => t.stop());
+    call.facing = call.facing === "user" ? "environment" : "user";
+    const cs = await navigator.mediaDevices.getUserMedia({ video: { facingMode: call.facing } });
+    await call.vSender.replaceTrack(cs.getVideoTracks()[0]);
+    call.camStream = cs;
+    const lv = $("localVideo");
+    lv.srcObject = cs; lv.play().catch(() => {});
+    lv.style.transform = call.facing === "user" ? "scaleX(-1)" : "none";
+  } catch (e) { console.error("Flip error:", e); toast("Could not switch the camera ♡"); }
+}
+
+async function toggleSpeaker() {
+  const a = $("remoteAudio");
+  if (!a.setSinkId || !navigator.mediaDevices.enumerateDevices) {
+    toast("This browser can't switch the speaker. Use your phone volume or Bluetooth ♡"); return;
+  }
+  try {
+    const outs = (await navigator.mediaDevices.enumerateDevices()).filter(d => d.kind === "audiooutput");
+    const want = !speakerOn;
+    const dev = want
+      ? outs.find(d => /speaker/i.test(d.label))
+      : (outs.find(d => /earpiece|handset|phone/i.test(d.label) && !/speaker/i.test(d.label)) || outs.find(d => d.deviceId === "default"));
+    if (!dev) { toast("Speaker switch isn't available here. Use your phone volume ♡"); return; }
+    await a.setSinkId(dev.deviceId);
+    speakerOn = want;
+    $("btnSpk").classList.toggle("on", want);
+  } catch (e) { console.error("Speaker error:", e); toast("Could not switch the speaker ♡"); }
+}
+
+window.toggleMute = toggleMute;
+window.toggleCamera = toggleCamera;
+window.flipCamera = flipCamera;
+window.toggleSpeaker = toggleSpeaker;
 window.startCall = startCall;
 window.answerCall = answerCall;
 window.declineCall = declineCall;
