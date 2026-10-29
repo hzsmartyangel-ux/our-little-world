@@ -111,6 +111,7 @@ main{max-width:1000px;margin:auto;padding:25px 16px}.top{text-align:center;paddi
   .pill textarea{padding:10px 4px}
   #micBtn,#sendBtn{width:42px;height:42px}
 }
+#cancelRec{width:42px;height:42px;border-radius:50%;padding:0;background:#fff;color:#a94763;border:1px solid #e4bbc7;display:flex;align-items:center;justify-content:center;flex:none}
 </style>
 </head>
 <body>
@@ -162,6 +163,7 @@ main{max-width:1000px;margin:auto;padding:25px 16px}.top{text-align:center;paddi
   <div class="grow"><span id="attachName"></span><br><small style="opacity:.7">Write a message if you want, then tap Send</small></div>
   <button class="x" onclick="clearAttachment()">✕</button>
 </div>
+<div id="voiceBar" class="bar hidden"><audio id="voicePrev" controls style="flex:1;min-width:0;height:38px"></audio><button class="x" onclick="clearVoice()">🗑️</button></div>
 <div id="replyBar" class="bar hidden"><div class="grow"><b id="replyWho" style="color:#a94763"></b><br><span id="replyTxt"></span></div><button class="x" onclick="clearReply()">✕</button></div>
 
 <div class="composer">
@@ -171,6 +173,7 @@ main{max-width:1000px;margin:auto;padding:25px 16px}.top{text-align:center;paddi
     <button id="attBtn" class="ibtn" onclick="$('fileInput').click()"></button>
     <button id="camBtn" class="ibtn" onclick="$('photoInput').click()"></button>
   </div>
+  <button id="cancelRec" class="hidden" onclick="cancelRecord()"></button>
   <button id="micBtn" onclick="toggleRecord()"></button>
   <button id="sendBtn" onclick="sendChatMessage()"></button>
 </div>
@@ -625,6 +628,7 @@ async function sendChatMessage() {
   if (!user || !input) return;
   const text = input.value.trim();
   if (editingId) { saveEdit(text); return; }
+  if (pendingVoice) { sendPendingVoice(); return; }
   if (pendingFile) { sendPendingFile(text); return; }
   if (!text) return;
   if (!allowed(user)) { error.textContent = "This account is not allowed. ♡"; return; }
@@ -964,15 +968,19 @@ async function toggleRecord() {
   rec.onstop = async () => {
     clearInterval(recTimer);
     recStream.getTracks().forEach(t => t.stop());
-    updateSendBtn(); $("chatInput").placeholder = "Message";
+    updateSendBtn(); $("chatInput").placeholder = "Message"; $("cancelRec").classList.add("hidden");
     const secs = Math.round((Date.now() - recStart) / 1000);
     const type = (rec.mimeType || mime || "audio/webm").split(";")[0];
+    if (recCancelled) { recCancelled = false; return; }
     if (secs < 1) { toast("Too short ♡"); return; }
-    await sendVoice(new Blob(recChunks, { type }), type, secs);
+    pendingVoice = { blob: new Blob(recChunks, { type }), type, secs };
+    voiceUrl = URL.createObjectURL(pendingVoice.blob);
+    $("voicePrev").src = voiceUrl;
+    $("voiceBar").classList.remove("hidden");
   };
   rec.start();
   recStart = Date.now();
-  btn.style.background = "#d33"; btn.innerHTML = svg(ICON.stop, 26); $("chatInput").placeholder = "Recording… 0:00";
+  btn.style.background = "#d33"; btn.innerHTML = svg(ICON.stop, 26); $("chatInput").placeholder = "Recording… 0:00"; $("cancelRec").classList.remove("hidden"); clearVoice();
   recTimer = setInterval(() => {
     const s = Math.round((Date.now() - recStart) / 1000);
     $("chatInput").placeholder = "Recording… " + Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
@@ -1245,6 +1253,7 @@ document.addEventListener("visibilitychange", () => {
 var speakerOn = false;
 
 const ICON = {
+  trash: "M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z",
   emoji: "M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z",
   attach: "M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5v10.5c0 .55-.45 1-1 1s-1-.45-1-1V6H10v9.5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V5c0-2.21-1.79-4-4-4S7 2.79 7 5v12.5c0 3.04 2.46 5.5 5.5 5.5s5.5-2.46 5.5-5.5V6h-1.5z",
   camera: "M12 12m-3.2 0a3.2 3.2 0 1 0 6.4 0a3.2 3.2 0 1 0-6.4 0M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z",
@@ -1263,6 +1272,7 @@ const ICON = {
 };
 const svg = (d, size) => '<svg viewBox="0 0 24 24" width="' + (size || 28) + '" height="' + (size || 28) + '" fill="currentColor"><path d="' + d + '"/></svg>';
 function paintIcons() {
+  $("cancelRec").innerHTML = svg(ICON.trash, 22);
   $("emojiBtn").innerHTML = svg(ICON.emoji, 26);
   $("attBtn").innerHTML = svg(ICON.attach, 24);
   $("camBtn").innerHTML = svg(ICON.camera, 24);
@@ -1380,6 +1390,24 @@ setInterval(() => {
   const t = $("chatInput");
   if (!t.value) t.style.height = "42px";
 }, 300);
+var pendingVoice = null, voiceUrl = "", recCancelled = false;
+function clearVoice() {
+  pendingVoice = null;
+  if (voiceUrl) { try { URL.revokeObjectURL(voiceUrl); } catch (e) {} voiceUrl = ""; }
+  const bar = $("voiceBar");
+  if (bar) { bar.classList.add("hidden"); $("voicePrev").removeAttribute("src"); }
+}
+function cancelRecord() {
+  if (rec && rec.state === "recording") { recCancelled = true; rec.stop(); }
+}
+async function sendPendingVoice() {
+  const v = pendingVoice;
+  if (!v) return;
+  clearVoice();
+  await sendVoice(v.blob, v.type, v.secs);
+}
+window.clearVoice = clearVoice;
+window.cancelRecord = cancelRecord;
 window.mainAction = mainAction;
 window.toggleMute = toggleMute;
 window.toggleCamera = toggleCamera;
