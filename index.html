@@ -112,6 +112,45 @@ main{max-width:1000px;margin:auto;padding:25px 16px}.top{text-align:center;paddi
   #micBtn,#sendBtn{width:42px;height:42px}
 }
 #cancelRec{width:42px;height:42px;border-radius:50%;padding:0;background:#fff;color:#a94763;border:1px solid #e4bbc7;display:flex;align-items:center;justify-content:center;flex:none}
+#chatMessages{background:#fbe9ef url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='160'%20height='160'%20viewBox='0%200%20160%20160'%3E%3Cg%20fill='none'%20stroke='%23c95e7b'%20stroke-opacity='.25'%20stroke-width='1.6'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M24%2034c-10-8-14-14-9-19%204-3%208-1%209%203%201-4%205-6%209-3%205%205%201%2011-9%2019z'/%3E%3Cpath%20d='M100%2014l4%209%2010%201-7%207%202%2010-9-5-9%205%202-10-7-7%2010-1z'/%3E%3Cpath%20d='M128%2060h22a6%206%200%200%201%206%206v12a6%206%200%200%201-6%206h-12l-8%207v-7h-2a6%206%200%200%201-6-6V66a6%206%200%200%201%206-6z'/%3E%3Ccircle%20cx='40'%20cy='88'%20r='3'/%3E%3Ccircle%20cx='40'%20cy='78'%20r='4'/%3E%3Ccircle%20cx='40'%20cy='98'%20r='4'/%3E%3Ccircle%20cx='30'%20cy='88'%20r='4'/%3E%3Ccircle%20cx='50'%20cy='88'%20r='4'/%3E%3Crect%20x='84'%20y='104'%20width='28'%20height='20'%20rx='3'/%3E%3Cpath%20d='M84%20107l14%2010%2014-10'/%3E%3Cpath%20d='M20%20130v14M13%20137h14'/%3E%3Cpath%20d='M70%2062c-8-10-18-4-14%204%203%205%2010%204%2014-4zM70%2062c8-10%2018-4%2014%204-3%205-10%204-14-4z'/%3E%3Cpath%20d='M138%20128v-16l12-3v16'/%3E%3Ccircle%20cx='134'%20cy='128'%20r='4'/%3E%3Ccircle%20cx='146'%20cy='125'%20r='4'/%3E%3Ccircle%20cx='62'%20cy='142'%20r='5'/%3E%3Cpath%20d='M140%2022c-4-3-6-6-4-8%202-1%203%200%204%202%201-2%203-3%204-2%202%202%200%205-4%208z'/%3E%3C/g%3E%3C/svg%3E");background-size:160px 160px}
+/* dark chat */
+#chat.panel{background:#111b21;box-shadow:none}
+#chat h2{color:#e9edef}
+#chat .chat-head{background:#1f2c34}
+#chat .chat-name{color:#e9edef}
+#chat .chat-status{color:#8696a0;opacity:1}
+#chat .chat-status.on{color:#25d366}
+#chat .chat-status.typing{color:#25d366}
+#chat .avatar{background:#2a3942;color:#e9798f}
+#chat .avatar .dot{border-color:#1f2c34}
+#chat .hbtn{color:#aebac1}
+#chatMessages{background:#0b141a url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='160'%20height='160'%20viewBox='0%200%20160%20160'%3E%3Cg%20fill='none'%20stroke='%238696a0'%20stroke-opacity='.16'%20stroke-width='1.6'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M24%2034c-10-8-14-14-9-19%204-3%208-1%209%203%201-4%205-6%209-3%205%205%201%2011-9%2019z'/%3E%3Cpath%20d='M100%2014l4%209%2010%201-7%207%202%2010-9-5-9%205%202-10-7-7%2010-1z'/%3E%3Cpath%20d='M128%2060h22a6%206%200%200%201%206%206v12a6%206%200%200%201-6%206h-12l-8%207v-7h-2a6%206%200%200%201-6-6V66a6%206%200%200%201%206-6z'/%3E%3Ccircle%20cx='40'%20cy='88'%20r='3'/%3E%3Ccircle%20cx='40'%20cy='78'%20r='4'/%3E%3Ccircle%20cx='40'%20cy='98'%20r='4'/%3E%3Ccircle%20cx='30'%20cy='88'%20r='4'/%3E%3Ccircle%20cx='50'%20cy='88'%20r='4'/%3E%3Crect%20x='84'%20y='104'%20width='28'%20height='20'%20rx='3'/%3E%3Cpath%20d='M84%20107l14%2010%2014-10'/%3E%3Cpath%20d='M20%20130v14M13%20137h14'/%3E%3Cpath%20d='M70%2062c-8-10-18-4-14%204%203%205%2010%204%2014-4zM70%2062c8-10%2018-4%2014%204-3%205-10%204-14-4z'/%3E%3Cpath%20d='M138%20128v-16l12-3v16'/%3E%3Ccircle%20cx='134'%20cy='128'%20r='4'/%3E%3Ccircle%20cx='146'%20cy='125'%20r='4'/%3E%3Ccircle%20cx='62'%20cy='142'%20r='5'/%3E%3Cpath%20d='M140%2022c-4-3-6-6-4-8%202-1%203%200%204%202%201-2%203-3%204-2%202%202%200%205-4%208z'/%3E%3C/g%3E%3C/svg%3E");background-size:160px 160px;box-shadow:none}
+#chat .bub{background:#1f2c34;color:#e9edef;box-shadow:none}
+#chat .mine .bub{background:#005c4b}
+#chat .nm{color:#aebac1}
+#chat .tm{color:#8696a0;opacity:1}
+#chat .mc a{color:#53bdeb!important}
+#chat .rquote{background:#0b141a66;border-left-color:#25d366}
+#chat .rquote b{color:#25d366}
+#chat .rchip{background:#1f2c34;border-color:#2a3942;color:#e9edef}
+#chat .rchip.me{background:#005c4b;border-color:#25d366}
+#chat .rbtn{background:#1f2c34;border-color:#2a3942;color:#aebac1}
+#chat .rpick{background:#1f2c34;border-color:#2a3942}
+#chat .rpick span.picked{background:#2a3942}
+#chat .chunkbtn{background:#111b21;color:#e9edef;border-color:#2a3942}
+#chat .bar{background:#1f2c34;border-color:#2a3942;color:#e9edef}
+#chat .bar .x{color:#aebac1}
+#chat .bar b{color:#25d366!important}
+#chat .pill{background:#1f2c34;border:0}
+#chat .pill textarea{color:#e9edef}
+#chat .pill textarea::placeholder{color:#8696a0}
+#chat .ibtn{color:#8696a0}
+#chat #micBtn,#chat #sendBtn{background:#25d366;color:#111b21}
+#chat #cancelRec{background:#1f2c34;border-color:#2a3942;color:#f15c6d}
+#chat #emojiPicker{background:#1f2c34;border-color:#2a3942}
+#chat .typing-bubble{background:#1f2c34}
+#chat .typing-bubble span{background:#8696a0}
+#chat .error{color:#f15c6d}
 </style>
 </head>
 <body>
