@@ -7,21 +7,17 @@
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:Georgia,serif;color:#593743;background:#fff6f7}
 .hidden{display:none!important}.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#f6c7d2,#eadcf0)}
-.card{width:min(560px,100%);padding:40px 25px;border-radius:28px;background:#fffafadd;box-shadow:0 20px 60px #74435430;text-align:center}.heart{font-size:42px}.script{font-size:clamp(42px,10vw,68px);font-style:italic;color:#a94763;margin:8px}.login{max-width:390px;margin:auto}input,textarea{width:100%;padding:14px;border:1px solid #e4bbc7;border-radius:18px;font:16px Georgia;background:#fff}.login input{border-radius:30px;text-align:center}button{padding:12px 20px;border:0;border-radius:25px;background:#c95e7b;color:white;font-size:15px;cursor:pointer} .login button{width:100%;margin-top:10px}.error{min-height:22px;color:#a94763;margin-top:8px}
-main{max-width:1000px;margin:auto;padding:25px 16px}.top{text-align:center;padding:25px 0}.top h1{font-size:38px;margin:5px}.subtitle{font-style:italic}.tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:20px 0}.tabs button{background:#fff;color:#87495b;border:1px solid #e8c6cf}.tabs button.active{background:#c95e7b;color:white}.panel{background:#fffafd;padding:25px;border-radius:25px;box-shadow:0 8px 30px #75485812}.panel h2{margin-top:0}.editor{display:grid;gap:10px}.entry{padding:16px;margin-top:14px;border-radius:18px;background:#fff0f3;border:1px solid #f1d5dc}.entry small{display:block;color:#8d6973;margin-bottom:7px}.entry p{white-space:pre-wrap;line-height:1.6}.actions{display:flex;gap:8px;flex-wrap:wrap}.danger{background:#a64c62}.quote{text-align:center;margin:30px 0;padding:22px;background:#f2cbd6;border-radius:22px;font-style:italic}
-
-/* step 2: popups + edit bar */
+.card{width:min(560px,100%);padding:40px 25px;border-radius:28px;background:#fffafadd;box-shadow:0 20px 60px #74435430;text-align:center}.heart{font-size:42px}.script{font-size:clamp(42px,10vw,68px);font-style:italic;color:#a94763;margin:8px}.login{max-width:390px;margin:auto}input,textarea{width:100%;padding:14px;border:1px solid #e4bbc7;border-radius:18px;font:16px Georgia;background:#fff}.login input{border-radius:30px;text-align:center;margin-top:8px}button{padding:12px 20px;border:0;border-radius:25px;background:#c95e7b;color:#fff;font-size:15px;cursor:pointer}.login button{width:100%;margin-top:10px}.error{min-height:22px;color:#a94763;margin-top:8px}
+main{max-width:1000px;margin:auto;padding:25px 16px}.top{text-align:center;padding:25px 0}.top h1{font-size:38px;margin:5px}.subtitle{font-style:italic}.tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:20px 0}.tabs button{background:#fff;color:#87495b;border:1px solid #e8c6cf}.tabs button.active{background:#c95e7b;color:#fff}.panel{background:#fffafd;padding:25px;border-radius:25px;box-shadow:0 8px 30px #75485812}.panel h2{margin-top:0}.editor{display:grid;gap:10px}.entry{padding:16px;margin-top:14px;border-radius:18px;background:#fff0f3;border:1px solid #f1d5dc}.entry small{display:block;color:#8d6973;margin-bottom:7px}.entry p{white-space:pre-wrap;line-height:1.6}.actions{display:flex;gap:8px;flex-wrap:wrap}.danger{background:#a64c62}.quote{text-align:center;margin:30px 0;padding:22px;background:#f2cbd6;border-radius:22px;font-style:italic}
 .bar{display:flex;align-items:center;gap:10px;padding:8px 14px;margin-top:10px;background:#fff0f3;border:1px solid #f1d5dc;border-radius:16px;font-size:14px}
 .bar .grow{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .bar .x{background:transparent;color:#a94763;padding:4px 8px;font-size:20px}
-#modal{position:fixed;left:0;top:0;right:0;bottom:0;background:#0006;display:flex;align-items:center;justify-content:center;z-index:400;padding:20px}
+#modal{position:fixed;inset:0;background:#0006;display:flex;align-items:center;justify-content:center;z-index:400;padding:20px}
 #modal .box{background:#fffafd;border-radius:22px;padding:24px;max-width:340px;width:100%;text-align:center;box-shadow:0 20px 60px #0005}
 #modal .box p{margin:0 0 18px;font-size:17px}
-#modal .box .btns{display:flex;gap:10px;justify-content:center}
-#modal .box .cancel{background:#fff;color:#87495b;border:1px solid #e8c6cf}
+#modal .btns{display:flex;gap:10px;justify-content:center}
+#modal .cancel{background:#fff;color:#87495b;border:1px solid #e8c6cf}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:90px;max-width:90%;background:#593743;color:#fff;padding:10px 16px;border-radius:18px;font-size:14px;z-index:500;box-shadow:0 6px 20px #0004}
-
-/* step 3: reactions */
 .rrow{display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-end;align-items:center;margin-top:6px}
 .rchip{background:#fff;border:1px solid #e8c6cf;border-radius:14px;padding:1px 8px;font-size:15px;cursor:pointer}
 .rchip.me{background:#ffe3ec;border-color:#c95e7b}
@@ -29,8 +25,6 @@ main{max-width:1000px;margin:auto;padding:25px 16px}.top{text-align:center;paddi
 .rpick{display:none;gap:2px;justify-content:center;flex-wrap:wrap;background:#fff;border:1px solid #e8c6cf;border-radius:18px;padding:6px;margin-top:6px}
 .rpick span{font-size:27px;padding:3px 6px;cursor:pointer;border-radius:50%}
 .rpick span.picked{background:#ffe3ec}
-
-/* step 4: online + typing */
 .chat-head{display:flex;align-items:center;gap:12px;padding:10px 14px;margin-bottom:12px;background:linear-gradient(135deg,#f6c7d2,#eadcf0);border-radius:20px}
 .avatar{width:42px;height:42px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;color:#c95e7b;position:relative;flex:none}
 .avatar .dot{position:absolute;right:0;bottom:0;width:13px;height:13px;border-radius:50%;background:#aaa;border:2px solid #fff}
@@ -42,2415 +36,790 @@ main{max-width:1000px;margin:auto;padding:25px 16px}.top{text-align:center;paddi
 #typingRow{margin:8px 0 0}
 .typing-bubble{display:inline-flex;gap:5px;padding:12px 16px;background:#f1e3e8;border-radius:20px 20px 20px 5px}
 .typing-bubble span{width:8px;height:8px;border-radius:50%;background:#a94763;opacity:.35;animation:blink 1.2s infinite}
-.typing-bubble span:nth-child(2){animation-delay:.2s}
-.typing-bubble span:nth-child(3){animation-delay:.4s}
+.typing-bubble span:nth-child(2){animation-delay:.2s}.typing-bubble span:nth-child(3){animation-delay:.4s}
 @keyframes blink{0%,60%,100%{opacity:.3}30%{opacity:1}}
-#lightbox{position:fixed;left:0;top:0;right:0;bottom:0;background:#000d;display:flex;align-items:center;justify-content:center;z-index:300;padding:15px}
+#lightbox{position:fixed;inset:0;background:#000d;display:flex;align-items:center;justify-content:center;z-index:300;padding:15px}
 #lightbox img{max-width:100%;max-height:100%;border-radius:10px}
-
-/* step 7: reply + loaded files */
 .rquote{border-left:4px solid #c95e7b;background:#ffffff80;padding:5px 8px;border-radius:8px;margin-bottom:6px;font-size:13px;cursor:pointer}
 .rquote b{display:block;color:#a94763;font-size:12px}
-.rbtn2{background:#fff;color:#a94763;border:1px solid #e8c6cf;padding:2px 9px;font-size:15px;border-radius:14px}
 .chunkbtn{background:#fff;color:#a94763;border:1px solid #e8c6cf;border-radius:14px;padding:10px 14px;font-size:14px;text-align:left;max-width:100%}
+/* chat bubbles */
+#chatMessages{height:45vh;overflow-y:auto;padding:15px;background:linear-gradient(135deg,#fff6f8,#f8edf5);border-radius:25px;box-shadow:inset 0 0 20px #75485810}
+.mrow{display:flex;margin:12px 0;border-radius:20px;transition:background .3s}.mrow.mine{justify-content:flex-end}
+.bub{max-width:80%;padding:10px 15px;border-radius:20px 20px 20px 5px;background:#f1e3e8;box-shadow:0 3px 10px #75485815}
+.mine .bub{border-radius:20px 20px 5px 20px;background:#e7bfd0}
+.nm{display:block;font-weight:bold;margin-bottom:5px}.mc{white-space:pre-wrap;line-height:1.5}
+.mc img{max-width:220px;max-height:300px;border-radius:15px;display:block;cursor:pointer}
+.mc video,.mc audio{max-width:220px;border-radius:15px;display:block}
+.cap{margin-top:6px}.tm{display:block;text-align:right;margin-top:6px;font-size:11px;opacity:.65}
+.acts{display:flex;justify-content:flex-end;gap:3px}.acts button{background:transparent;padding:3px 6px;font-size:14px}
+.tool{display:flex;gap:8px;margin-bottom:8px}.tool button{padding:10px 14px;font-size:20px}
+#emojiPicker{margin-top:8px;padding:14px;background:#fff;border:1px solid #e8c6cf;border-radius:18px;text-align:center;line-height:2.4;font-size:22px}
+#emojiPicker span{cursor:pointer}
+/* call screen */
+#callUI{position:fixed;inset:0;background:linear-gradient(135deg,#f6c7d2ee,#eadcf0ee);z-index:450;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:20px;text-align:center}
+#callUI .big{font-size:80px}#callText{font-size:22px;font-style:italic}
+#callUI .row{display:flex;gap:18px}#callUI button{font-size:18px;padding:16px 26px;border-radius:40px}
+#callAnswer{background:#2e9e5b}#callDecline,#callHang{background:#c0392b}
 </style>
 </head>
 <body>
 <section id="login" class="hero">
 <div class="card"><div class="heart">♡</div><div class="script">our little world</div>
-<p>A private little place for you & me. 🤍</p>
-
+<p>A private little place for you &amp; me. 🤍</p>
 <div class="login">
   <p>🔐 Welcome to our little world</p>
-
   <input id="email" type="email" placeholder="Your email">
-
   <input id="password" type="password" placeholder="Your password">
-
   <button onclick="unlock()">ENTER OUR WORLD ♡</button>
-
   <div id="err" class="error"></div>
 </div>
-<p>Just you & me, always. 🦋</p><div style="font-size:11px;opacity:.5">step 7</div></div>
+<p>Just you &amp; me, always. 🦋</p></div>
 </section>
 
 <main id="app" class="hidden">
-<div id="welcomeMessage" style="text-align:center;margin:10px auto 20px;padding:15px 20px;background:#f2cbd6;border-radius:20px;font-style:italic;max-width:600px;">
-  Welcome back to our little world, my love. ♡
-</div><div class="top">
+<div style="text-align:center;margin:10px auto 20px;padding:15px 20px;background:#f2cbd6;border-radius:20px;font-style:italic;max-width:600px">Welcome back to our little world, my love. ♡</div>
+<div class="top">
   <h1>Our Little World ❤️</h1>
-  <div class="subtitle">A place for our words, memories & little moments.</div>
-  <button onclick="logout()" style="margin-top:15px;background:#a64c62;">
-    Leave our little world ♡
-  </button>
+  <div class="subtitle">A place for our words, memories &amp; little moments.</div>
+  <button onclick="logout()" style="margin-top:15px;background:#a64c62">Leave our little world ♡</button>
 </div>
 <div class="tabs">
-<button class="active" onclick="show('letters',this)">💌 Letters</button>
+  <button class="active" onclick="show('letters',this)">💌 Letters</button>
   <button onclick="show('chat',this)">💬 Our Chat</button>
-<button onclick="show('memories',this)">📸 Memories</button>
-<button onclick="show('moments',this)">🗓️ Moments</button>
-<button onclick="show('words',this)">🤍 Words</button>
-<button onclick="show('song',this)">🎵 Our Song</button>
+  <button onclick="show('memories',this)">📸 Memories</button>
+  <button onclick="show('moments',this)">🗓️ Moments</button>
+  <button onclick="show('words',this)">🤍 Words</button>
+  <button onclick="show('song',this)">🎵 Our Song</button>
 </div>
+
 <section id="chat" class="panel hidden">
 <h2>💬 Our Little Chat</h2>
-
 <div class="chat-head">
   <div class="avatar">♡<span id="partnerDot" class="dot"></span></div>
-  <div>
-    <div class="chat-name">My love ♡</div>
-    <div id="partnerStatus" class="chat-status">offline</div>
-  </div>
+  <div><div class="chat-name">My love ♡</div><div id="partnerStatus" class="chat-status">offline</div></div>
 </div>
-
-<div id="chatMessages"
-style="height:45vh;overflow-y:auto;padding:15px;background:linear-gradient(135deg,#fff6f8,#f8edf5);border-radius:25px;box-shadow:inset 0 0 20px #75485810;">
-</div>
-
-<div id="editBar" class="bar hidden">
-  <div class="grow"><b style="color:#a94763">✏️ Editing message</b><br><span id="editTxt"></span></div>
-  <button class="x" onclick="cancelEdit()">✕</button>
-</div>
-
+<div id="chatMessages"></div>
+<div id="editBar" class="bar hidden"><div class="grow"><b style="color:#a94763">✏️ Editing message</b><br><span id="editTxt"></span></div><button class="x" onclick="cancelEdit()">✕</button></div>
 <div id="typingRow" class="hidden"><div class="typing-bubble"><span></span><span></span><span></span></div></div>
-
 <div id="attachBar" class="bar hidden">
   <img id="attachThumb" class="hidden" alt="" style="width:46px;height:46px;object-fit:cover;border-radius:8px">
   <span id="attachIco" class="hidden" style="font-size:28px">📎</span>
   <div class="grow"><span id="attachName"></span><br><small style="opacity:.7">Write a message if you want, then tap Send</small></div>
   <button class="x" onclick="clearAttachment()">✕</button>
 </div>
+<div id="replyBar" class="bar hidden"><div class="grow"><b id="replyWho" style="color:#a94763"></b><br><span id="replyTxt"></span></div><button class="x" onclick="clearReply()">✕</button></div>
 
-<div id="replyBar" class="bar hidden">
-  <div class="grow"><b id="replyWho" style="color:#a94763"></b><br><span id="replyTxt"></span></div>
-  <button class="x" onclick="clearReply()">✕</button>
-</div>
-
-<div style="margin-top:12px;">
-
- <div style="margin-top:12px;">
-
-  <div style="display:flex;gap:8px;margin-bottom:8px;">
-    
-    <button onclick="toggleEmojiPicker()"
-            style="padding:10px 14px;font-size:20px;">
-      😊
-    </button>
-
-    <button onclick="document.getElementById('photoInput').click()"
-            style="padding:10px 14px;font-size:20px;">
-      📷
-    </button>
-
-    <button onclick="document.getElementById('fileInput').click()"
-            style="padding:10px 14px;font-size:20px;">
-      📎
-    </button>
-
+<div style="margin-top:12px">
+  <div class="tool">
+    <button onclick="toggleEmojiPicker()">😊</button>
+    <button onclick="$('photoInput').click()">📷</button>
+    <button onclick="$('fileInput').click()">📎</button>
+    <button id="micBtn" onclick="toggleRecord()">🎤</button>
+    <button id="callBtn" onclick="startCall()">📞</button>
   </div>
-
-  <div style="display:flex;gap:8px;align-items:stretch;">
-
-    <textarea id="chatInput"
-              placeholder="Write something to me..."
-              rows="2"
-              style="flex:1;min-width:0;height:55px;resize:none;"></textarea>
-
-    <button onclick="sendChatMessage()"
-            style="min-width:80px;">
-      Send ♡
-    </button>
-
+  <div style="display:flex;gap:8px;align-items:stretch">
+    <textarea id="chatInput" placeholder="Write something to me..." rows="2" style="flex:1;min-width:0;height:55px;resize:none"></textarea>
+    <button onclick="sendChatMessage()" style="min-width:80px">Send ♡</button>
   </div>
-
 </div>
-
-<input id="fileInput"
-       type="file"
-       style="display:none;"
-       onchange="sendFile(this)">
-
-<input id="photoInput"
-       type="file"
-       accept="image/*,video/*"
-       style="display:none;"
-       onchange="sendFile(this)">
-
-<div id="emojiPicker" class="hidden"
-style="margin-top:8px;padding:14px;background:#fff;border:1px solid #e8c6cf;border-radius:18px;text-align:center;line-height:2.4;font-size:22px;">
-
-<!-- 💗 Hearts -->
-<span onclick="addEmoji('❤️')">❤️</span>
-<span onclick="addEmoji('🩷')">🩷</span>
-<span onclick="addEmoji('🧡')">🧡</span>
-<span onclick="addEmoji('💛')">💛</span>
-<span onclick="addEmoji('💚')">💚</span>
-<span onclick="addEmoji('🩵')">🩵</span>
-<span onclick="addEmoji('💙')">💙</span>
-<span onclick="addEmoji('💜')">💜</span>
-<span onclick="addEmoji('🤎')">🤎</span>
-<span onclick="addEmoji('🖤')">🖤</span>
-<span onclick="addEmoji('🩶')">🩶</span>
-<span onclick="addEmoji('🤍')">🤍</span>
-<span onclick="addEmoji('💔')">💔</span>
-<span onclick="addEmoji('❤️‍🔥')">❤️‍🔥</span>
-<span onclick="addEmoji('❤️‍🩹')">❤️‍🩹</span>
-<span onclick="addEmoji('💕')">💕</span>
-<span onclick="addEmoji('💞')">💞</span>
-<span onclick="addEmoji('💓')">💓</span>
-<span onclick="addEmoji('💗')">💗</span>
-<span onclick="addEmoji('💖')">💖</span>
-<span onclick="addEmoji('💘')">💘</span>
-<span onclick="addEmoji('💝')">💝</span>
-<span onclick="addEmoji('💟')">💟</span>
-<span onclick="addEmoji('❣️')">❣️</span>
-<span onclick="addEmoji('♥️')">♥️</span>
-
-<!-- 😍 Feelings -->
-<span onclick="addEmoji('🥰')">🥰</span>
-<span onclick="addEmoji('😍')">😍</span>
-<span onclick="addEmoji('😘')">😘</span>
-<span onclick="addEmoji('😚')">😚</span>
-<span onclick="addEmoji('😙')">😙</span>
-<span onclick="addEmoji('😻')">😻</span>
-<span onclick="addEmoji('😊')">😊</span>
-<span onclick="addEmoji('☺️')">☺️</span>
-<span onclick="addEmoji('😉')">😉</span>
-<span onclick="addEmoji('😏')">😏</span>
-<span onclick="addEmoji('🥹')">🥹</span>
-<span onclick="addEmoji('🥺')">🥺</span>
-<span onclick="addEmoji('😭')">😭</span>
-<span onclick="addEmoji('😂')">😂</span>
-<span onclick="addEmoji('🤣')">🤣</span>
-<span onclick="addEmoji('🤭')">🤭</span>
-<span onclick="addEmoji('🙈')">🙈</span>
-<span onclick="addEmoji('🙉')">🙉</span>
-<span onclick="addEmoji('🙊')">🙊</span>
-<span onclick="addEmoji('😇')">😇</span>
-<span onclick="addEmoji('😌')">😌</span>
-<span onclick="addEmoji('🤗')">🤗</span>
-<span onclick="addEmoji('🫠')">🫠</span>
-<span onclick="addEmoji('😎')">😎</span>
-
-<!-- 🫶 Hands -->
-<span onclick="addEmoji('🫶')">🫶</span>
-<span onclick="addEmoji('🫂')">🫂</span>
-<span onclick="addEmoji('👍')">👍</span>
-<span onclick="addEmoji('👏')">👏</span>
-<span onclick="addEmoji('🙌')">🙌</span>
-<span onclick="addEmoji('✌️')">✌️</span>
-<span onclick="addEmoji('🤞')">🤞</span>
-<span onclick="addEmoji('👉')">👉</span>
-<span onclick="addEmoji('👈')">👈</span>
-<span onclick="addEmoji('☝️')">☝️</span>
-<span onclick="addEmoji('🙏')">🙏</span>
-
-<!-- 🌹 Romantic -->
-<span onclick="addEmoji('🌹')">🌹</span>
-<span onclick="addEmoji('🌷')">🌷</span>
-<span onclick="addEmoji('🌸')">🌸</span>
-<span onclick="addEmoji('🌺')">🌺</span>
-<span onclick="addEmoji('🌻')">🌻</span>
-<span onclick="addEmoji('💐')">💐</span>
-<span onclick="addEmoji('🦋')">🦋</span>
-<span onclick="addEmoji('✨')">✨</span>
-<span onclick="addEmoji('💫')">💫</span>
-<span onclick="addEmoji('⭐')">⭐</span>
-<span onclick="addEmoji('🌙')">🌙</span>
-<span onclick="addEmoji('☀️')">☀️</span>
-<span onclick="addEmoji('🌈')">🌈</span>
-
-<!-- 🐻 Cute -->
-<span onclick="addEmoji('🐻')">🐻</span>
-<span onclick="addEmoji('🐰')">🐰</span>
-<span onclick="addEmoji('🐱')">🐱</span>
-<span onclick="addEmoji('🐶')">🐶</span>
-<span onclick="addEmoji('🐼')">🐼</span>
-<span onclick="addEmoji('🦊')">🦊</span>
-<span onclick="addEmoji('🐥')">🐥</span>
-<span onclick="addEmoji('🦄')">🦄</span>
-<span onclick="addEmoji('🧸')">🧸</span>
-
-<!-- 🎀 Cute & Celebration -->
-<span onclick="addEmoji('🎀')">🎀</span>
-<span onclick="addEmoji('🎁')">🎁</span>
-<span onclick="addEmoji('🎉')">🎉</span>
-<span onclick="addEmoji('🎊')">🎊</span>
-<span onclick="addEmoji('🥳')">🥳</span>
-<span onclick="addEmoji('💎')">💎</span>
-<span onclick="addEmoji('👑')">👑</span>
-<span onclick="addEmoji('🍓')">🍓</span>
-<span onclick="addEmoji('🍒')">🍒</span>
-<span onclick="addEmoji('🍫')">🍫</span>
-<span onclick="addEmoji('🍰')">🍰</span>
-<span onclick="addEmoji('☕')">☕</span>
-
-<!-- 💋 Romantic -->
-<span onclick="addEmoji('💋')">💋</span>
-<span onclick="addEmoji('💌')">💌</span>
-<span onclick="addEmoji('💍')">💍</span>
-<span onclick="addEmoji('💑')">💑</span>
-<span onclick="addEmoji('👩‍❤️‍👨')">👩‍❤️‍👨</span>
-<span onclick="addEmoji('👩‍❤️‍💋‍👨')">👩‍❤️‍💋‍👨</span>
-
-</div>
-
+<input id="fileInput" type="file" style="display:none" onchange="sendFile(this)">
+<input id="photoInput" type="file" accept="image/*,video/*" style="display:none" onchange="sendFile(this)">
+<div id="emojiPicker" class="hidden"></div>
 <div id="chatError" class="error"></div>
-
 <div id="kbSpacer" style="height:0"></div>
-
 </section>
+
 <section id="letters" class="panel">
 <h2>💌 Letters to You</h2>
-<div class="editor"><textarea id="letterText" rows="5" placeholder="Write something from your heart..."></textarea><button onclick="addEntry('letters','letterText','letter')">Save this letter ♡</button></div>
+<div class="editor"><textarea id="letterText" rows="5" placeholder="Write something from your heart..."></textarea><button onclick="addEntry('letterText','letter')">Save this letter ♡</button></div>
 <div id="letterList"></div></section>
 
 <section id="memories" class="panel hidden">
-
-<img src="https://raw.githubusercontent.com/hzsmartyangel-ux/our-little-world/main/IMG20260726110434.jpg"
-     alt="Our memory"
-     style="width:100%;max-height:500px;object-fit:cover;border-radius:20px;margin-bottom:20px;">
-
+<img src="https://raw.githubusercontent.com/hzsmartyangel-ux/our-little-world/main/IMG20260726110434.jpg" alt="Our memory" style="width:100%;max-height:500px;object-fit:cover;border-radius:20px;margin-bottom:20px">
 <h2>📸 Our Memories</h2>
-
 <div class="editor">
-
-  <input
-    id="memoryTitle"
-    placeholder="Memory title"
-  >
-
-  <textarea
-    id="memoryText"
-    rows="4"
-    placeholder="Write about this memory..."
-  ></textarea>
-
-  <input
-    type="file"
-    id="memoryImage"
-    accept="image/*"
-  >
-
-  <button
-    onclick="addMemory()"
-  >
-    Save memory ♡
-  </button>
-
+  <input id="memoryTitle" placeholder="Memory title">
+  <textarea id="memoryText" rows="4" placeholder="Write about this memory..."></textarea>
+  <input type="file" id="memoryImage" accept="image/*">
+  <button onclick="addMemory()">Save memory ♡</button>
 </div>
+<div id="memoryList"></div></section>
 
-<div id="memoryList"></div>
-
-</section>
 <section id="moments" class="panel hidden">
-<h2>🗓️ Special Moments</h2><div class="editor"><input id="momentTitle" placeholder="Moment / date"><textarea id="momentText" rows="3" placeholder="Why is this moment special?"></textarea><button onclick="addEntry('moments','momentText','moment','momentTitle')">Save moment ♡</button></div><div id="momentList"></div></section>
+<h2>🗓️ Special Moments</h2><div class="editor"><input id="momentTitle" placeholder="Moment / date"><textarea id="momentText" rows="3" placeholder="Why is this moment special?"></textarea><button onclick="addEntry('momentText','moment','momentTitle')">Save moment ♡</button></div><div id="momentList"></div></section>
 
 <section id="words" class="panel hidden">
-<h2>🤍 Words I Keep in My Heart</h2><div class="editor"><textarea id="wordText" rows="5" placeholder="Something you want him/her to read..."></textarea><button onclick="addEntry('words','wordText','word')">Save words ♡</button></div><div id="wordList"></div></section>
+<h2>🤍 Words I Keep in My Heart</h2><div class="editor"><textarea id="wordText" rows="5" placeholder="Something you want him/her to read..."></textarea><button onclick="addEntry('wordText','word')">Save words ♡</button></div><div id="wordList"></div></section>
 
 <section id="song" class="panel hidden">
 <h2>🎵 Our Song</h2><div class="editor"><input id="songText" placeholder="Song name or YouTube/Spotify link"><button onclick="saveSong()">Save our song ♡</button></div><div id="songSaved" class="entry hidden"></div></section>
 
 <div class="quote">“Distance means so little when someone means so much.” ♡</div>
 </main>
+
 <div id="lightbox" class="hidden" onclick="this.classList.add('hidden')"><img id="lightboxImg" alt=""></div>
 <div id="modal" class="hidden"><div class="box"><p id="modalText"></p><div class="btns"><button class="cancel" id="modalNo">Cancel</button><button class="danger" id="modalYes">Delete</button></div></div></div>
+<div id="callUI" class="hidden">
+  <div class="big">♡</div>
+  <div id="callText"></div>
+  <div class="row">
+    <button id="callAnswer" onclick="answerCall()">📞 Answer</button>
+    <button id="callDecline" onclick="declineCall()">✕ Decline</button>
+    <button id="callHang" onclick="hangUp()">📵 Hang up</button>
+  </div>
+  <audio id="remoteAudio" autoplay playsinline></audio>
+</div>
 
 <script type="module">
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-  signOut
-} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  query,
-  orderBy,
-  onSnapshot,
-  serverTimestamp,
-  updateDoc,
-  doc,
-  deleteDoc,
-  setDoc,
-  deleteField,
-  where,
-  getDocs
-} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
-
-import {
-  getStorage,
-  ref,
-  uploadBytes,
-  uploadBytesResumable,
-  getDownloadURL
-} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-storage.js";
-
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, updateDoc, doc, deleteDoc, setDoc, deleteField, arrayUnion, where, getDocs } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-storage.js";
 
 const firebaseConfig = {
-
   apiKey: "AIzaSyAIgT6npYKXzu_zCYdvzLZgGezkr5GoDZU",
-
   authDomain: "our-little-world-h.firebaseapp.com",
-
-  databaseURL:
-    "https://our-little-world-h-default-rtdb.firebaseio.com",
-
+  databaseURL: "https://our-little-world-h-default-rtdb.firebaseio.com",
   projectId: "our-little-world-h",
-
-  storageBucket:
-    "our-little-world-h.firebasestorage.app",
-
+  storageBucket: "our-little-world-h.firebasestorage.app",
   messagingSenderId: "204255083251",
-
-  appId:
-    "1:204255083251:web:abd61857c1974b45d11586",
-
+  appId: "1:204255083251:web:abd61857c1974b45d11586",
   measurementId: "G-XSLR9G2H8X"
 };
-
-
 const MY_UID = "nU2e103h6rYT9ZkQrTZ7a2hCcIk2";
-
 const HIS_UID = "mTnX5HUrmeSevuUZVjTDQ7jA9wn1";
 
-
 const appFirebase = initializeApp(firebaseConfig);
-
 const auth = getAuth(appFirebase);
-
 const db = getFirestore(appFirebase);
-
 const storage = getStorage(appFirebase);
-
-// ==============================
-// Shared Entries - Firestore
-// ==============================
-
 const sharedEntriesRef = collection(db, "sharedEntries");
-  const sharedSongRef = collection(db, "sharedSong");
-async function saveSharedEntry(type, title, text) {
+const sharedSongRef = collection(db, "sharedSong");
 
-  const user = auth.currentUser;
-
-  if (!user) return;
-
-  try {
-
-    await addDoc(sharedEntriesRef, {
-      type: type,
-      title: title || "",
-      text: text,
-      uid: user.uid,
-      createdAt: serverTimestamp()
-    });
-
-  } catch (error) {
-
-    console.error("Firestore save error:", error);
-
-    toast("Could not save. Please try again.");
-
-  }
-
-  }
-  let sharedEntriesUnsubscribe = null;
-
-function startSharedEntries() {
-
-  if (sharedEntriesUnsubscribe) {
-    sharedEntriesUnsubscribe();
-  }
-
-  const q = query(
-    sharedEntriesRef,
-    orderBy("createdAt", "desc")
-  );
-
-  sharedEntriesUnsubscribe = onSnapshot(
-    q,
-    snapshot => {
-
-      const lists = {
-        letter: "letterList",
-        memory: "memoryList",
-        moment: "momentList",
-        word: "wordList"
-      };
-
-      // Clear all shared lists
-      Object.values(lists).forEach(id => {
-        const element = document.getElementById(id);
-
-        if (element) {
-          element.innerHTML = "";
-        }
-      });
-
-      // Display shared entries
-      snapshot.forEach(docSnap => {
-
-        const data = docSnap.data();
-
-        const listId = lists[data.type];
-
-        if (!listId) return;
-
-        const element = document.getElementById(listId);
-
-        if (!element) return;
-
-        const box = document.createElement("div");
-        box.className = "entry";
-
-        const small = document.createElement("small");
-
-        let dateText = "";
-
-        if (data.createdAt) {
-          dateText = data.createdAt
-            .toDate()
-            .toLocaleString();
-        }
-
-        small.textContent =
-          dateText +
-          (data.title
-            ? " · " + data.title
-            : "");
-
-        if (data.imageUrl) {
-
-  const image = document.createElement("img");
-
-  image.src = data.imageUrl;
-  image.alt = data.title || "Our memory";
-
-  image.style.width = "100%";
-  image.style.maxHeight = "400px";
-  image.style.objectFit = "cover";
-  image.style.borderRadius = "20px";
-  image.style.marginTop = "10px";
-
-  box.appendChild(image);
+const $ = id => document.getElementById(id);
+window.$ = $;
+function el(tag, cls, text) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text != null) e.textContent = text;
+  return e;
 }
-
-const paragraph = document.createElement("p");
-paragraph.textContent = data.text;
-
-const actions = document.createElement("div");
-        actions.className = "actions";
-
-        const deleteButton =
-          document.createElement("button");
-
-        deleteButton.className = "danger";
-        deleteButton.textContent = "Delete";
-
-        deleteButton.onclick = async () => {
-
-          const confirmed = await askConfirm("Delete this entry? ♡", "Delete");
-
-          if (!confirmed) return;
-
-          try {
-
-            await deleteDoc(
-              doc(db, "sharedEntries", docSnap.id)
-            );
-
-          } catch (error) {
-
-            console.error(
-              "Delete error:",
-              error
-            );
-
-            toast(
-              "Could not delete this entry."
-            );
-
-          }
-
-        };
-
-        actions.appendChild(deleteButton);
-
-        box.appendChild(small);
-        box.appendChild(paragraph);
-        box.appendChild(actions);
-
-        element.appendChild(box);
-
-      });
-
-    },
-
-    error => {
-
-      console.error(
-        "Shared entries error:",
-        error
-      );
-
-    }
-  );
-  }
-  const login = document.getElementById("login");
-
-const app = document.getElementById("app");
-
-const err = document.getElementById("err");
-
-
-function unlock() {
-
-  const email =
-    document.getElementById("email").value.trim();
-
-  const password =
-    document.getElementById("password").value;
-
-  const errorBox =
-    document.getElementById("err");
-
-
-  if (!email || !password) {
-
-    errorBox.textContent =
-      "Please enter your email and password ♡";
-
-    return;
-  }
-
-
-  errorBox.textContent =
-    "Entering our world... ♡";
-
-
-  signInWithEmailAndPassword(
-    auth,
-    email,
-    password
-  )
-
-  .then(userCredential => {
-
-    const user =
-      userCredential.user;
-
-    console.log(
-      "LOGIN SUCCESS:",
-      user.uid
-    );
-
-
-    if (
-      user.uid !== MY_UID &&
-      user.uid !== HIS_UID
-    ) {
-
-      errorBox.textContent =
-        "This account is not allowed here. ♡";
-
-      signOut(auth);
-
-      return;
-    }
-
-
-    errorBox.textContent = "";
-
-    login.classList.add("hidden");
-
-    app.classList.remove("hidden");
-
-  })
-
-  .catch(error => {
-
-    console.error(
-      "LOGIN ERROR:",
-      error.code,
-      error.message
-    );
-
-
-    if (
-      error.code ===
-      "auth/invalid-credential"
-    ) {
-
-      errorBox.textContent =
-        "Email or password is incorrect ♡";
-
-    }
-
-    else if (
-      error.code ===
-      "auth/invalid-email"
-    ) {
-
-      errorBox.textContent =
-        "Please enter a valid email ♡";
-
-    }
-
-    else if (
-      error.code ===
-      "auth/user-not-found"
-    ) {
-
-      errorBox.textContent =
-        "This email is not registered ♡";
-
-    }
-
-    else if (
-      error.code ===
-      "auth/wrong-password"
-    ) {
-
-      errorBox.textContent =
-        "Wrong password ♡";
-
-    }
-
-    else {
-
-      errorBox.textContent =
-        "Login error: " + error.code;
-
-    }
-
+const allowed = u => u && (u.uid === MY_UID || u.uid === HIS_UID);
+const errText = e => (e && (e.code || e.message)) || String(e);
+
+// ===== helpers: toast, confirm =====
+function toast(msg) {
+  const t = el("div", "toast", msg);
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 5000);
+}
+function askConfirm(message, yesLabel) {
+  return new Promise(resolve => {
+    const modal = $("modal");
+    $("modalText").textContent = message;
+    $("modalYes").textContent = yesLabel || "Delete";
+    modal.classList.remove("hidden");
+    const done = v => { modal.classList.add("hidden"); $("modalYes").onclick = null; $("modalNo").onclick = null; resolve(v); };
+    $("modalYes").onclick = () => done(true);
+    $("modalNo").onclick = () => done(false);
   });
-
 }
 
+// ===== login / logout =====
+function unlock() {
+  const email = $("email").value.trim(), pw = $("password").value, eb = $("err");
+  if (!email || !pw) { eb.textContent = "Please enter your email and password ♡"; return; }
+  eb.textContent = "Entering our world... ♡";
+  signInWithEmailAndPassword(auth, email, pw).then(c => {
+    if (!allowed(c.user)) { eb.textContent = "This account is not allowed here. ♡"; signOut(auth); }
+    else eb.textContent = "";
+  }).catch(e => {
+    const m = {
+      "auth/invalid-credential": "Email or password is incorrect ♡",
+      "auth/invalid-email": "Please enter a valid email ♡",
+      "auth/user-not-found": "This email is not registered ♡",
+      "auth/wrong-password": "Wrong password ♡"
+    };
+    eb.textContent = m[e.code] || "Login error: " + e.code;
+  });
+}
 window.unlock = unlock;
-
-
-window.unlock = unlock;
-
 
 async function logout() {
-
   try { await setPresence({ online: false, typing: false }); } catch (e) {}
-
   signOut(auth);
-
 }
-
-
 window.logout = logout;
 
-
 onAuthStateChanged(auth, user => {
-
-  if (!user) {
-
-    login.classList.remove("hidden");
-
-    app.classList.add("hidden");
-
-    return;
-  }
-
-
-  if (
-    user.uid !== MY_UID &&
-    user.uid !== HIS_UID
-  ) {
-
-    signOut(auth);
-
-    err.textContent =
-      "This account is not allowed here. ♡";
-
-    return;
-  }
-
-
-  login.classList.add("hidden");
-
-  app.classList.remove("hidden");
-
+  if (!user) { $("login").classList.remove("hidden"); $("app").classList.add("hidden"); return; }
+  if (!allowed(user)) { signOut(auth); $("err").textContent = "This account is not allowed here. ♡"; return; }
+  $("login").classList.add("hidden");
+  $("app").classList.remove("hidden");
+  $("err").textContent = "";
+  loadAll();
 });
-// ==============================
-// PART 2 — Navigation & Storage
-// ==============================
-
-function show(id, btn) {
-
-  document
-    .querySelectorAll("main > section.panel")
-    .forEach(section => {
-      section.classList.add("hidden");
-    });
-
-  const selected = document.getElementById(id);
-
-  if (selected) {
-    selected.classList.remove("hidden");
-  }
-
-  document
-    .querySelectorAll(".tabs button")
-    .forEach(button => {
-      button.classList.remove("active");
-    });
-
-  if (btn) {
-    btn.classList.add("active");
-  }
-}
-
-window.show = show;
-
-
-// ==============================
-// Local Storage
-// ==============================
-
-function key(type) {
-  return "oulw_" + type;
-}
-
-
-function get(type) {
-
-  try {
-
-    return JSON.parse(
-      localStorage.getItem(key(type)) || "[]"
-    );
-
-  } catch (error) {
-
-    console.error("Storage error:", error);
-
-    return [];
-  }
-}
-
-
-function save(type, data) {
-
-  localStorage.setItem(
-    key(type),
-    JSON.stringify(data)
-  );
-
-}
-
-
-// ==============================
-// Load Everything
-// ==============================
 
 function loadAll() {
-
-  render("letter");
-
-  render("memory");
-
-  render("moment");
-
-  render("word");
-
   loadSong();
-
   startChat();
   startSharedEntries();
   startPresence();
-
+  startCallListener();
 }
 
-
-// ==============================
-// Escape HTML
-// ==============================
-
-function escapeHtml(text) {
-
-  if (!text) return "";
-
-  return text.replace(
-    /[&<>"']/g,
-    character => ({
-
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#039;"
-
-    }[character])
-  );
-
+function show(id, btn) {
+  document.querySelectorAll("main > section.panel").forEach(s => s.classList.add("hidden"));
+  const s = $(id); if (s) s.classList.remove("hidden");
+  document.querySelectorAll(".tabs button").forEach(b => b.classList.remove("active"));
+  if (btn) btn.classList.add("active");
 }
-  // ==============================
-// PART 3 — Letters, Memories,
-// Moments & Words
-// ==============================
+window.show = show;
 
-async function addEntry(section, textId, type, titleId) {
+// ===== letters / moments / words / memories =====
+var sharedUnsub = null;
+const LISTS = { letter: "letterList", memory: "memoryList", moment: "momentList", word: "wordList" };
 
-  const textElement = document.getElementById(textId);
-
-  if (!textElement) return;
-
-  const text = textElement.value.trim();
-
+async function addEntry(textId, type, titleId) {
+  const user = auth.currentUser, t = $(textId);
+  if (!user || !t) return;
+  const text = t.value.trim();
   if (!text) return;
-
-  let title = "";
-
-  if (titleId) {
-
-    const titleElement = document.getElementById(titleId);
-
-    if (titleElement) {
-      title = titleElement.value.trim();
-    }
-
-  }
-
-  await saveSharedEntry(type, title, text);
-
-  textElement.value = "";
-
-  if (titleId) {
-
-    const titleElement = document.getElementById(titleId);
-
-    if (titleElement) {
-      titleElement.value = "";
-    }
-
-  }
-
-}
-
-window.addEntry = addEntry;
-  async function addMemory() {
-
-  const titleInput =
-    document.getElementById("memoryTitle");
-
-  const textInput =
-    document.getElementById("memoryText");
-
-  const imageInput =
-    document.getElementById("memoryImage");
-
-  if (!titleInput || !textInput || !imageInput) return;
-
-  const title = titleInput.value.trim();
-  const text = textInput.value.trim();
-  const file = imageInput.files[0];
-
-  if (!text && !file) return;
-
-  const user = auth.currentUser;
-
-  if (!user) return;
-
+  const title = titleId ? $(titleId).value.trim() : "";
   try {
-
-    let imageUrl = "";
-
-    if (file) {
-
-      const imageRef = ref(
-        storage,
-        "memories/" +
-        Date.now() +
-        "_" +
-        file.name
-      );
-
-      await uploadBytes(imageRef, file);
-
-      imageUrl =
-        await getDownloadURL(imageRef);
-    }
-
-    await addDoc(sharedEntriesRef, {
-
-      type: "memory",
-      title: title,
-      text: text,
-      imageUrl: imageUrl,
-      uid: user.uid,
-      createdAt: serverTimestamp()
-
-    });
-
-    titleInput.value = "";
-    textInput.value = "";
-    imageInput.value = "";
-
-  } catch (error) {
-
-    console.error(
-      "Memory save error:",
-      error
-    );
-
-    toast(
-      "Could not save this memory. Please try again."
-    );
-
-  }
+    await addDoc(sharedEntriesRef, { type, title, text, uid: user.uid, createdAt: serverTimestamp() });
+    t.value = "";
+    if (titleId) $(titleId).value = "";
+  } catch (e) { console.error("Save error:", e); toast("Could not save. Please try again."); }
 }
+window.addEntry = addEntry;
 
+async function addMemory() {
+  const user = auth.currentUser;
+  if (!user) return;
+  const title = $("memoryTitle").value.trim(), text = $("memoryText").value.trim(), file = $("memoryImage").files[0];
+  if (!text && !file) return;
+  try {
+    let imageUrl = "";
+    if (file) {
+      imageUrl = await compressForChat(file);
+      if (imageUrl.length > 950000) throw new Error("photo-too-large");
+    }
+    await addDoc(sharedEntriesRef, { type: "memory", title, text, imageUrl, uid: user.uid, createdAt: serverTimestamp() });
+    $("memoryTitle").value = ""; $("memoryText").value = ""; $("memoryImage").value = "";
+  } catch (e) { console.error("Memory save error:", e); toast("Could not save this memory. Please try again."); }
+}
 window.addMemory = addMemory;
 
-// ==============================
-// Render Entries
-// ==============================
-
-function render(type) {
-
-  const lists = {
-
-    letter: "letterList",
-
-    memory: "memoryList",
-
-    moment: "momentList",
-
-    word: "wordList"
-
-  };
-
-
-  const listId = lists[type];
-
-  if (!listId) return;
-
-
-  const element =
-    document.getElementById(listId);
-
-  if (!element) return;
-
-
-  const entries = get(type);
-
-
-  element.innerHTML = "";
-
-
-  entries.forEach((entry, index) => {
-
-    const box =
-      document.createElement("div");
-
-    box.className = "entry";
-
-
-    const small =
-      document.createElement("small");
-
-    small.textContent =
-      entry.date +
-      (entry.title
-        ? " · " + entry.title
-        : "");
-
-
-    const paragraph =
-      document.createElement("p");
-
-    paragraph.textContent =
-      entry.text;
-
-
-    const actions =
-      document.createElement("div");
-
-    actions.className = "actions";
-
-
-    const deleteButton =
-      document.createElement("button");
-
-    deleteButton.className = "danger";
-
-    deleteButton.textContent = "Delete";
-
-
-    deleteButton.onclick = () => {
-
-      removeEntry(type, index);
-
-    };
-
-
-    actions.appendChild(deleteButton);
-
-
-    box.appendChild(small);
-
-    box.appendChild(paragraph);
-
-    box.appendChild(actions);
-
-
-    element.appendChild(box);
-
-  });
-
-}
-
-
-// ==============================
-// Delete Entry
-// ==============================
-
-function removeEntry(type, index) {
-
-  const entries = get(type);
-
-
-  if (
-    index < 0 ||
-    index >= entries.length
-  ) {
-    return;
-  }
-
-
-  entries.splice(index, 1);
-
-
-  save(type, entries);
-
-
-  render(type);
-
-}
-
-
-window.removeEntry = removeEntry;
-  // ==============================
-// PART 4 — Our Song
-// & Emoji Picker
-// ==============================
-
-async function saveSong() {
-
-  const input =
-    document.getElementById("songText");
-
-  if (!input) return;
-
-  const song = input.value.trim();
-
-  if (!song) return;
-
-  const user = auth.currentUser;
-
-  if (!user) return;
-
-  try {
-
-    await addDoc(sharedSongRef, {
-      song: song,
-      uid: user.uid,
-      createdAt: serverTimestamp()
+function startSharedEntries() {
+  if (sharedUnsub) sharedUnsub();
+  sharedUnsub = onSnapshot(query(sharedEntriesRef, orderBy("createdAt", "desc")), snap => {
+    Object.values(LISTS).forEach(id => { const e = $(id); if (e) e.innerHTML = ""; });
+    snap.forEach(ds => {
+      const data = ds.data(), list = $(LISTS[data.type]);
+      if (!list) return;
+      const box = el("div", "entry");
+      const dateText = data.createdAt ? data.createdAt.toDate().toLocaleString() : "";
+      box.appendChild(el("small", "", dateText + (data.title ? " · " + data.title : "")));
+      if (data.imageUrl) {
+        const img = el("img");
+        img.src = data.imageUrl; img.alt = data.title || "Our memory";
+        img.style.cssText = "width:100%;max-height:400px;object-fit:cover;border-radius:20px;margin-top:10px";
+        box.appendChild(img);
+      }
+      box.appendChild(el("p", "", data.text));
+      const actions = el("div", "actions");
+      const del = el("button", "danger", "Delete");
+      del.onclick = async () => {
+        if (!(await askConfirm("Delete this entry? ♡", "Delete"))) return;
+        try { await deleteDoc(doc(db, "sharedEntries", ds.id)); }
+        catch (e) { console.error("Delete error:", e); toast("Could not delete this entry."); }
+      };
+      actions.appendChild(del);
+      box.appendChild(actions);
+      list.appendChild(box);
     });
-
-    input.value = "";
-
-  } catch (error) {
-
-    console.error(
-      "Song save error:",
-      error
-    );
-
-    toast(
-      "Could not save the song. Please try again."
-    );
-
-  }
-
+  }, e => console.error("Shared entries error:", e));
 }
 
-
+// ===== our song =====
+var songUnsub = null;
+async function saveSong() {
+  const input = $("songText"), user = auth.currentUser;
+  if (!input || !user) return;
+  const song = input.value.trim();
+  if (!song) return;
+  try {
+    await addDoc(sharedSongRef, { song, uid: user.uid, createdAt: serverTimestamp() });
+    input.value = "";
+  } catch (e) { console.error("Song save error:", e); toast("Could not save the song. Please try again."); }
+}
 window.saveSong = saveSong;
 
-
-// ==============================
-// Load Song
-// ==============================
 function loadSong() {
-
-  const box =
-    document.getElementById("songSaved");
-
+  const box = $("songSaved");
   if (!box) return;
-
-  const q = query(
-    sharedSongRef,
-    orderBy("createdAt", "desc")
-  );
-
-  onSnapshot(q, snapshot => {
-
+  if (songUnsub) songUnsub();
+  songUnsub = onSnapshot(query(sharedSongRef, orderBy("createdAt", "desc")), snap => {
     box.innerHTML = "";
-
-    if (snapshot.empty) {
-
-      box.classList.add("hidden");
-
-      return;
-    }
-
+    if (snap.empty) { box.classList.add("hidden"); return; }
     box.classList.remove("hidden");
-
-    snapshot.forEach(docSnap => {
-
-      const data = docSnap.data();
-
-      const songBox =
-        document.createElement("div");
-
-      songBox.className = "entry";
-
-      const small =
-        document.createElement("small");
-
-      let dateText = "";
-
-      if (data.createdAt) {
-
-        dateText =
-          data.createdAt
-            .toDate()
-            .toLocaleString();
-
-      }
-
-      small.textContent = dateText;
-
-      const songText =
-        document.createElement("p");
-
-      songText.textContent =
-        data.song || "";
-
-      songBox.appendChild(small);
-      songBox.appendChild(songText);
-
-      box.appendChild(songBox);
-
+    snap.forEach(ds => {
+      const data = ds.data(), s = el("div", "entry");
+      s.appendChild(el("small", "", data.createdAt ? data.createdAt.toDate().toLocaleString() : ""));
+      s.appendChild(el("p", "", data.song || ""));
+      box.appendChild(s);
     });
-
-  }, error => {
-
-    console.error(
-      "Song load error:",
-      error
-    );
-
-  });
-  }
-// ==============================
-// Emoji Picker
-// ==============================
-
-function toggleEmojiPicker() {
-
-  const picker =
-    document.getElementById("emojiPicker");
-
-  if (!picker) return;
-
-
-  picker.classList.toggle("hidden");
-
+  }, e => console.error("Song load error:", e));
 }
 
-
-window.toggleEmojiPicker =
-  toggleEmojiPicker;
-
-
-// ==============================
-// Add Emoji
-// ==============================
-
+// ===== emoji picker =====
+const EMOJIS = "❤️ 🩷 🧡 💛 💚 🩵 💙 💜 🤎 🖤 🩶 🤍 💔 ❤️‍🔥 ❤️‍🩹 💕 💞 💓 💗 💖 💘 💝 💟 ❣️ ♥️ 🥰 😍 😘 😚 😙 😻 😊 ☺️ 😉 😏 🥹 🥺 😭 😂 🤣 🤭 🙈 🙉 🙊 😇 😌 🤗 🫠 😎 🫶 🫂 👍 👏 🙌 ✌️ 🤞 👉 👈 ☝️ 🙏 🌹 🌷 🌸 🌺 🌻 💐 🦋 ✨ 💫 ⭐ 🌙 ☀️ 🌈 🐻 🐰 🐱 🐶 🐼 🦊 🐥 🦄 🧸 🎀 🎁 🎉 🎊 🥳 💎 👑 🍓 🍒 🍫 🍰 ☕ 💋 💌 💍 💑 👩‍❤️‍👨 👩‍❤️‍💋‍👨".split(" ");
+EMOJIS.forEach(e => {
+  const s = el("span", "", e);
+  s.onclick = () => addEmoji(e);
+  $("emojiPicker").appendChild(s);
+});
+function toggleEmojiPicker() { $("emojiPicker").classList.toggle("hidden"); }
 function addEmoji(emoji) {
-
-  const input =
-    document.getElementById("chatInput");
-
-  if (!input) return;
-
-
-  const start =
-    input.selectionStart ?? input.value.length;
-
-  const end =
-    input.selectionEnd ?? input.value.length;
-
-
-  input.value =
-    input.value.substring(0, start) +
-    emoji +
-    input.value.substring(end);
-
-
-  const newPosition =
-    start + emoji.length;
-
-
+  const input = $("chatInput");
+  const a = input.selectionStart ?? input.value.length, b = input.selectionEnd ?? input.value.length;
+  input.value = input.value.substring(0, a) + emoji + input.value.substring(b);
   input.focus();
-
-
-  input.setSelectionRange(
-    newPosition,
-    newPosition
-  );
-
+  input.setSelectionRange(a + emoji.length, a + emoji.length);
 }
+window.toggleEmojiPicker = toggleEmojiPicker;
 
+// ===== chat display =====
+var chatUnsub = null, chunkUrlCache = {};
+const CHUNK_MAX_BYTES = 10 * 1024 * 1024, CHUNK_CHARS = 700000;
 
-window.addEmoji = addEmoji;
-  // ==============================
-// PART 5 — Chat Display
-// ==============================
-
-let chatUnsubscribe = null;
+function fmtSize(b) {
+  if (!b) return "";
+  if (b < 1024) return b + " B";
+  if (b < 1048576) return (b / 1024).toFixed(0) + " KB";
+  return (b / 1048576).toFixed(1) + " MB";
+}
+function makeVideo(url) {
+  const v = el("video");
+  v.src = url; v.controls = true; v.preload = "metadata"; v.setAttribute("playsinline", "");
+  return v;
+}
+function makeAudio(url) {
+  const a = el("audio");
+  a.src = url; a.controls = true; a.preload = "metadata";
+  return a;
+}
+function openLightbox(url) { $("lightboxImg").src = url; $("lightbox").classList.remove("hidden"); }
 
 function startChat() {
-
-  const user = auth.currentUser;
-
-  if (!user) return;
-
-
-  const chatMessages =
-    document.getElementById("chatMessages");
-
-  const chatError =
-    document.getElementById("chatError");
-
-  if (!chatMessages) return;
-
-
-  // Stop old listener first
-  if (chatUnsubscribe) {
-    chatUnsubscribe();
-    chatUnsubscribe = null;
-  }
-
-
-  const messagesQuery = query(
-    collection(db, "messages"),
-    orderBy("createdAt", "asc")
-  );
-
-
-  chatUnsubscribe = onSnapshot(
-    messagesQuery,
-
-    snapshot => {
-
-      chatMessages.innerHTML = "";
-
-
-      snapshot.forEach(messageDoc => {
-
-        const data = messageDoc.data();
-
-        const isMine =
-          data.uid === user.uid;
-
-
-        const row =
-          document.createElement("div");
-
-        row.id = "msg_" + messageDoc.id;
-
-        row.style.display = "flex";
-
-        row.style.justifyContent =
-          isMine ? "flex-end" : "flex-start";
-
-        row.style.margin = "12px 0";
-
-
-        const bubble =
-          document.createElement("div");
-
-        bubble.style.maxWidth = "80%";
-
-        bubble.style.padding = "10px 15px";
-
-        bubble.style.borderRadius =
-          isMine
-            ? "20px 20px 5px 20px"
-            : "20px 20px 20px 5px";
-
-        bubble.style.background =
-          isMine ? "#e7bfd0" : "#f1e3e8";
-
-        bubble.style.color = "#593743";
-
-        bubble.style.boxShadow =
-          "0 3px 10px #75485815";
-
-
-        // Name
-        const name =
-          document.createElement("small");
-
-        name.textContent =
-          isMine ? "Me ♡" : "You ♡";
-
-        name.style.display = "block";
-
-        name.style.fontWeight = "bold";
-
-        name.style.marginBottom = "5px";
-
-
-        // Message content
-        const message =
-          document.createElement("div");
-
-        message.style.whiteSpace =
-          "pre-wrap";
-
-        message.style.lineHeight =
-          "1.5";
-
-
-        // File or normal message
-        if (data.chunkId) {
-
-          // file or video stored inside Firestore (loads when you tap it)
-          const isVideo = !!(data.fileType && data.fileType.indexOf("video/") === 0);
-          const sizeText = data.fileSize ? " (" + fmtSize(data.fileSize) + ")" : "";
-          const cached = chunkUrlCache[data.chunkId];
-
-          if (cached && isVideo) {
-            message.appendChild(makeVideo(cached));
-          } else {
-            const cbtn = document.createElement("button");
-            cbtn.className = "chunkbtn";
-            const label = (isVideo ? "▶ Play video: " : "⬇ Open file: ") + (data.fileName || "file") + sizeText;
-            cbtn.textContent = label;
-            cbtn.onclick = async () => {
-              cbtn.disabled = true;
-              cbtn.textContent = "Loading... ♡";
-              try {
-                const url = await loadChunkedFile(data);
-                if (isVideo) {
-                  cbtn.replaceWith(makeVideo(url));
-                } else {
-                  const a = document.createElement("a");
-                  a.href = url;
-                  a.download = data.fileName || "file";
-                  a.target = "_blank";
-                  document.body.appendChild(a);
-                  a.click();
-                  a.remove();
-                  cbtn.disabled = false;
-                  cbtn.textContent = label;
-                }
-              } catch (loadError) {
-                console.error("Load file error:", loadError);
-                cbtn.disabled = false;
-                cbtn.textContent = label;
-                toast("Could not load the file: " + ((loadError && (loadError.code || loadError.message)) || loadError));
-              }
-            };
-            message.appendChild(cbtn);
-          }
-
-        } else if (data.fileURL) {
-
-          if (
-            data.fileType &&
-            data.fileType.startsWith("image/")
-          ) {
-
-            const image =
-              document.createElement("img");
-
-            image.src = data.fileURL;
-
-            image.alt =
-              data.text || "Our memory";
-
-            image.style.maxWidth = "220px";
-
-            image.style.maxHeight = "300px";
-
-            image.style.borderRadius = "15px";
-
-            image.style.display = "block";
-
-            image.style.cursor = "pointer";
-
-
-            image.onclick = () => { openLightbox(data.fileURL); };
-
-
-            message.appendChild(image);
-
-          } else if (
-            data.fileType &&
-            data.fileType.startsWith("video/")
-          ) {
-
-            const video =
-              document.createElement("video");
-
-            video.src = data.fileURL;
-            video.controls = true;
-            video.preload = "metadata";
-            video.setAttribute("playsinline", "");
-            video.style.maxWidth = "220px";
-            video.style.borderRadius = "15px";
-            video.style.display = "block";
-
-            message.appendChild(video);
-
-          } else {
-
-            const link =
-              document.createElement("a");
-
-            link.href = data.fileURL;
-
-            link.target = "_blank";
-
-            link.rel = "noopener noreferrer";
-
-            link.textContent =
-              "📎 " +
-              String(data.text || "")
-                .replace("📎 ", "");
-
-            link.style.color = "#a94763";
-
-            link.style.fontWeight = "bold";
-
-            link.style.textDecoration =
-              "none";
-
-
-            message.appendChild(link);
-
-          }
-
+  const user = auth.currentUser, box = $("chatMessages"), ce = $("chatError");
+  if (!user || !box) return;
+  if (chatUnsub) chatUnsub();
+
+  chatUnsub = onSnapshot(query(collection(db, "messages"), orderBy("createdAt", "asc")), snap => {
+    box.innerHTML = "";
+    snap.forEach(m => {
+      const data = m.data(), mine = data.uid === user.uid;
+      const row = el("div", "mrow " + (mine ? "mine" : "theirs"));
+      row.id = "msg_" + m.id;
+      const bub = el("div", "bub");
+      bub.appendChild(el("small", "nm", mine ? "Me ♡" : "You ♡"));
+
+      // quoted reply
+      if (data.replyTo && typeof data.replyTo === "object") {
+        const q = el("div", "rquote");
+        q.appendChild(el("b", "", data.replyTo.uid === user.uid ? "You" : "My love"));
+        q.appendChild(el("span", "", String(data.replyTo.text || "").slice(0, 90)));
+        q.onclick = () => {
+          const t = $("msg_" + data.replyTo.id);
+          if (t) { t.scrollIntoView({ block: "center" }); t.style.background = "#ffd6e2"; setTimeout(() => { t.style.background = ""; }, 1200); }
+        };
+        bub.appendChild(q);
+      }
+
+      // content
+      const msg = el("div", "mc");
+      if (data.chunkId) {
+        const voice = !!data.isVoice;
+        const video = !!(data.fileType && data.fileType.indexOf("video/") === 0);
+        const size = data.fileSize ? " (" + fmtSize(data.fileSize) + ")" : "";
+        const label = voice
+          ? "🎤 Play voice message" + (data.duration ? " (" + data.duration + "s)" : "")
+          : (video ? "▶ Play video: " : "⬇ Open file: ") + (data.fileName || "file") + size;
+        const media = url => voice ? makeAudio(url) : makeVideo(url);
+        if (chunkUrlCache[data.chunkId] && (video || voice)) {
+          msg.appendChild(media(chunkUrlCache[data.chunkId]));
         } else {
-
-          message.textContent =
-            data.text || "";
-
-        }
-
-        // words sent together with a photo or file
-        if ((data.fileURL || data.chunkId) && data.caption) {
-          const cap = document.createElement("div");
-          cap.style.whiteSpace = "pre-wrap";
-          cap.style.lineHeight = "1.5";
-          cap.style.marginTop = "6px";
-          cap.textContent = data.caption;
-          message.appendChild(cap);
-        }
-
-
-        // Time
-        const time =
-          document.createElement("small");
-
-
-        if (
-          data.createdAt &&
-          typeof data.createdAt.toDate === "function"
-        ) {
-
-          const date =
-            data.createdAt.toDate();
-
-
-          time.textContent =
-            date.toLocaleDateString([], {
-              day: "2-digit",
-              month: "short",
-              year: "numeric"
-            }) +
-            " · " +
-            date.toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit"
-            });
-
-        } else {
-
-          time.textContent =
-            "sending...";
-
-        }
-
-
-        time.style.display = "block";
-
-        time.style.textAlign = "right";
-
-        time.style.marginTop = "6px";
-
-        time.style.fontSize = "11px";
-
-        time.style.opacity = "0.65";
-
-
-        bubble.appendChild(name);
-
-        // ----- quoted reply (step 7) -----
-        try {
-          if (data.replyTo && typeof data.replyTo === "object") {
-            const quote = document.createElement("div");
-            quote.className = "rquote";
-            const qwho = document.createElement("b");
-            qwho.textContent = data.replyTo.uid === user.uid ? "You" : "My love";
-            const qtext = document.createElement("span");
-            qtext.textContent = String(data.replyTo.text || "").slice(0, 90);
-            quote.appendChild(qwho);
-            quote.appendChild(qtext);
-            quote.onclick = () => {
-              const target = document.getElementById("msg_" + data.replyTo.id);
-              if (target) {
-                target.scrollIntoView({ block: "center" });
-                target.style.background = "#ffd6e2";
-                setTimeout(() => { target.style.background = ""; }, 1200);
-              }
-            };
-            bubble.appendChild(quote);
-          }
-        } catch (quoteError) {
-          console.error("Quote display error:", quoteError);
-        }
-
-        bubble.appendChild(message);
-
-        bubble.appendChild(time);
-
-
-        // ----- reactions (step 3) -----
-        try {
-          const reacts = (data.reactions && typeof data.reactions === "object") ? data.reactions : {};
-          const myReact = reacts[user.uid];
-          const counts = {};
-          Object.keys(reacts).forEach(u => {
-            const r = reacts[u];
-            if (typeof r === "string") counts[r] = (counts[r] || 0) + 1;
-          });
-
-          const rrow = document.createElement("div");
-          rrow.className = "rrow";
-
-          Object.keys(counts).forEach(r => {
-            const chip = document.createElement("span");
-            chip.className = "rchip" + (myReact === r ? " me" : "");
-            chip.textContent = r + (counts[r] > 1 ? " " + counts[r] : "");
-            chip.onclick = () => toggleReaction(messageDoc.id, r, myReact);
-            rrow.appendChild(chip);
-          });
-
-          const picker = document.createElement("div");
-          picker.className = "rpick";
-          ["❤️", "😂", "😮", "😢", "👍", "🙏"].forEach(r => {
-            const sp = document.createElement("span");
-            sp.textContent = r;
-            if (myReact === r) sp.className = "picked";
-            sp.onclick = () => { picker.style.display = "none"; toggleReaction(messageDoc.id, r, myReact); };
-            picker.appendChild(sp);
-          });
-
-          const rbtn = document.createElement("button");
-          rbtn.className = "rbtn";
-          rbtn.textContent = "☺";
-          rbtn.onclick = () => { picker.style.display = (picker.style.display === "flex") ? "none" : "flex"; };
-          const replyBtn = document.createElement("button");
-          replyBtn.className = "rbtn2";
-          replyBtn.textContent = "↩";
-          replyBtn.title = "Reply";
-          replyBtn.onclick = () => startReply(messageDoc.id, data);
-          rrow.appendChild(replyBtn);
-
-          rrow.appendChild(rbtn);
-
-          bubble.appendChild(rrow);
-          bubble.appendChild(picker);
-        } catch (reactError) {
-          console.error("Reaction display error:", reactError);
-        }
-
-
-        // ==========================
-        // Delete + Edit
-        // ==========================
-
-        if (isMine) {
-
-          const actions =
-            document.createElement("div");
-
-          actions.style.display = "flex";
-
-          actions.style.justifyContent =
-            "flex-end";
-
-          actions.style.gap = "3px";
-
-
-          // Delete
-          const deleteButton =
-            document.createElement("button");
-
-          deleteButton.textContent = "🗑️";
-
-          deleteButton.style.background =
-            "transparent";
-
-          deleteButton.style.padding =
-            "3px 6px";
-
-          deleteButton.style.fontSize =
-            "14px";
-
-          deleteButton.style.border = "none";
-
-
-          deleteButton.onclick = async () => {
-
-            if (!(await askConfirm("Delete this message? ♡", "Delete"))) {
-              return;
-            }
-
-
+          const b = el("button", "chunkbtn", label);
+          b.onclick = async () => {
+            b.disabled = true; b.textContent = "Loading... ♡";
             try {
-
-              await deleteDoc(
-                doc(
-                  db,
-                  "messages",
-                  messageDoc.id
-                )
-              );
-
-              if (data.chunkId) { deleteChunks(data.chunkId); }
-
-              chatError.textContent = "";
-
-            } catch (error) {
-
-              console.error(
-                "Delete error:",
-                error
-              );
-
-              chatError.textContent =
-                "Delete failed ♡";
-
+              const url = await loadChunkedFile(data);
+              if (video || voice) b.replaceWith(media(url));
+              else {
+                const a = document.createElement("a");
+                a.href = url; a.download = data.fileName || "file"; a.target = "_blank";
+                document.body.appendChild(a); a.click(); a.remove();
+                b.disabled = false; b.textContent = label;
+              }
+            } catch (e) {
+              console.error("Load file error:", e);
+              b.disabled = false; b.textContent = label;
+              toast("Could not load the file: " + errText(e));
             }
-
           };
-
-
-          // Edit
-          const editButton =
-            document.createElement("button");
-
-          editButton.textContent = "✏️";
-
-          editButton.style.background =
-            "transparent";
-
-          editButton.style.padding =
-            "3px 6px";
-
-          editButton.style.fontSize =
-            "14px";
-
-          editButton.style.border = "none";
-
-
-          editButton.onclick = () => {
-            startEdit(messageDoc.id, data);
-          };
-
-
-          actions.appendChild(deleteButton);
-
-          actions.appendChild(editButton);
-
-          bubble.appendChild(actions);
-
+          msg.appendChild(b);
         }
+      } else if (data.fileURL) {
+        const ft = data.fileType || "";
+        if (ft.startsWith("image/")) {
+          const img = el("img");
+          img.src = data.fileURL; img.alt = data.text || "Our memory";
+          img.onclick = () => openLightbox(data.fileURL);
+          msg.appendChild(img);
+        } else if (ft.startsWith("video/")) {
+          msg.appendChild(makeVideo(data.fileURL));
+        } else {
+          const a = el("a", "", "📎 " + String(data.text || "").replace("📎 ", ""));
+          a.href = data.fileURL; a.target = "_blank"; a.rel = "noopener noreferrer";
+          a.style.cssText = "color:#a94763;font-weight:bold;text-decoration:none";
+          msg.appendChild(a);
+        }
+      } else {
+        msg.textContent = data.text || "";
+      }
+      if ((data.fileURL || data.chunkId) && data.caption) msg.appendChild(el("div", "cap", data.caption));
+      bub.appendChild(msg);
 
+      // time
+      let tt = "sending...";
+      if (data.createdAt && typeof data.createdAt.toDate === "function") {
+        const d = data.createdAt.toDate();
+        tt = d.toLocaleDateString([], { day: "2-digit", month: "short", year: "numeric" }) + " · " + d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      }
+      bub.appendChild(el("small", "tm", tt));
 
-        row.appendChild(bubble);
-
-        chatMessages.appendChild(row);
-
+      // reactions + reply
+      const reacts = (data.reactions && typeof data.reactions === "object") ? data.reactions : {};
+      const myReact = reacts[user.uid], counts = {};
+      Object.keys(reacts).forEach(u => { const r = reacts[u]; if (typeof r === "string") counts[r] = (counts[r] || 0) + 1; });
+      const rrow = el("div", "rrow"), picker = el("div", "rpick");
+      Object.keys(counts).forEach(r => {
+        const chip = el("span", "rchip" + (myReact === r ? " me" : ""), r + (counts[r] > 1 ? " " + counts[r] : ""));
+        chip.onclick = () => toggleReaction(m.id, r, myReact);
+        rrow.appendChild(chip);
       });
+      ["❤️", "😂", "😮", "😢", "👍", "🙏"].forEach(r => {
+        const sp = el("span", myReact === r ? "picked" : "", r);
+        sp.onclick = () => { picker.style.display = "none"; toggleReaction(m.id, r, myReact); };
+        picker.appendChild(sp);
+      });
+      const replyBtn = el("button", "rbtn", "↩");
+      replyBtn.onclick = () => startReply(m.id, data);
+      const rbtn = el("button", "rbtn", "☺");
+      rbtn.onclick = () => { picker.style.display = picker.style.display === "flex" ? "none" : "flex"; };
+      rrow.appendChild(replyBtn); rrow.appendChild(rbtn);
+      bub.appendChild(rrow); bub.appendChild(picker);
 
+      // edit + delete (own messages)
+      if (mine) {
+        const acts = el("div", "acts");
+        const del = el("button", "", "🗑️");
+        del.onclick = async () => {
+          if (!(await askConfirm("Delete this message? ♡", "Delete"))) return;
+          try {
+            await deleteDoc(doc(db, "messages", m.id));
+            if (data.chunkId) deleteChunks(data.chunkId);
+            ce.textContent = "";
+          } catch (e) { console.error("Delete error:", e); ce.textContent = "Delete failed ♡"; }
+        };
+        const edit = el("button", "", "✏️");
+        edit.onclick = () => startEdit(m.id, data);
+        acts.appendChild(del); acts.appendChild(edit);
+        bub.appendChild(acts);
+      }
 
-      // Scroll to latest message
-      chatMessages.scrollTop =
-        chatMessages.scrollHeight;
+      row.appendChild(bub);
+      box.appendChild(row);
+    });
+    box.scrollTop = box.scrollHeight;
+  }, e => console.error("Chat error:", e));
+}
 
-    },
-
-    error => {
-
-      console.error(
-        "Chat error:",
-        error
-      );
-
-
-    }
-  );
-
-    }
-  // ==============================
-// PART 6 — Send Message
-// Reply & Reactions
-// ==============================
+// ===== send, edit, reply, reactions =====
+var editingId = null, replyTarget = null;
 
 async function sendChatMessage() {
-
-  const user = auth.currentUser;
-
-  const input =
-    document.getElementById("chatInput");
-
-  const error =
-    document.getElementById("chatError");
-
-
+  const user = auth.currentUser, input = $("chatInput"), error = $("chatError");
   if (!user || !input) return;
-
-
   const text = input.value.trim();
-
-
   if (editingId) { saveEdit(text); return; }
-
   if (pendingFile) { sendPendingFile(text); return; }
-
   if (!text) return;
-
-
-  if (
-    user.uid !== MY_UID &&
-    user.uid !== HIS_UID
-  ) {
-
-    error.textContent =
-      "This account is not allowed. ♡";
-
-    return;
-  }
-
-
+  if (!allowed(user)) { error.textContent = "This account is not allowed. ♡"; return; }
   try {
-
-    const messageData = {
-
-      uid: user.uid,
-
-      text: text,
-
-      createdAt: serverTimestamp()
-
-    };
-
-
-    // Reply information (step 7)
-    if (replyTarget) {
-      messageData.replyTo = replyTarget;
-    }
-
-
-    await addDoc(
-      collection(db, "messages"),
-      messageData
-    );
-
-
-    // Clear input
+    const data = { uid: user.uid, text, createdAt: serverTimestamp() };
+    if (replyTarget) data.replyTo = replyTarget;
+    await addDoc(collection(db, "messages"), data);
     input.value = "";
-
-    input.placeholder =
-      "Write something to me...";
-
-    delete input.dataset.replyTo;
-
-    delete input.dataset.replyText;
-
-    try { clearReply(); } catch (e) {}
-
+    clearReply();
     error.textContent = "";
+    stopTyping();
+  } catch (e) { console.error("Send message error:", e); error.textContent = "Could not send your message ♡"; }
+}
+window.sendChatMessage = sendChatMessage;
 
-    try { stopTyping(); } catch (e) {}
+$("chatInput").addEventListener("keydown", e => {
+  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendChatMessage(); }
+});
 
+function startEdit(id, data) {
+  clearAttachment();
+  if (data.fileURL || data.chunkId) { toast("File messages cannot be edited ♡"); return; }
+  clearReply();
+  editingId = id;
+  $("chatInput").value = data.text || "";
+  $("editTxt").textContent = String(data.text || "").slice(0, 80);
+  $("editBar").classList.remove("hidden");
+  $("chatInput").focus();
+}
+function cancelEdit() { editingId = null; $("editBar").classList.add("hidden"); $("chatInput").value = ""; }
+window.cancelEdit = cancelEdit;
+function saveEdit(text) {
+  const id = editingId;
+  if (!id) return;
+  if (!text) { toast("A message can't be empty (use the bin to delete) ♡"); return; }
+  editingId = null;
+  $("editBar").classList.add("hidden");
+  $("chatInput").value = "";
+  updateDoc(doc(db, "messages", id), { text, edited: true }).catch(e => { console.error("Edit error:", e); toast("Edit failed: " + errText(e)); });
+}
 
-  } catch (e) {
-
-    console.error(
-      "Send message error:",
-      e
-    );
-
-    error.textContent =
-      "Could not send your message ♡";
-
+function startReply(id, data) {
+  if (editingId) cancelEdit();
+  let text = (data.text && String(data.text).indexOf("📎 ") !== 0) ? data.text : "";
+  if (!text && data.caption) text = data.caption;
+  if (!text) {
+    const ft = data.fileType || "";
+    text = ft.indexOf("image/") === 0 ? "📷 Photo" : ft.indexOf("video/") === 0 ? "🎬 Video" : "📎 " + (data.fileName || "file");
   }
-
+  replyTarget = { id, text: String(text).slice(0, 120), uid: data.uid };
+  $("replyWho").textContent = "Replying to " + (data.uid === auth.currentUser.uid ? "yourself" : "my love");
+  $("replyTxt").textContent = replyTarget.text.slice(0, 80);
+  $("replyBar").classList.remove("hidden");
+  $("chatInput").focus();
 }
+function clearReply() { replyTarget = null; $("replyBar").classList.add("hidden"); }
+window.clearReply = clearReply;
 
-
-window.sendChatMessage =
-  sendChatMessage;
-
-
-// ==============================
-// Reply
-// ==============================
-
-function cancelReply() {
-
-  const input =
-    document.getElementById("chatInput");
-
-  if (!input) return;
-
-
-  delete input.dataset.replyTo;
-
-  delete input.dataset.replyText;
-
-
-  input.value = "";
-
-  input.placeholder =
-    "Write something to me...";
-
-
-  input.focus();
-
-}
-
-
-window.cancelReply =
-  cancelReply;
-
-
-// ==============================
-// Reaction
-// ==============================
-
-async function setReaction(
-  messageId,
-  reaction
-) {
-
+function toggleReaction(messageId, emoji, current) {
   const user = auth.currentUser;
-
   if (!user) return;
-
-
-  try {
-
-    await updateDoc(
-      doc(
-        db,
-        "messages",
-        messageId
-      ),
-      {
-        reaction: reaction
-      }
-    );
-
-  } catch (error) {
-
-    console.error(
-      "Reaction error:",
-      error
-    );
-
-  }
-
+  const r = doc(db, "messages", messageId);
+  const job = current === emoji
+    ? updateDoc(r, { ["reactions." + user.uid]: deleteField() })
+    : setDoc(r, { reactions: { [user.uid]: emoji } }, { merge: true });
+  job.catch(e => { console.error("Reaction error:", e); toast("Reaction failed: " + errText(e)); });
 }
 
+// ===== files, photos, videos =====
+var pendingFile = null, pendingThumbUrl = "", sendingFile = false;
 
-// ==============================
-// Enter key = Send
-// ==============================
-
-const chatInput =
-  document.getElementById("chatInput");
-
-
-if (chatInput) {
-
-  chatInput.addEventListener(
-    "keydown",
-    event => {
-
-      if (
-        event.key === "Enter" &&
-        !event.shiftKey
-      ) {
-
-        event.preventDefault();
-
-        sendChatMessage();
-
-      }
-
-    }
-  );
-
-}
-  
-// ==============================
-// PART 7 — Upload Files
-// ==============================
-
-var pendingFile = null;
-var pendingThumbUrl = "";
-var sendingFile = false;
-
-// called when a photo / file is chosen: show a preview, do NOT send yet
 function sendFile(inputEl) {
-
   const file = inputEl && inputEl.files && inputEl.files[0];
-
   if (!file) return;
-
-  try { if (typeof cancelEdit === "function" && editingId) cancelEdit(); } catch (e) {}
-
+  if (editingId) cancelEdit();
   pendingFile = file;
-
-  document.getElementById("attachName").textContent = file.name;
-
-  const thumb = document.getElementById("attachThumb");
-  const ico = document.getElementById("attachIco");
-
+  $("attachName").textContent = file.name;
+  const thumb = $("attachThumb"), ico = $("attachIco");
   if (pendingThumbUrl) { try { URL.revokeObjectURL(pendingThumbUrl); } catch (e) {} pendingThumbUrl = ""; }
-
   if (file.type && file.type.indexOf("image/") === 0) {
     pendingThumbUrl = URL.createObjectURL(file);
-    thumb.src = pendingThumbUrl;
-    thumb.classList.remove("hidden");
-    ico.classList.add("hidden");
-  } else {
-    thumb.classList.add("hidden");
-    ico.classList.remove("hidden");
-  }
-
-  document.getElementById("attachBar").classList.remove("hidden");
-  document.getElementById("chatError").textContent = "";
-  document.getElementById("chatInput").focus();
+    thumb.src = pendingThumbUrl; thumb.classList.remove("hidden"); ico.classList.add("hidden");
+  } else { thumb.classList.add("hidden"); ico.classList.remove("hidden"); }
+  $("attachBar").classList.remove("hidden");
+  $("chatError").textContent = "";
+  $("chatInput").focus();
 }
+window.sendFile = sendFile;
 
 function clearAttachment() {
   if (sendingFile) return;
   pendingFile = null;
-  document.getElementById("attachBar").classList.add("hidden");
-  document.getElementById("attachThumb").src = "";
+  $("attachBar").classList.add("hidden");
+  $("attachThumb").src = "";
   if (pendingThumbUrl) { try { URL.revokeObjectURL(pendingThumbUrl); } catch (e) {} pendingThumbUrl = ""; }
-  document.getElementById("fileInput").value = "";
-  document.getElementById("photoInput").value = "";
+  $("fileInput").value = ""; $("photoInput").value = "";
 }
 window.clearAttachment = clearAttachment;
 
-// called by the Send button / Enter key when a photo or file is waiting
 async function sendPendingFile(caption) {
-
-  const user = auth.currentUser;
-
-  const error = document.getElementById("chatError");
-
-  const file = pendingFile;
-
+  const user = auth.currentUser, error = $("chatError"), file = pendingFile;
   if (!user || !file || sendingFile) return;
-
-  if (user.uid !== MY_UID && user.uid !== HIS_UID) {
-    error.textContent = "This account is not allowed. ♡";
-    return;
-  }
-
+  if (!allowed(user)) { error.textContent = "This account is not allowed. ♡"; return; }
   sendingFile = true;
-
   try {
-
-    let fileURL = "";
-    let fileType = file.type;
-    let chunkInfo = null;
-
-    // Photos: shrink and send inside the message (works without Firebase Storage)
+    let fileURL = "", fileType = file.type, chunkInfo = null;
     if (file.type && file.type.indexOf("image/") === 0) {
       error.textContent = "Sending photo... ♡";
-      try {
-        fileURL = await compressForChat(file);
-        fileType = "image/jpeg";
-      } catch (compressError) {
-        console.error("Photo shrink failed:", compressError);
-        fileURL = "";
-      }
+      try { fileURL = await compressForChat(file); fileType = "image/jpeg"; }
+      catch (e) { console.error("Photo shrink failed:", e); fileURL = ""; }
     }
-
-    // Other files and videos up to 10 MB: saved in Firestore pieces (no Firebase Storage needed)
     if (!fileURL) {
-      if (file.size <= CHUNK_MAX_BYTES) {
-        chunkInfo = await uploadChunked(file, error);
-      } else if (file.size > 25 * 1024 * 1024) {
-        error.textContent = "";
-        toast("File too big (max 25 MB) ♡");
-        return;
-      } else {
-        // bigger than 10 MB: only possible with Firebase Storage
-        fileURL = await uploadToStorage(file, error);
-      }
+      if (file.size <= CHUNK_MAX_BYTES) chunkInfo = await uploadChunked(file, error);
+      else { error.textContent = ""; toast("File too big (max 10 MB) ♡"); return; }
     }
-
     await addDoc(collection(db, "messages"), {
-      uid: user.uid,
-      text: "📎 " + file.name,
-      caption: caption || "",
-      replyTo: replyTarget || null,
-      chunkId: chunkInfo ? chunkInfo.chunkId : "",
-      chunkCount: chunkInfo ? chunkInfo.count : 0,
-      fileURL: fileURL,
-      fileType: fileType,
-      fileName: file.name,
-      fileSize: file.size,
-      createdAt: serverTimestamp()
+      uid: user.uid, text: "📎 " + file.name, caption: caption || "", replyTo: replyTarget || null,
+      chunkId: chunkInfo ? chunkInfo.chunkId : "", chunkCount: chunkInfo ? chunkInfo.count : 0,
+      fileURL, fileType, fileName: file.name, fileSize: file.size, createdAt: serverTimestamp()
     });
-
     sendingFile = false;
-    clearAttachment();
-    try { clearReply(); } catch (e) {}
-
-    const input = document.getElementById("chatInput");
-    input.value = "";
-    try { stopTyping(); } catch (e) {}
+    clearAttachment(); clearReply();
+    $("chatInput").value = "";
+    stopTyping();
     error.textContent = "";
-
-    const box = document.getElementById("chatMessages");
-    if (box) box.scrollTop = box.scrollHeight;
-
   } catch (e) {
-
     console.error("Upload error:", e);
-
-    const code = (e && (e.code || e.message)) || String(e);
     error.textContent = "Could not send the file ♡";
-    toast("Could not send: " + code);
-
-  } finally {
-    sendingFile = false;
-  }
-
+    toast("Could not send: " + errText(e));
+  } finally { sendingFile = false; }
 }
 
-// Shrink a photo to a small JPEG (about 100-400 KB) so it fits in a message
 function compressForChat(file) {
   return new Promise((resolve, reject) => {
-    const url = URL.createObjectURL(file);
-    const img = new Image();
+    const url = URL.createObjectURL(file), img = new Image();
     img.onload = () => {
       try {
-        const sides = [1280, 1024, 800, 640, 480];
-        const qualities = [0.75, 0.65, 0.55];
+        const sides = [1280, 1024, 800, 640, 480], qualities = [0.75, 0.65, 0.55];
         let best = null;
         outer:
-        for (let a = 0; a < sides.length; a++) {
-          const scale = Math.min(1, sides[a] / Math.max(img.naturalWidth, img.naturalHeight));
-          const w = Math.max(1, Math.round(img.naturalWidth * scale));
-          const h = Math.max(1, Math.round(img.naturalHeight * scale));
-          const canvas = document.createElement("canvas");
-          canvas.width = w; canvas.height = h;
-          const ctx = canvas.getContext("2d");
-          ctx.fillStyle = "#ffffff";
-          ctx.fillRect(0, 0, w, h);
-          ctx.drawImage(img, 0, 0, w, h);
-          for (let b = 0; b < qualities.length; b++) {
-            best = canvas.toDataURL("image/jpeg", qualities[b]);
-            if (best.length < 800000) break outer;
-          }
+        for (const side of sides) {
+          const scale = Math.min(1, side / Math.max(img.naturalWidth, img.naturalHeight));
+          const w = Math.max(1, Math.round(img.naturalWidth * scale)), h = Math.max(1, Math.round(img.naturalHeight * scale));
+          const c = document.createElement("canvas");
+          c.width = w; c.height = h;
+          const ctx = c.getContext("2d");
+          ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, w, h); ctx.drawImage(img, 0, 0, w, h);
+          for (const q of qualities) { best = c.toDataURL("image/jpeg", q); if (best.length < 800000) break outer; }
         }
         URL.revokeObjectURL(url);
         if (!best || best.length >= 1000000) { reject(new Error("photo-too-large")); return; }
         resolve(best);
-      } catch (err) { URL.revokeObjectURL(url); reject(err); }
+      } catch (e) { URL.revokeObjectURL(url); reject(e); }
     };
     img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("cannot-read-photo")); };
     img.src = url;
   });
 }
 
-// Upload to Firebase Storage with a visible percentage and a clear message if it gets stuck
 function uploadToStorage(file, statusEl) {
   return new Promise((resolve, reject) => {
-    const safeFileName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-    const fileRef = ref(storage, "chatFiles/" + Date.now() + "_" + safeFileName);
-    const task = uploadBytesResumable(fileRef, file, { contentType: file.type || "application/octet-stream" });
-
-    let lastProgress = Date.now();
+    const safe = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+    const task = uploadBytesResumable(ref(storage, "chatFiles/" + Date.now() + "_" + safe), file, { contentType: file.type || "application/octet-stream" });
+    let last = Date.now();
     statusEl.textContent = "Uploading... 0% ♡";
-
-    const watchdog = setInterval(() => {
-      if (Date.now() - lastProgress > 15000) {
-        clearInterval(watchdog);
+    const wd = setInterval(() => {
+      if (Date.now() - last > 15000) {
+        clearInterval(wd);
         try { task.cancel(); } catch (e) {}
         reject(new Error("upload-stuck: Firebase Storage is not set up or its rules are not published"));
       }
     }, 2000);
-
-    task.on("state_changed", snap => {
-      lastProgress = Date.now();
-      const pct = snap.totalBytes ? Math.round(snap.bytesTransferred / snap.totalBytes * 100) : 0;
-      statusEl.textContent = "Uploading... " + pct + "% ♡";
-    }, err => {
-      clearInterval(watchdog);
-      reject(err);
-    }, () => {
-      clearInterval(watchdog);
-      getDownloadURL(task.snapshot.ref).then(resolve, reject);
-    });
+    task.on("state_changed", s => {
+      last = Date.now();
+      statusEl.textContent = "Uploading... " + (s.totalBytes ? Math.round(s.bytesTransferred / s.totalBytes * 100) : 0) + "% ♡";
+    }, e => { clearInterval(wd); reject(e); }, () => { clearInterval(wd); getDownloadURL(task.snapshot.ref).then(resolve, reject); });
   });
 }
 
-function openLightbox(url) {
-  document.getElementById("lightboxImg").src = url;
-  document.getElementById("lightbox").classList.remove("hidden");
-}
-
-
-window.sendFile = sendFile;
-
-
-// ==============================
-// Start application after login
-// ==============================
-
-onAuthStateChanged(auth, user => {
-
-  if (!user) {
-
-    login.classList.remove("hidden");
-
-    app.classList.add("hidden");
-
-    return;
-  }
-
-
-  if (
-    user.uid !== MY_UID &&
-    user.uid !== HIS_UID
-  ) {
-
-    signOut(auth);
-
-    err.textContent =
-      "This account is not allowed here. ♡";
-
-    return;
-  }
-
-
-  login.classList.add("hidden");
-
-  app.classList.remove("hidden");
-
-  err.textContent = "";
-
-  loadAll();
-
-});
-
-// ==============================
-// END OF SCRIPT
-// ==============================
-
-
-// ==============================
-// STEP 1 — keep the message box above the phone keyboard
-try {
-  const kbInput = document.getElementById("chatInput");
-  const kbSpacer = document.getElementById("kbSpacer");
-  const kbBaseHeight = window.innerHeight;
-  let kbTimer = null;
-
-  kbInput.addEventListener("focus", () => {
-    clearTimeout(kbTimer);
-    kbTimer = setTimeout(() => {
-      if (document.activeElement !== kbInput) return;
-      const vv = window.visualViewport;
-      const h = vv ? vv.height : window.innerHeight;
-      const resized = h < kbBaseHeight * 0.8 || window.innerHeight < kbBaseHeight * 0.8;
-      if (!resized) kbSpacer.style.height = "55vh";      // browser did not make room: we do
-      const r = kbInput.getBoundingClientRect();
-      const wantTop = resized ? Math.max(10, h - r.height - 14) : window.innerHeight * 0.26;
-      window.scrollTo(0, window.scrollY + r.top - wantTop);
-      const box = document.getElementById("chatMessages");
-      if (box) box.scrollTop = box.scrollHeight;
-    }, 350);
+async function uploadChunked(file, statusEl) {
+  const dataUrl = await new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(r.result);
+    r.onerror = () => reject(r.error || new Error("cannot-read-file"));
+    r.readAsDataURL(file);
   });
+  const base64 = String(dataUrl).slice(String(dataUrl).indexOf(",") + 1);
+  const total = Math.max(1, Math.ceil(base64.length / CHUNK_CHARS));
+  const chunkId = "f" + Date.now() + Math.random().toString(36).slice(2, 8);
+  const uid = auth.currentUser.uid;
+  let done = 0;
+  statusEl.textContent = "Uploading... 0% ♡";
+  try {
+    for (let i = 0; i < total; i += 3) {
+      const batch = [];
+      for (let j = i; j < Math.min(total, i + 3); j++) {
+        batch.push(addDoc(collection(db, "fileChunks"), {
+          chunkId, index: j, total, data: base64.slice(j * CHUNK_CHARS, (j + 1) * CHUNK_CHARS), uid
+        }).then(() => { done++; statusEl.textContent = "Uploading... " + Math.round(done / total * 100) + "% ♡"; }));
+      }
+      await Promise.all(batch);
+    }
+  } catch (e) { deleteChunks(chunkId); throw e; }
+  return { chunkId, count: total };
+}
 
-  kbInput.addEventListener("blur", () => {
-    clearTimeout(kbTimer);
-    kbTimer = setTimeout(() => {
-      if (document.activeElement !== kbInput) kbSpacer.style.height = "0";
-    }, 600);
+async function loadChunkedFile(data) {
+  if (chunkUrlCache[data.chunkId]) return chunkUrlCache[data.chunkId];
+  const snap = await getDocs(query(collection(db, "fileChunks"), where("chunkId", "==", data.chunkId)));
+  const parts = [];
+  snap.forEach(d => parts.push(d.data()));
+  parts.sort((a, b) => a.index - b.index);
+  if (!parts.length || (data.chunkCount && parts.length < data.chunkCount)) throw new Error("file-pieces-missing");
+  const arrays = parts.map(p => {
+    const bin = atob(p.data), bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return bytes;
   });
-} catch (e) { console.error("keyboard step failed", e); }
-
-
-// ==============================
-// STEP 2 — helpers: popups, edit mode
-function toast(msg) {
-  const t = document.createElement("div");
-  t.className = "toast";
-  t.textContent = msg;
-  document.body.appendChild(t);
-  setTimeout(() => t.remove(), 5000);
+  const url = URL.createObjectURL(new Blob(arrays, { type: data.fileType || "application/octet-stream" }));
+  chunkUrlCache[data.chunkId] = url;
+  return url;
 }
 
-function askConfirm(message, yesLabel) {
-  return new Promise(resolve => {
-    const modal = document.getElementById("modal");
-    document.getElementById("modalText").textContent = message;
-    document.getElementById("modalYes").textContent = yesLabel || "Delete";
-    modal.classList.remove("hidden");
-    const done = v => {
-      modal.classList.add("hidden");
-      document.getElementById("modalYes").onclick = null;
-      document.getElementById("modalNo").onclick = null;
-      resolve(v);
-    };
-    document.getElementById("modalYes").onclick = () => done(true);
-    document.getElementById("modalNo").onclick = () => done(false);
-  });
+async function deleteChunks(chunkId) {
+  try {
+    const snap = await getDocs(query(collection(db, "fileChunks"), where("chunkId", "==", chunkId)));
+    const jobs = [];
+    snap.forEach(d => jobs.push(deleteDoc(doc(db, "fileChunks", d.id))));
+    await Promise.all(jobs);
+  } catch (e) { console.error("Delete pieces error:", e); }
 }
 
-var editingId = null;
-
-function startEdit(id, data) {
-  try { clearAttachment(); } catch (e) {}
-  if (data.fileURL || data.chunkId) { toast("File messages cannot be edited ♡"); return; }
-  try { clearReply(); } catch (e) {}
-  editingId = id;
-  const input = document.getElementById("chatInput");
-  input.value = data.text || "";
-  document.getElementById("editTxt").textContent = String(data.text || "").slice(0, 80);
-  document.getElementById("editBar").classList.remove("hidden");
-  input.focus();
-}
-
-function cancelEdit() {
-  editingId = null;
-  document.getElementById("editBar").classList.add("hidden");
-  document.getElementById("chatInput").value = "";
-}
-window.cancelEdit = cancelEdit;
-
-function saveEdit(text) {
-  const id = editingId;
-  if (!id) return;
-  if (!text) { toast("A message can't be empty (use the bin to delete) ♡"); return; }
-  editingId = null;
-  document.getElementById("editBar").classList.add("hidden");
-  document.getElementById("chatInput").value = "";
-  updateDoc(doc(db, "messages", id), { text: text, edited: true })
-    .catch(e => { console.error("Edit error:", e); toast("Edit failed: " + ((e && e.code) || e)); });
-}
-
-
-// ==============================
-// STEP 3 — save / remove a reaction
-function toggleReaction(messageId, emoji, current) {
-  const user = auth.currentUser;
-  if (!user) return;
-  const ref1 = doc(db, "messages", messageId);
-  const job = (current === emoji)
-    ? updateDoc(ref1, { ["reactions." + user.uid]: deleteField() })
-    : setDoc(ref1, { reactions: { [user.uid]: emoji } }, { merge: true });
-  job.catch(e => { console.error("Reaction error:", e); toast("Reaction failed: " + ((e && e.code) || e)); });
-}
-
-
-// ==============================
-// STEP 4 — online / last seen / typing
+// ===== presence / typing =====
 var partnerData = null, heartbeat = null, statusTimer = null, presenceUnsub = null;
 var presenceBound = false, typingTimer = null, lastTypingSent = 0;
 
-function partnerUid() {
-  const u = auth.currentUser;
-  return u && u.uid === MY_UID ? HIS_UID : MY_UID;
-}
+function partnerUid() { const u = auth.currentUser; return u && u.uid === MY_UID ? HIS_UID : MY_UID; }
 
 function setPresence(patch) {
   const u = auth.currentUser;
   if (!u) return Promise.resolve();
-  return setDoc(doc(db, "presence", u.uid),
-    Object.assign({ lastActive: Date.now() }, patch), { merge: true })
-    .catch(e => { console.error("Presence error:", e); });
+  return setDoc(doc(db, "presence", u.uid), Object.assign({ lastActive: Date.now() }, patch), { merge: true })
+    .catch(e => console.error("Presence error:", e));
 }
 
 function startPresence() {
-  try {
-    setPresence({ online: !document.hidden, typing: false });
-    clearInterval(heartbeat);
-    heartbeat = setInterval(() => setPresence({ online: !document.hidden }), 20000);
-
-    if (!presenceBound) {
-      presenceBound = true;
-      document.addEventListener("visibilitychange", () => {
-        setPresence({ online: !document.hidden, typing: false });
-      });
-      window.addEventListener("pagehide", () => setPresence({ online: false, typing: false }));
-      const input = document.getElementById("chatInput");
-      input.addEventListener("input", () => { if (input.value.trim()) onTyping(); });
-      input.addEventListener("blur", () => { if (!input.value.trim()) stopTyping(); });
-    }
-
-    if (presenceUnsub) { presenceUnsub(); presenceUnsub = null; }
-    presenceUnsub = onSnapshot(doc(db, "presence", partnerUid()), snap => {
-      partnerData = snap.exists() ? snap.data() : null;
-      renderPartnerStatus();
-    }, e => { console.error("Partner presence error:", e); });
-
-    clearInterval(statusTimer);
-    statusTimer = setInterval(renderPartnerStatus, 5000);
-  } catch (e) {
-    console.error("Presence start failed:", e);
+  setPresence({ online: !document.hidden, typing: false });
+  clearInterval(heartbeat);
+  heartbeat = setInterval(() => setPresence({ online: !document.hidden }), 20000);
+  if (!presenceBound) {
+    presenceBound = true;
+    document.addEventListener("visibilitychange", () => setPresence({ online: !document.hidden, typing: false }));
+    window.addEventListener("pagehide", () => setPresence({ online: false, typing: false }));
+    const input = $("chatInput");
+    input.addEventListener("input", () => { if (input.value.trim()) onTyping(); });
+    input.addEventListener("blur", () => { if (!input.value.trim()) stopTyping(); });
   }
+  if (presenceUnsub) presenceUnsub();
+  presenceUnsub = onSnapshot(doc(db, "presence", partnerUid()), snap => {
+    partnerData = snap.exists() ? snap.data() : null;
+    renderPartnerStatus();
+  }, e => console.error("Partner presence error:", e));
+  clearInterval(statusTimer);
+  statusTimer = setInterval(renderPartnerStatus, 5000);
 }
 
 function fmtLastSeen(ms) {
@@ -2464,14 +833,10 @@ function fmtLastSeen(ms) {
 }
 
 function renderPartnerStatus() {
-  const st = document.getElementById("partnerStatus");
-  const dot = document.getElementById("partnerDot");
-  const row = document.getElementById("typingRow");
+  const st = $("partnerStatus"), dot = $("partnerDot"), row = $("typingRow"), d = partnerData;
   if (!st || !dot || !row) return;
-  const d = partnerData;
-  const fresh = d && d.lastActive && (Date.now() - d.lastActive) < 50000;
-  const online = !!(d && d.online && fresh);
-  const typing = !!(online && d.typing && d.typingAt && (Date.now() - d.typingAt) < 6000);
+  const online = !!(d && d.online && d.lastActive && Date.now() - d.lastActive < 50000);
+  const typing = !!(online && d.typing && d.typingAt && Date.now() - d.typingAt < 6000);
   st.className = "chat-status" + (typing ? " typing" : online ? " on" : "");
   st.textContent = typing ? "typing…" : online ? "Online" : fmtLastSeen(d && d.lastActive);
   dot.className = "dot" + (online ? " on" : "");
@@ -2480,144 +845,282 @@ function renderPartnerStatus() {
 
 function onTyping() {
   const now = Date.now();
-  if (now - lastTypingSent > 2500) {
-    lastTypingSent = now;
-    setPresence({ typing: true, typingAt: now, online: true });
-  }
+  if (now - lastTypingSent > 2500) { lastTypingSent = now; setPresence({ typing: true, typingAt: now, online: true }); }
   clearTimeout(typingTimer);
   typingTimer = setTimeout(stopTyping, 3000);
 }
-
 function stopTyping() {
   clearTimeout(typingTimer);
   if (lastTypingSent) { lastTypingSent = 0; setPresence({ typing: false }); }
 }
 
-
-// ==============================
-// STEP 7 — reply, and files / videos without Firebase Storage
-var replyTarget = null;
-var chunkUrlCache = {};
-var CHUNK_MAX_BYTES = 10 * 1024 * 1024;
-var CHUNK_CHARS = 700000;   // must be a multiple of 4
-
-function fmtSize(b) {
-  if (!b) return "";
-  if (b < 1024) return b + " B";
-  if (b < 1048576) return (b / 1024).toFixed(0) + " KB";
-  return (b / 1048576).toFixed(1) + " MB";
-}
-
-function startReply(id, data) {
-  try { if (editingId) cancelEdit(); } catch (e) {}
-  let text = (data.text && String(data.text).indexOf("📎 ") !== 0) ? data.text : "";
-  if (!text && data.caption) text = data.caption;
-  if (!text) {
-    if (data.fileType && data.fileType.indexOf("image/") === 0) text = "📷 Photo";
-    else if (data.fileType && data.fileType.indexOf("video/") === 0) text = "🎬 Video";
-    else text = "📎 " + (data.fileName || "file");
-  }
-  replyTarget = { id: id, text: String(text).slice(0, 120), uid: data.uid };
-  document.getElementById("replyWho").textContent =
-    "Replying to " + (data.uid === auth.currentUser.uid ? "yourself" : "my love");
-  document.getElementById("replyTxt").textContent = replyTarget.text.slice(0, 80);
-  document.getElementById("replyBar").classList.remove("hidden");
-  document.getElementById("chatInput").focus();
-}
-
-function clearReply() {
-  replyTarget = null;
-  const bar = document.getElementById("replyBar");
-  if (bar) bar.classList.add("hidden");
-}
-window.clearReply = clearReply;
-
-function makeVideo(url) {
-  const video = document.createElement("video");
-  video.src = url;
-  video.controls = true;
-  video.preload = "metadata";
-  video.setAttribute("playsinline", "");
-  video.style.maxWidth = "220px";
-  video.style.borderRadius = "15px";
-  video.style.display = "block";
-  return video;
-}
-
-// Save a file in pieces inside Firestore (collection "fileChunks")
-async function uploadChunked(file, statusEl) {
-  const dataUrl = await new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = () => reject(reader.error || new Error("cannot-read-file"));
-    reader.readAsDataURL(file);
+// ===== keep the message box above the phone keyboard =====
+try {
+  const kbInput = $("chatInput"), kbSpacer = $("kbSpacer"), base = window.innerHeight;
+  let kbTimer = null;
+  kbInput.addEventListener("focus", () => {
+    clearTimeout(kbTimer);
+    kbTimer = setTimeout(() => {
+      if (document.activeElement !== kbInput) return;
+      const vv = window.visualViewport, h = vv ? vv.height : window.innerHeight;
+      const resized = h < base * 0.8 || window.innerHeight < base * 0.8;
+      if (!resized) kbSpacer.style.height = "55vh";
+      const r = kbInput.getBoundingClientRect();
+      const wantTop = resized ? Math.max(10, h - r.height - 14) : window.innerHeight * 0.26;
+      window.scrollTo(0, window.scrollY + r.top - wantTop);
+      const box = $("chatMessages");
+      if (box) box.scrollTop = box.scrollHeight;
+    }, 350);
   });
-  const base64 = String(dataUrl).slice(String(dataUrl).indexOf(",") + 1);
-  const total = Math.max(1, Math.ceil(base64.length / CHUNK_CHARS));
-  const chunkId = "f" + Date.now() + Math.random().toString(36).slice(2, 8);
-  const uid = auth.currentUser.uid;
-  let done = 0;
-  statusEl.textContent = "Uploading... 0% ♡";
+  kbInput.addEventListener("blur", () => {
+    clearTimeout(kbTimer);
+    kbTimer = setTimeout(() => { if (document.activeElement !== kbInput) kbSpacer.style.height = "0"; }, 600);
+  });
+} catch (e) { console.error("keyboard step failed", e); }
 
+// ===== voice messages =====
+var rec = null, recChunks = [], recStart = 0, recTimer = null, recStream = null;
+
+async function toggleRecord() {
+  const btn = $("micBtn");
+  if (rec && rec.state === "recording") { rec.stop(); return; }
+  if (sendingFile) return;
+  if (!navigator.mediaDevices || !window.MediaRecorder) { toast("Voice messages are not supported on this browser ♡"); return; }
+  try { recStream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
+  catch (e) { toast("Please allow the microphone ♡"); return; }
+  const mime = ["audio/webm;codecs=opus", "audio/webm", "audio/mp4", "audio/ogg"].find(t => MediaRecorder.isTypeSupported(t)) || "";
+  rec = new MediaRecorder(recStream, mime ? { mimeType: mime } : undefined);
+  recChunks = [];
+  rec.ondataavailable = e => { if (e.data && e.data.size) recChunks.push(e.data); };
+  rec.onstop = async () => {
+    clearInterval(recTimer);
+    recStream.getTracks().forEach(t => t.stop());
+    btn.textContent = "🎤"; btn.style.background = "";
+    const secs = Math.round((Date.now() - recStart) / 1000);
+    const type = (rec.mimeType || mime || "audio/webm").split(";")[0];
+    if (secs < 1) { toast("Too short ♡"); return; }
+    await sendVoice(new Blob(recChunks, { type }), type, secs);
+  };
+  rec.start();
+  recStart = Date.now();
+  btn.style.background = "#d33"; btn.textContent = "⏹ 0:00";
+  recTimer = setInterval(() => {
+    const s = Math.round((Date.now() - recStart) / 1000);
+    btn.textContent = "⏹ " + Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
+    if (s >= 120) rec.stop();
+  }, 500);
+}
+window.toggleRecord = toggleRecord;
+
+async function sendVoice(blob, type, secs) {
+  const user = auth.currentUser, error = $("chatError");
+  if (!user || sendingFile) return;
+  sendingFile = true;
   try {
-    for (let i = 0; i < total; i += 3) {
-      const batch = [];
-      for (let j = i; j < Math.min(total, i + 3); j++) {
-        batch.push(addDoc(collection(db, "fileChunks"), {
-          chunkId: chunkId,
-          index: j,
-          total: total,
-          data: base64.slice(j * CHUNK_CHARS, (j + 1) * CHUNK_CHARS),
-          uid: uid
-        }).then(() => {
-          done++;
-          statusEl.textContent = "Uploading... " + Math.round(done / total * 100) + "% ♡";
-        }));
-      }
-      await Promise.all(batch);
+    error.textContent = "Sending voice message... ♡";
+    const ext = type.indexOf("mp4") > -1 ? "m4a" : type.indexOf("ogg") > -1 ? "ogg" : "webm";
+    const file = new File([blob], "voice." + ext, { type });
+    const info = await uploadChunked(file, error);
+    await addDoc(collection(db, "messages"), {
+      uid: user.uid, text: "🎤 Voice message", caption: "", replyTo: replyTarget || null,
+      chunkId: info.chunkId, chunkCount: info.count, fileURL: "", fileType: type,
+      fileName: file.name, fileSize: file.size, isVoice: true, duration: secs, createdAt: serverTimestamp()
+    });
+    clearReply();
+    error.textContent = "";
+  } catch (e) {
+    console.error("Voice send error:", e);
+    error.textContent = "Could not send the voice message ♡";
+    toast("Could not send: " + errText(e));
+  } finally { sendingFile = false; }
+}
+
+// ===== voice calls (WebRTC, signalled through Firestore doc calls/active) =====
+const RTC_CFG = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }, { urls: "stun:stun1.l.google.com:19302" }] };
+const freshCall = () => ({ id: null, role: null, pc: null, stream: null, iceDone: 0, answered: false, gotAnswer: false, started: 0, ringTimeout: null, timer: null, last: null });
+var call = freshCall(), incoming = null, ringInt = null, ringCtx = null, incomingTimer = null, callUnsub = null;
+const callRef = () => doc(db, "calls", "active");
+
+function callUI(mode, text) {
+  $("callUI").classList.remove("hidden");
+  $("callText").textContent = text;
+  $("callAnswer").classList.toggle("hidden", mode !== "incoming");
+  $("callDecline").classList.toggle("hidden", mode !== "incoming");
+  $("callHang").classList.toggle("hidden", mode === "incoming");
+}
+function callTick() {
+  if (!call.started) return;
+  const s = Math.round((Date.now() - call.started) / 1000);
+  $("callText").textContent = "On a call with my love ♡  " + Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
+}
+
+function newPC() {
+  const pc = new RTCPeerConnection(RTC_CFG);
+  call.pc = pc;
+  call.stream.getTracks().forEach(t => pc.addTrack(t, call.stream));
+  pc.ontrack = e => { const a = $("remoteAudio"); a.srcObject = e.streams[0]; a.play().catch(() => {}); };
+  pc.onconnectionstatechange = () => {
+    const s = pc.connectionState;
+    if (s === "connected" && !call.started) { call.started = Date.now(); callTick(); call.timer = setInterval(callTick, 1000); }
+    if (s === "failed") { toast("Call connection failed ♡"); hangUp(); }
+    if (s === "disconnected") setTimeout(() => { if (call.pc === pc && pc.connectionState === "disconnected") hangUp(); }, 8000);
+  };
+  return pc;
+}
+
+async function startCall() {
+  const user = auth.currentUser;
+  if (!user || call.id || incoming) return;
+  if (!navigator.mediaDevices) { toast("Calls need a secure (https) page ♡"); return; }
+  try { call.stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
+  catch (e) { toast("Please allow the microphone ♡"); return; }
+  const id = "c" + Date.now();
+  call.id = id; call.role = "caller";
+  callUI("calling", "Calling my love… ♡");
+  const pc = newPC();
+  let ready = false;
+  const buf = [];
+  pc.onicecandidate = e => {
+    if (!e.candidate) return;
+    const s = JSON.stringify(e.candidate);
+    if (!ready) buf.push(s);
+    else updateDoc(callRef(), { callerIce: arrayUnion(s) }).catch(() => {});
+  };
+  try {
+    const offer = await pc.createOffer();
+    await pc.setLocalDescription(offer);
+    await setDoc(callRef(), {
+      callId: id, from: user.uid, to: partnerUid(), state: "ringing",
+      offer: { type: offer.type, sdp: offer.sdp }, answer: null, callerIce: [], calleeIce: [], at: Date.now()
+    });
+    ready = true;
+    if (buf.length) await updateDoc(callRef(), { callerIce: arrayUnion(...buf) });
+    call.ringTimeout = setTimeout(() => { if (call.id === id && !call.answered) { toast("No answer ♡"); hangUp(); } }, 45000);
+  } catch (e) {
+    console.error("Start call error:", e);
+    toast("Could not start the call: " + errText(e));
+    cleanupCall();
+  }
+}
+
+async function answerCall() {
+  const d = incoming;
+  if (!d) return;
+  stopRing();
+  try { call.stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
+  catch (e) { toast("Please allow the microphone ♡"); declineCall(); return; }
+  call.id = d.callId; call.role = "callee"; call.answered = true;
+  incoming = null;
+  callUI("active", "Connecting… ♡");
+  const pc = newPC();
+  pc.onicecandidate = e => {
+    if (e.candidate) updateDoc(callRef(), { calleeIce: arrayUnion(JSON.stringify(e.candidate)) }).catch(() => {});
+  };
+  try {
+    await pc.setRemoteDescription(d.offer);
+    const ans = await pc.createAnswer();
+    await pc.setLocalDescription(ans);
+    await updateDoc(callRef(), { answer: { type: ans.type, sdp: ans.sdp }, state: "active" });
+    applyRemote(d);
+  } catch (e) {
+    console.error("Answer error:", e);
+    toast("Could not answer: " + errText(e));
+    hangUp();
+  }
+}
+
+async function applyRemote(d) {
+  const pc = call.pc;
+  if (!pc) return;
+  call.last = d;
+  try {
+    if (call.role === "caller" && d.answer && !call.gotAnswer) {
+      call.gotAnswer = true; call.answered = true;
+      clearTimeout(call.ringTimeout);
+      callUI("active", "Connecting… ♡");
+      await pc.setRemoteDescription(d.answer);
     }
-  } catch (e) {
-    deleteChunks(chunkId);
-    throw e;
-  }
-  return { chunkId: chunkId, count: total };
+    if (pc.remoteDescription) {
+      const dd = call.last, list = call.role === "caller" ? (dd.calleeIce || []) : (dd.callerIce || []);
+      while (call.iceDone < list.length) await pc.addIceCandidate(JSON.parse(list[call.iceDone++]));
+    }
+  } catch (e) { console.error("Call apply error:", e); }
 }
 
-// Read the pieces back and build the file
-async function loadChunkedFile(data) {
-  if (chunkUrlCache[data.chunkId]) return chunkUrlCache[data.chunkId];
-  const snap = await getDocs(query(collection(db, "fileChunks"), where("chunkId", "==", data.chunkId)));
-  const parts = [];
-  snap.forEach(d => parts.push(d.data()));
-  parts.sort((a, b) => a.index - b.index);
-  if (!parts.length || (data.chunkCount && parts.length < data.chunkCount)) {
-    throw new Error("file-pieces-missing");
+function handleCallDoc(d) {
+  const me = auth.currentUser && auth.currentUser.uid;
+  if (!me) return;
+  if (!d) { if (call.id) cleanupCall(); return; }
+  if (d.state === "ended") {
+    if (call.id === d.callId) cleanupCall();
+    if (incoming && incoming.callId === d.callId) { stopRing(); incoming = null; $("callUI").classList.add("hidden"); }
+    return;
   }
-  const arrays = parts.map(p => {
-    const bin = atob(p.data);
-    const bytes = new Uint8Array(bin.length);
-    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-    return bytes;
-  });
-  const blob = new Blob(arrays, { type: data.fileType || "application/octet-stream" });
-  const url = URL.createObjectURL(blob);
-  chunkUrlCache[data.chunkId] = url;
-  return url;
+  if (d.to === me && d.state === "ringing" && !call.id && !incoming && Math.abs(Date.now() - d.at) < 60000) {
+    incoming = d;
+    callUI("incoming", "My love is calling… ♡");
+    startRing();
+    return;
+  }
+  if (incoming && incoming.callId === d.callId) incoming = d;
+  if (call.id && call.id === d.callId) applyRemote(d);
 }
 
-async function deleteChunks(chunkId) {
+function startCallListener() {
+  if (callUnsub) callUnsub();
+  callUnsub = onSnapshot(callRef(), snap => handleCallDoc(snap.exists() ? snap.data() : null), e => console.error("Call listener error:", e));
+}
+
+async function hangUp() {
+  const id = call.id;
+  cleanupCall();
+  if (id) { try { await updateDoc(callRef(), { state: "ended" }); } catch (e) {} }
+}
+async function declineCall() {
+  const d = incoming;
+  stopRing(); incoming = null;
+  $("callUI").classList.add("hidden");
+  if (d) { try { await updateDoc(callRef(), { state: "ended" }); } catch (e) {} }
+}
+
+function cleanupCall() {
+  const wasOn = !!call.started;
+  clearTimeout(call.ringTimeout); clearInterval(call.timer);
+  try { if (call.pc) call.pc.close(); } catch (e) {}
+  try { if (call.stream) call.stream.getTracks().forEach(t => t.stop()); } catch (e) {}
+  call = freshCall();
+  $("remoteAudio").srcObject = null;
+  $("callUI").classList.add("hidden");
+  if (wasOn) toast("Call ended ♡");
+}
+
+function startRing() {
   try {
-    const snap = await getDocs(query(collection(db, "fileChunks"), where("chunkId", "==", chunkId)));
-    const jobs = [];
-    snap.forEach(d => jobs.push(deleteDoc(doc(db, "fileChunks", d.id))));
-    await Promise.all(jobs);
-  } catch (e) {
-    console.error("Delete pieces error:", e);
-  }
+    if (navigator.vibrate) navigator.vibrate([400, 200, 400]);
+    ringCtx = ringCtx || new (window.AudioContext || window.webkitAudioContext)();
+    const beep = () => {
+      const o = ringCtx.createOscillator(), g = ringCtx.createGain();
+      o.frequency.value = 660; g.gain.value = 0.15;
+      o.connect(g); g.connect(ringCtx.destination);
+      o.start(); o.stop(ringCtx.currentTime + 0.4);
+    };
+    beep();
+    ringInt = setInterval(beep, 1500);
+  } catch (e) {}
+  incomingTimer = setTimeout(() => {
+    if (incoming) { stopRing(); incoming = null; $("callUI").classList.add("hidden"); }
+  }, 45000);
+}
+function stopRing() {
+  clearInterval(ringInt); clearTimeout(incomingTimer);
+  ringInt = null; incomingTimer = null;
+  try { if (navigator.vibrate) navigator.vibrate(0); } catch (e) {}
 }
 
+window.startCall = startCall;
+window.answerCall = answerCall;
+window.declineCall = declineCall;
+window.hangUp = hangUp;
 </script>
-
 </body>
 </html>
-  
