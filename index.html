@@ -231,6 +231,7 @@ function unlock() {
   const email = $("email").value.trim(), pw = $("password").value, eb = $("err");
   if (!email || !pw) { eb.textContent = "Please enter your email and password ♡"; return; }
   eb.textContent = "Entering our world... ♡";
+  try { if ("Notification" in window && Notification.permission === "default") Notification.requestPermission(); } catch (e) {}
   signInWithEmailAndPassword(auth, email, pw).then(c => {
     if (!allowed(c.user)) { eb.textContent = "This account is not allowed here. ♡"; signOut(auth); }
     else eb.textContent = "";
@@ -272,6 +273,7 @@ function loadAll() {
 function show(id, btn) {
   document.querySelectorAll("main > section.panel").forEach(s => s.classList.add("hidden"));
   const s = $(id); if (s) s.classList.remove("hidden");
+  if (id === "chat") { unread = 0; updateBadge(); }
   document.querySelectorAll(".tabs button").forEach(b => b.classList.remove("active"));
   if (btn) btn.classList.add("active");
 }
@@ -417,9 +419,14 @@ function startChat() {
   const user = auth.currentUser, box = $("chatMessages"), ce = $("chatError");
   if (!user || !box) return;
   if (chatUnsub) chatUnsub();
+  chatLoaded = false;
 
   chatUnsub = onSnapshot(query(collection(db, "messages"), orderBy("createdAt", "asc")), snap => {
     box.innerHTML = "";
+    if (chatLoaded) snap.docChanges().forEach(ch => {
+      if (ch.type === "added" && ch.doc.data().uid !== user.uid) onPartnerMessage(ch.doc.data());
+    });
+    chatLoaded = true;
     snap.forEach(m => {
       const data = m.data(), mine = data.uid === user.uid;
       const row = el("div", "mrow " + (mine ? "mine" : "theirs"));
@@ -1060,6 +1067,7 @@ function handleCallDoc(d) {
     incoming = d;
     callUI("incoming", "My love is calling… ♡");
     startRing();
+    if (document.hidden) notifyLocal("📞 My love is calling", "Open our little world to answer");
     return;
   }
   if (incoming && incoming.callId === d.callId) incoming = d;
@@ -1072,8 +1080,9 @@ function startCallListener() {
 }
 
 async function hangUp() {
-  const id = call.id;
+  const id = call.id, missed = call.role === "caller" && !call.answered;
   cleanupCall();
+  if (missed) logMissedCall();
   if (id) { try { await updateDoc(callRef(), { state: "ended" }); } catch (e) {} }
 }
 async function declineCall() {
@@ -1116,6 +1125,38 @@ function stopRing() {
   ringInt = null; incomingTimer = null;
   try { if (navigator.vibrate) navigator.vibrate(0); } catch (e) {}
 }
+
+// ===== missed calls + notifications =====
+var unread = 0, chatLoaded = false;
+
+async function logMissedCall() {
+  const u = auth.currentUser;
+  if (!u) return;
+  try { await addDoc(collection(db, "messages"), { uid: u.uid, text: "📞 Missed call", isCall: true, createdAt: serverTimestamp() }); }
+  catch (e) { console.error("Missed call log error:", e); }
+}
+
+function notifyLocal(title, body) {
+  try { if (navigator.vibrate) navigator.vibrate([200, 100, 200]); } catch (e) {}
+  try { if ("Notification" in window && Notification.permission === "granted") new Notification(title, { body }); } catch (e) {}
+}
+
+function updateBadge() {
+  const b = document.querySelector('.tabs button[onclick*="chat"]');
+  if (b) b.textContent = "💬 Our Chat" + (unread ? " (" + unread + ")" : "");
+  document.title = (unread ? "(" + unread + ") " : "") + "Our Little World ♡";
+}
+
+function onPartnerMessage(d) {
+  if (!$("chat").classList.contains("hidden") && !document.hidden) return;
+  unread++;
+  updateBadge();
+  notifyLocal(d.isCall ? "📞 Missed call" : "💌 New message", d.isCall ? "My love tried to call you" : String(d.text || "").slice(0, 80));
+}
+
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden && !$("chat").classList.contains("hidden")) { unread = 0; updateBadge(); }
+});
 
 window.startCall = startCall;
 window.answerCall = answerCall;
