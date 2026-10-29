@@ -72,6 +72,19 @@ main{max-width:1000px;margin:auto;padding:25px 16px}.top{text-align:center;paddi
 #callUI.vid .cinner{position:static}
 #callUI.vid .big,#callUI.vid .row{display:none}
 #callUI.vid #callText{position:absolute;top:18px;left:16px;font-size:16px;color:#fff;text-shadow:0 1px 4px #000;z-index:3}
+#callUI{background:linear-gradient(180deg,#0b141a,#1f2c34);color:#fff}
+#callUI .avatarbig{width:130px;height:130px;border-radius:50%;background:#2a3942;display:flex;align-items:center;justify-content:center;font-size:60px;color:#e9798f}
+#callUI .cname{font-size:30px;color:#fff}
+#callText{color:#aebac1!important;font-size:17px!important;font-style:normal!important}
+#callUI .row{gap:70px;position:absolute;left:0;right:0;bottom:70px;justify-content:center;z-index:3}
+#callUI .cb{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:14px;color:#fff}
+#callUI .cb button{width:70px;height:70px;padding:0;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff}
+#callUI #callDecline{background:#f15c6d}#callUI #callAnswer{background:#25d366}
+#callUI #callCtl{bottom:26px;left:14px;right:14px;gap:12px;background:#1f2c34f0;border-radius:40px;padding:12px;flex-wrap:nowrap}
+#callUI #callCtl button{width:58px;height:58px;padding:0;border-radius:50%;background:#2a3942;color:#fff;display:flex;align-items:center;justify-content:center}
+#callUI #callCtl button.on{background:#fff;color:#111b21}
+#callUI #callCtl #callHang{background:#f15c6d;color:#fff}
+#callUI.vid .avatarbig,#callUI.vid .cname{display:none}
 </style>
 </head>
 <body>
@@ -92,7 +105,7 @@ main{max-width:1000px;margin:auto;padding:25px 16px}.top{text-align:center;paddi
 <div style="text-align:center;margin:10px auto 20px;padding:15px 20px;background:#f2cbd6;border-radius:20px;font-style:italic;max-width:600px">Welcome back to our little world, my love. ♡</div>
 <div class="top">
   <h1>Our Little World ❤️</h1>
-  <div class="subtitle">A place for our words, memories &amp; little moments.</div><div style="font-size:11px;opacity:.5">version 4</div>
+  <div class="subtitle">A place for our words, memories &amp; little moments.</div><div style="font-size:11px;opacity:.5">version 5</div>
   <button onclick="logout()" style="margin-top:15px;background:#a64c62">Leave our little world ♡</button>
 </div>
 <div class="tabs">
@@ -176,19 +189,20 @@ main{max-width:1000px;margin:auto;padding:25px 16px}.top{text-align:center;paddi
   <video id="remoteVideo" class="hidden" autoplay playsinline muted></video>
   <video id="localVideo" class="hidden" autoplay playsinline muted></video>
   <div class="cinner">
-    <div class="big">♡</div>
+    <div class="avatarbig">♡</div>
+    <div class="cname">My love ♡</div>
     <div id="callText"></div>
-    <div class="row">
-      <button id="callAnswer" onclick="answerCall()">📞 Answer</button>
-      <button id="callDecline" onclick="declineCall()">✕ Decline</button>
-    </div>
+  </div>
+  <div id="callRow" class="row hidden">
+    <div class="cb"><button id="callDecline" onclick="declineCall()"></button><span>Decline</span></div>
+    <div class="cb"><button id="callAnswer" onclick="answerCall()"></button><span>Answer</span></div>
   </div>
   <div id="callCtl" class="hidden">
-    <button id="btnMute" onclick="toggleMute()">🎙️</button>
-    <button id="btnCam" onclick="toggleCamera()">📷</button>
-    <button id="btnFlip" onclick="flipCamera()">🔄</button>
-    <button id="btnSpk" onclick="toggleSpeaker()">🔊</button>
-    <button id="callHang" onclick="hangUp()">📵</button>
+    <button id="btnSpk" onclick="toggleSpeaker()"></button>
+    <button id="btnCam" onclick="toggleCamera()"></button>
+    <button id="btnMute" onclick="toggleMute()"></button>
+    <button id="btnFlip" onclick="flipCamera()"></button>
+    <button id="callHang" onclick="hangUp()"></button>
   </div>
   <audio id="remoteAudio" autoplay playsinline></audio>
 </div>
@@ -973,8 +987,7 @@ const callRef = () => doc(db, "calls", "active");
 function callUI(mode, text) {
   $("callUI").classList.remove("hidden");
   $("callText").textContent = text;
-  $("callAnswer").classList.toggle("hidden", mode !== "incoming");
-  $("callDecline").classList.toggle("hidden", mode !== "incoming");
+  $("callRow").classList.toggle("hidden", mode !== "incoming");
   $("callCtl").classList.toggle("hidden", mode === "incoming");
 }
 function callTick() {
@@ -1133,7 +1146,8 @@ function cleanupCall(reason) {
   try { if (call.dummy) call.dummy.stop(); } catch (e) {}
   $("localVideo").srcObject = null; $("localVideo").classList.add("hidden");
   $("remoteVideo").srcObject = null; setRemoteVideo(false);
-  $("btnMute").textContent = "🎙️"; ["btnMute", "btnCam", "btnSpk"].forEach(i => $(i).classList.remove("on"));
+  ["btnMute", "btnCam", "btnSpk"].forEach(i => $(i).classList.remove("on"));
+  paintIcons();
   speakerOn = false;
   call = freshCall();
   $("remoteAudio").srcObject = null;
@@ -1204,6 +1218,28 @@ document.addEventListener("visibilitychange", () => {
 // ===== call controls: mute, camera, flip, speaker =====
 var speakerOn = false;
 
+const ICON = {
+  mic: "M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z",
+  micoff: "M19 11h-1.7c0 .74-.16 1.43-.43 2.05l1.23 1.23c.56-.98.9-2.09.9-3.28zm-4.02.17c0-.06.02-.11.02-.17V5c0-1.66-1.34-3-3-3S9 3.34 9 5v.18l5.98 5.99zM4.27 3L3 4.27l6.01 6.01V11c0 1.66 1.33 3 2.99 3 .22 0 .44-.03.65-.08l1.66 1.66c-.71.33-1.5.52-2.31.52-2.76 0-5.3-2.1-5.3-5.1H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c.91-.13 1.77-.45 2.54-.9L19.73 21 21 19.73 4.27 3z",
+  vid: "M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z",
+  vidoff: "M21 6.5l-4 4V7c0-.55-.45-1-1-1H9.82L21 17.18V6.5zM3.27 2L2 3.27 4.73 6H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.21 0 .39-.08.54-.18L19.73 21 21 19.73 3.27 2z",
+  flip: "M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z",
+  vol: "M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z",
+  end: "M12 9c-1.6 0-3.15.25-4.6.72v3.1c0 .39-.23.74-.56.9-.98.49-1.87 1.12-2.66 1.85-.18.18-.43.28-.7.28-.28 0-.53-.11-.71-.29L.29 13.08c-.18-.17-.29-.42-.29-.7 0-.28.11-.53.29-.71C3.34 8.78 7.46 7 12 7s8.66 1.78 11.71 4.67c.18.18.29.43.29.71 0 .28-.11.53-.29.71l-2.48 2.48c-.18.18-.43.29-.71.29-.27 0-.52-.11-.7-.28-.79-.73-1.68-1.36-2.66-1.85-.33-.16-.56-.51-.56-.9v-3.1C15.15 9.25 13.6 9 12 9z",
+  call: "M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"
+};
+const svg = (d, size) => '<svg viewBox="0 0 24 24" width="' + (size || 28) + '" height="' + (size || 28) + '" fill="currentColor"><path d="' + d + '"/></svg>';
+function paintIcons() {
+  $("btnSpk").innerHTML = svg(ICON.vol);
+  $("btnCam").innerHTML = svg(ICON.vidoff);
+  $("btnMute").innerHTML = svg(ICON.mic);
+  $("btnFlip").innerHTML = svg(ICON.flip);
+  $("callHang").innerHTML = svg(ICON.end, 30);
+  $("callDecline").innerHTML = svg(ICON.end, 32);
+  $("callAnswer").innerHTML = svg(ICON.call, 32);
+}
+paintIcons();
+
 function makeDummyTrack() {
   const c = document.createElement("canvas");
   c.width = 160; c.height = 120;
@@ -1223,7 +1259,7 @@ function toggleMute() {
   if (!call.stream) return;
   const muted = $("btnMute").classList.toggle("on");
   call.stream.getAudioTracks().forEach(t => { t.enabled = !muted; });
-  $("btnMute").textContent = muted ? "🔇" : "🎙️";
+  $("btnMute").innerHTML = svg(muted ? ICON.micoff : ICON.mic);
 }
 
 async function toggleCamera() {
@@ -1244,6 +1280,7 @@ async function toggleCamera() {
       $("localVideo").classList.add("hidden");
     }
     $("btnCam").classList.toggle("on", call.camOn);
+    $("btnCam").innerHTML = svg(call.camOn ? ICON.vid : ICON.vidoff);
     updateDoc(callRef(), call.role === "caller" ? { camCaller: call.camOn } : { camCallee: call.camOn }).catch(() => {});
   } catch (e) { console.error("Camera error:", e); toast("Camera not allowed ♡"); }
 }
