@@ -97,7 +97,7 @@ main{max-width:1000px;margin:auto;padding:25px 16px}.top{text-align:center;paddi
 .pill{flex:1;min-width:0;display:flex;align-items:flex-end;gap:2px;background:#fff;border:1px solid #e4bbc7;border-radius:28px;padding:4px 6px}
 .pill textarea{border:0;background:transparent;border-radius:0;padding:10px 6px;height:42px;max-height:120px;resize:none;outline:none;flex:1;min-width:0}
 .ibtn{background:transparent;color:#8d6973;padding:8px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none}
-#micBtn{width:52px;height:52px;padding:0;border-radius:50%;background:#c95e7b;color:#fff;display:flex;align-items:center;justify-content:center;flex:none}
+#micBtn,#sendBtn{width:46px;height:46px;padding:0;border-radius:50%;background:#c95e7b;color:#fff;display:flex;align-items:center;justify-content:center;flex:none}
 </style>
 </head>
 <body>
@@ -118,7 +118,7 @@ main{max-width:1000px;margin:auto;padding:25px 16px}.top{text-align:center;paddi
 <div style="text-align:center;margin:10px auto 20px;padding:15px 20px;background:#f2cbd6;border-radius:20px;font-style:italic;max-width:600px">Welcome back to our little world, my love. ♡</div>
 <div class="top">
   <h1>Our Little World ❤️</h1>
-  <div class="subtitle">A place for our words, memories &amp; little moments.</div><div style="font-size:11px;opacity:.5">version 8</div>
+  <div class="subtitle">A place for our words, memories &amp; little moments.</div><div style="font-size:11px;opacity:.5">version 9</div>
   <button onclick="logout()" style="margin-top:15px;background:#a64c62">Leave our little world ♡</button>
 </div>
 <div class="tabs">
@@ -133,15 +133,12 @@ main{max-width:1000px;margin:auto;padding:25px 16px}.top{text-align:center;paddi
 <section id="chat" class="panel hidden">
 <h2>💬 Our Little Chat</h2>
 <div class="chat-head">
-  <button id="hBack" class="hbtn" onclick="show('letters',document.querySelector('.tabs button'))"></button>
   <div class="avatar">♡<span id="partnerDot" class="dot"></span></div>
   <div class="hinfo"><div class="chat-name">My love ♡</div><div id="partnerStatus" class="chat-status">offline</div></div>
   <div class="hicons">
     <button id="vidBtn" class="hbtn" onclick="startCall(true)"></button>
     <button id="callBtn" class="hbtn" onclick="startCall()"></button>
-    <button id="hDots" class="hbtn" onclick="$('hMenu').classList.toggle('hidden')"></button>
   </div>
-  <div id="hMenu" class="hmenu hidden"><button onclick="logout()">🚪 Leave our little world ♡</button></div>
 </div>
 <div id="chatMessages"></div>
 <div id="editBar" class="bar hidden"><div class="grow"><b style="color:#a94763">✏️ Editing message</b><br><span id="editTxt"></span></div><button class="x" onclick="cancelEdit()">✕</button></div>
@@ -161,7 +158,8 @@ main{max-width:1000px;margin:auto;padding:25px 16px}.top{text-align:center;paddi
     <button id="attBtn" class="ibtn" onclick="$('fileInput').click()"></button>
     <button id="camBtn" class="ibtn" onclick="$('photoInput').click()"></button>
   </div>
-  <button id="micBtn" onclick="mainAction()"></button>
+  <button id="micBtn" onclick="toggleRecord()"></button>
+  <button id="sendBtn" onclick="sendChatMessage()"></button>
 </div>
 <input id="fileInput" type="file" style="display:none" onchange="sendFile(this)">
 <input id="photoInput" type="file" accept="image/*,video/*" style="display:none" onchange="sendFile(this)">
@@ -1256,8 +1254,6 @@ function paintIcons() {
   $("attBtn").innerHTML = svg(ICON.attach, 24);
   $("camBtn").innerHTML = svg(ICON.camera, 24);
   updateSendBtn();
-  $("hBack").innerHTML = svg(ICON.back, 26);
-  $("hDots").innerHTML = svg(ICON.dots, 26);
   $("vidBtn").innerHTML = svg(ICON.vid, 26);
   $("callBtn").innerHTML = svg(ICON.call, 24);
   $("btnSpk").innerHTML = svg(ICON.vol);
@@ -1349,11 +1345,11 @@ async function toggleSpeaker() {
 
 // ===== WhatsApp-style send / mic button =====
 function updateSendBtn() {
-  const b = $("micBtn");
-  if (!b || (rec && rec.state === "recording")) return;
-  const has = $("chatInput").value.trim() || pendingFile || editingId;
-  b.style.background = "";
-  b.innerHTML = svg(has ? ICON.send : ICON.mic, 26);
+  const m = $("micBtn");
+  if (!m || (rec && rec.state === "recording")) return;
+  m.style.background = "";
+  m.innerHTML = svg(ICON.mic, 24);
+  $("sendBtn").innerHTML = svg(ICON.send, 24);
 }
 function mainAction() {
   if (rec && rec.state === "recording") { toggleRecord(); return; }
